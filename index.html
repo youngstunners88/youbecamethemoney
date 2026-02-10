@@ -674,9 +674,15 @@
             50% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
         }
 
-        /* Hidden audio element */
-        #audioPlayer {
-            display: none;
+        /* Hidden SoundCloud iframe - completely invisible */
+        #scPlayer {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: none;
+            opacity: 0;
+            pointer-events: none;
+            overflow: hidden;
         }
 
         /* ElevenLabs Widget */
@@ -1004,11 +1010,13 @@
         <p class="copyright">© 2026 You Became The Money. All rights reserved. | Daniel Garcia</p>
     </footer>
 
-    <!-- Music Player - Hidden audio, visible button only -->
+    <!-- Hidden SoundCloud Player -->
+    <iframe id="scPlayer" scrolling="no" frameborder="no" allow="autoplay" 
+        src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2263815089&color=%23d4af37&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false">
+    </iframe>
+
+    <!-- Music Player Button Only -->
     <div class="music-player">
-        <audio id="audioPlayer" loop>
-            <source src="https://soundcloud.com/kofibeatz/verse" type="audio/mpeg">
-        </audio>
         <button class="play-btn" id="playBtn" onclick="toggleMusic()">
             <i class="fas fa-play" id="playIcon"></i>
         </button>
@@ -1030,9 +1038,9 @@
             particlesContainer.appendChild(particle);
         }
 
-        // Music Player Toggle - Hidden audio element
+        // Music Player Toggle using hidden SoundCloud iframe
         let isPlaying = false;
-        const audioPlayer = document.getElementById('audioPlayer');
+        const scPlayer = document.getElementById('scPlayer');
         const playBtn = document.getElementById('playBtn');
         const playIcon = document.getElementById('playIcon');
 
@@ -1040,11 +1048,13 @@
             isPlaying = !isPlaying;
             
             if (isPlaying) {
-                audioPlayer.play();
+                // Reload iframe with autoplay enabled
+                scPlayer.src = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2263815089&color=%23d4af37&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false";
                 playBtn.classList.add('playing');
                 playIcon.className = 'fas fa-pause';
             } else {
-                audioPlayer.pause();
+                // Reload iframe with autoplay disabled (stops music)
+                scPlayer.src = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2263815089&color=%23d4af37&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false";
                 playBtn.classList.remove('playing');
                 playIcon.className = 'fas fa-play';
             }
