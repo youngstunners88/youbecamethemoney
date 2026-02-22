@@ -76,7 +76,7 @@
             position: fixed;
             top: 0;
             width: 100%;
-            padding: 1.5rem 5%;
+            padding: 1rem 5%;
             background: rgba(10, 14, 39, 0.9);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(212, 175, 55, 0.2);
@@ -87,13 +87,28 @@
         }
 
         .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .logo-text {
             font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 700;
             background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-decoration: none;
             letter-spacing: 1px;
         }
 
@@ -480,7 +495,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 3px;
+                       height: 3px;
             background: linear-gradient(90deg, transparent, var(--gold), transparent);
             transform: scaleX(0);
             transition: transform 0.3s;
@@ -567,6 +582,58 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             color: var(--gray);
+        }
+
+        /* Daniel Garcia Portrait Section */
+        .portrait-section {
+            padding: 60px 5%;
+            text-align: center;
+            background: linear-gradient(180deg, var(--navy) 0%, var(--carbon) 100%);
+        }
+
+        .portrait-container {
+            max-width: 400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .portrait-frame {
+            width: 280px;
+            height: 280px;
+            margin: 0 auto;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid var(--gold);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.3), 0 20px 60px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .portrait-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .portrait-frame:hover img {
+            transform: scale(1.05);
+        }
+
+        .portrait-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-top: 2rem;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .portrait-title {
+            color: var(--gray);
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
         }
 
         /* Footer */
@@ -719,6 +786,15 @@
                 bottom: 10px;
             }
 
+            .portrait-frame {
+                width: 220px;
+                height: 220px;
+            }
+
+            .portrait-name {
+                font-size: 2rem;
+            }
+
             elevenlabs-convai {
                 bottom: 80px;
                 right: 10px;
@@ -745,7 +821,10 @@
 
     <!-- Navigation -->
     <nav>
-        <a href="#" class="logo">YBTM</a>
+        <a href="#" class="logo">
+            <img src="https://i.imgur.com/Rq5suc9.jpeg" alt="Daniel Garcia" class="logo-img">
+            <span class="logo-text">YBTM</span>
+        </a>
         <ul class="nav-links">
             <li><a href="#home">Home</a></li>
             <li><a href="#books">Library</a></li>
@@ -987,6 +1066,17 @@
                 "We go from being their goods to GODS..."
             </p>
             <p style="color: var(--gray); margin-top: 1rem; font-size: 0.9rem;">— Daniel Garcia</p>
+        </div>
+    </section>
+
+    <!-- Daniel Garcia Portrait Section -->
+    <section class="portrait-section">
+        <div class="portrait-container fade-in">
+            <div class="portrait-frame">
+                <img src="https://i.imgur.com/Rq5suc9.jpeg" alt="Daniel Garcia - You Became The Money">
+            </div>
+            <h2 class="portrait-name">Daniel Garcia</h2>
+            <p class="portrait-title">Founder & Sovereign Wealth Architect</p>
         </div>
     </section>
 
