@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="You Became The Money by Daniel Garcia - Master banking law, SBLC, insurance wraps, and commercial law. Transform from debtor to creditor.">
+    <meta name="keywords" content="banking law, SBLC, insurance wraps, Daniel Garcia, commercial law, maritime law, financial sovereignty">
     <title>You Became The Money | Daniel Garcia</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,6 +17,8 @@
             --carbon: #1a1a1a;
             --white: #ffffff;
             --gray: #8892b0;
+            --error: #e74c3c;
+            --success: #2ecc71;
         }
 
         * {
@@ -146,6 +150,72 @@
 
         .nav-links a:hover::after {
             width: 100%;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--gold);
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background: rgba(10, 14, 39, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            transition: right 0.3s ease;
+            border-left: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .mobile-nav.active {
+            right: 0;
+        }
+
+        .mobile-nav a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 1rem;
+            transition: color 0.3s;
+        }
+
+        .mobile-nav a:hover {
+            color: var(--gold);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
         }
 
         /* Hero Section */
@@ -495,7 +565,7 @@
             top: 0;
             left: 0;
             width: 100%;
-                       height: 3px;
+            height: 3px;
             background: linear-gradient(90deg, transparent, var(--gold), transparent);
             transform: scaleX(0);
             transition: transform 0.3s;
@@ -693,43 +763,64 @@
             letter-spacing: 1px;
         }
 
-        /* Mobile Menu */
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--gold);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        /* Music Player - Just the button */
+        /* ============================================
+           ENHANCED MUSIC PLAYER
+           ============================================ */
         .music-player {
             position: fixed;
             bottom: 20px;
             left: 20px;
             z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 12px 16px;
+            border-radius: 50px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            max-width: 320px;
+        }
+
+        .music-player:hover {
+            border-color: var(--gold);
+            box-shadow: 0 6px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .player-main {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .play-btn {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
             border: none;
             border-radius: 50%;
             color: var(--navy);
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
             transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
         .play-btn:hover {
             transform: scale(1.1);
             box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
+        }
+
+        .play-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .play-btn.playing {
@@ -741,8 +832,176 @@
             50% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
         }
 
-        /* Hidden SoundCloud iframe - completely invisible */
-        #scPlayer {
+        .player-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .track-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--white);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
+        }
+
+        .track-artist {
+            font-size: 0.75rem;
+            color: var(--gray);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .player-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(212, 175, 55, 0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.65rem;
+            color: var(--gray);
+            margin-top: 2px;
+        }
+
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .volume-btn {
+            background: none;
+            border: none;
+            color: var(--gold);
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0.3s;
+        }
+
+        .volume-btn:hover {
+            color: var(--gold-light);
+        }
+
+        .volume-slider {
+            width: 60px;
+            height: 4px;
+            background: rgba(212, 175, 55, 0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .volume-fill {
+            height: 100%;
+            background: var(--gold);
+            border-radius: 2px;
+            width: 70%;
+        }
+
+        .player-expanded {
+            display: none;
+            width: 100%;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .music-player.expanded {
+            border-radius: 20px;
+            flex-wrap: wrap;
+        }
+
+        .music-player.expanded .player-expanded {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .expand-btn {
+            background: none;
+            border: none;
+            color: var(--gold);
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 4px;
+            transition: transform 0.3s;
+        }
+
+        .music-player.expanded .expand-btn {
+            transform: rotate(180deg);
+        }
+
+        .error-message {
+            position: fixed;
+            bottom: 100px;
+            left: 20px;
+            background: rgba(231, 76, 60, 0.9);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            z-index: 10000;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Hidden SoundCloud iframe */
+        #scWidget {
             position: absolute;
             width: 0;
             height: 0;
@@ -760,6 +1019,7 @@
             z-index: 9998;
         }
 
+        /* Responsive */
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -784,6 +1044,18 @@
             .music-player {
                 left: 10px;
                 bottom: 10px;
+                max-width: calc(100vw - 20px);
+                padding: 10px 12px;
+            }
+
+            .play-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1rem;
+            }
+
+            .player-info {
+                max-width: 120px;
             }
 
             .portrait-frame {
@@ -812,9 +1084,71 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Loading state */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--navy);
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            text-align: center;
+        }
+
+        .loader-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .loader-bar {
+            width: 200px;
+            height: 2px;
+            background: rgba(212, 175, 55, 0.2);
+            border-radius: 1px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .loader-progress {
+            height: 100%;
+            background: var(--gold);
+            width: 0%;
+            animation: loading 1.5s ease-in-out forwards;
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
     </style>
 </head>
 <body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader">
+            <div class="loader-text">You Became The Money</div>
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Background Animation -->
     <div class="bg-animation"></div>
     <div class="gold-particles" id="particles"></div>
@@ -831,8 +1165,19 @@
             <li><a href="#expertise">Expertise</a></li>
             <li><a href="#contact">Connect</a></li>
         </ul>
-        <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+            <i class="fas fa-bars"></i>
+        </button>
     </nav>
+
+    <!-- Mobile Navigation -->
+    <div class="overlay" id="overlay"></div>
+    <div class="mobile-nav" id="mobileNav">
+        <a href="#home">Home</a>
+        <a href="#books">Library</a>
+        <a href="#expertise">Expertise</a>
+        <a href="#contact">Connect</a>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero" id="home">
@@ -884,14 +1229,14 @@
             <!-- Book 1: Black's Law Dictionary -->
             <div class="book-card fade-in">
                 <div class="book-image">
-                    <img src="https://i.imgur.com/c4mMxud.jpeg" alt="Black's Law Dictionary by Bryan A. Garner">
+                    <img src="https://i.imgur.com/c4mMxud.jpeg" alt="Black's Law Dictionary by Bryan A. Garner" loading="lazy">
                 </div>
                 <div class="book-content">
                     <div class="book-category">Legal Foundation</div>
                     <h3 class="book-title">Black's Law Dictionary</h3>
                     <p class="book-author">Bryan A. Garner</p>
                     <p class="book-description">The definitive legal dictionary. Essential for decoding the language of the courts and understanding the true meaning of legal terminology.</p>
-                    <a href="https://amzn.to/4r5kcke" target="_blank" class="buy-button">
+                    <a href="https://amzn.to/4r5kcke" target="_blank" rel="noopener noreferrer" class="buy-button">
                         <i class="fab fa-amazon"></i> Acquire on Amazon
                     </a>
                 </div>
@@ -900,14 +1245,14 @@
             <!-- Book 2: Maritime Liens -->
             <div class="book-card fade-in">
                 <div class="book-image">
-                    <img src="https://i.imgur.com/oHJPGAF.jpeg" alt="Maritime Liens and Claims by William Tetley">
+                    <img src="https://i.imgur.com/oHJPGAF.jpeg" alt="Maritime Liens and Claims by William Tetley" loading="lazy">
                 </div>
                 <div class="book-content">
                     <div class="book-category">Admiralty Law</div>
                     <h3 class="book-title">Maritime Liens and Claims</h3>
                     <p class="book-author">William Tetley</p>
                     <p class="book-description">Master the laws of the sea and international commerce. Critical for understanding vessel arrests, maritime priorities, and international trade.</p>
-                    <a href="https://amzn.to/4knMwvH" target="_blank" class="buy-button">
+                    <a href="https://amzn.to/4knMwvH" target="_blank" rel="noopener noreferrer" class="buy-button">
                         <i class="fab fa-amazon"></i> Acquire on Amazon
                     </a>
                 </div>
@@ -916,14 +1261,14 @@
             <!-- Book 3: Conflict of Laws -->
             <div class="book-card fade-in">
                 <div class="book-image">
-                    <img src="https://i.imgur.com/fbnPjuu.jpeg" alt="Conflict of Laws by Hay, Borchers and Symeonides">
+                    <img src="https://i.imgur.com/fbnPjuu.jpeg" alt="Conflict of Laws by Hay, Borchers and Symeonides" loading="lazy">
                 </div>
                 <div class="book-content">
                     <div class="book-category">Jurisdictional Mastery</div>
                     <h3 class="book-title">Conflict of Laws</h3>
                     <p class="book-author">Hay, Borchers & Symeonides</p>
                     <p class="book-description">Navigate between jurisdictions. Understanding how different legal systems interact is crucial for international banking and commerce.</p>
-                    <a href="https://amzn.to/4r7pPi9" target="_blank" class="buy-button">
+                    <a href="https://amzn.to/4r7pPi9" target="_blank" rel="noopener noreferrer" class="buy-button">
                         <i class="fab fa-amazon"></i> Acquire on Amazon
                     </a>
                 </div>
@@ -932,14 +1277,14 @@
             <!-- Book 4: Administrative Law -->
             <div class="book-card fade-in">
                 <div class="book-image">
-                    <img src="https://i.imgur.com/9yV6IVy.jpeg" alt="Administrative Law by John H. Reese">
+                    <img src="https://i.imgur.com/9yV6IVy.jpeg" alt="Administrative Law by John H. Reese" loading="lazy">
                 </div>
                 <div class="book-content">
                     <div class="book-category">Administrative Process</div>
                     <h3 class="book-title">Administrative Law</h3>
                     <p class="book-author">John H. Reese</p>
                     <p class="book-description">Administrative law equals administrator. Learn the principles and practice of regulatory agencies and administrative procedure.</p>
-                    <a href="https://amzn.to/4qtw8eO" target="_blank" class="buy-button">
+                    <a href="https://amzn.to/4qtw8eO" target="_blank" rel="noopener noreferrer" class="buy-button">
                         <i class="fab fa-amazon"></i> Acquire on Amazon
                     </a>
                 </div>
@@ -948,14 +1293,14 @@
             <!-- Book 5: Corpus Juris Secundum -->
             <div class="book-card fade-in">
                 <div class="book-image">
-                    <img src="https://i.imgur.com/tXdam95.jpeg" alt="Corpus Juris Secundum by West Publishing">
+                    <img src="https://i.imgur.com/tXdam95.jpeg" alt="Corpus Juris Secundum by West Publishing" loading="lazy">
                 </div>
                 <div class="book-content">
                     <div class="book-category">Legal Encyclopedia</div>
                     <h3 class="book-title">Corpus Juris Secundum</h3>
                     <p class="book-author">West Publishing</p>
                     <p class="book-description">The complete encyclopedia of American law. The gold standard for legal research and case law reference across all jurisdictions.</p>
-                    <a href="https://amzn.to/4cjTP5D" target="_blank" class="buy-button">
+                    <a href="https://amzn.to/4cjTP5D" target="_blank" rel="noopener noreferrer" class="buy-button">
                         <i class="fab fa-amazon"></i> Acquire on Amazon
                     </a>
                 </div>
@@ -964,14 +1309,14 @@
             <!-- Book 6: Creditors and Their Bonds -->
             <div class="book-card fade-in">
                 <div class="book-image">
-                    <img src="https://i.imgur.com/TjcdJP8.jpeg" alt="Creditors and Their Bonds">
+                    <img src="https://i.imgur.com/TjcdJP8.jpeg" alt="Creditors and Their Bonds" loading="lazy">
                 </div>
                 <div class="book-content">
                     <div class="book-category">Commercial Law</div>
                     <h3 class="book-title">Creditors and Their Bonds</h3>
                     <p class="book-author">Commercial Law Essentials</p>
                     <p class="book-description">Understand the hidden commercial court process. Essential for anyone seeking to transition from debtor to creditor status.</p>
-                    <a href="https://amzn.to/4cp5RdU" target="_blank" class="buy-button">
+                    <a href="https://amzn.to/4cp5RdU" target="_blank" rel="noopener noreferrer" class="buy-button">
                         <i class="fab fa-amazon"></i> Acquire on Amazon
                     </a>
                 </div>
@@ -1044,7 +1389,7 @@
                 <span>(954) 260-9327</span>
             </a>
 
-            <a href="https://www.instagram.com/youbecamethemoney?igsh=cXNkb3V0MWwzczd0" target="_blank" class="contact-item">
+            <a href="https://www.instagram.com/youbecamethemoney?igsh=cXNkb3V0MWwzczd0" target="_blank" rel="noopener noreferrer" class="contact-item">
                 <div class="contact-icon">
                     <i class="fab fa-instagram"></i>
                 </div>
@@ -1052,7 +1397,7 @@
                 <span>@youbecamethemoney</span>
             </a>
 
-            <a href="https://cash.app/$maz7166" target="_blank" class="contact-item">
+            <a href="https://cash.app/$maz7166" target="_blank" rel="noopener noreferrer" class="contact-item">
                 <div class="contact-icon">
                     <i class="fas fa-dollar-sign"></i>
                 </div>
@@ -1073,7 +1418,7 @@
     <section class="portrait-section">
         <div class="portrait-container fade-in">
             <div class="portrait-frame">
-                <img src="https://i.imgur.com/Rq5suc9.jpeg" alt="Daniel Garcia - You Became The Money">
+                <img src="https://i.imgur.com/Rq5suc9.jpeg" alt="Daniel Garcia - You Became The Money" loading="lazy">
             </div>
             <h2 class="portrait-name">Daniel Garcia</h2>
             <p class="portrait-title">Founder & Sovereign Wealth Architect</p>
@@ -1086,13 +1431,13 @@
         <p class="footer-text">Mastering the art of banking, commerce, and financial sovereignty.</p>
         
         <div class="social-links">
-            <a href="https://www.instagram.com/youbecamethemoney?igsh=cXNkb3V0MWwzczd0" target="_blank" title="Instagram">
+            <a href="https://www.instagram.com/youbecamethemoney?igsh=cXNkb3V0MWwzczd0" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Instagram">
                 <i class="fab fa-instagram"></i>
             </a>
-            <a href="tel:954-260-9327" title="Phone">
+            <a href="tel:954-260-9327" title="Phone" aria-label="Phone">
                 <i class="fas fa-phone"></i>
             </a>
-            <a href="https://cash.app/$maz7166" target="_blank" title="Cash App">
+            <a href="https://cash.app/$maz7166" target="_blank" rel="noopener noreferrer" title="Cash App" aria-label="Cash App">
                 <i class="fas fa-money-bill-wave"></i>
             </a>
         </div>
@@ -1100,16 +1445,47 @@
         <p class="copyright">© 2026 You Became The Money. All rights reserved. | Daniel Garcia</p>
     </footer>
 
-    <!-- Hidden SoundCloud Player -->
-    <iframe id="scPlayer" scrolling="no" frameborder="no" allow="autoplay" 
+    <!-- Error Message -->
+    <div class="error-message" id="errorMessage"></div>
+
+    <!-- Hidden SoundCloud Widget -->
+    <iframe id="scWidget" scrolling="no" frameborder="no" allow="autoplay" 
         src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2263815089&color=%23d4af37&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false">
     </iframe>
 
-    <!-- Music Player Button Only -->
-    <div class="music-player">
-        <button class="play-btn" id="playBtn" onclick="toggleMusic()">
-            <i class="fas fa-play" id="playIcon"></i>
-        </button>
+    <!-- Enhanced Music Player -->
+    <div class="music-player" id="musicPlayer">
+        <div class="player-main">
+            <button class="play-btn" id="playBtn" aria-label="Play/Pause">
+                <i class="fas fa-play" id="playIcon"></i>
+            </button>
+            <div class="player-info">
+                <div class="track-name" id="trackName">You Became The Money</div>
+                <div class="track-artist" id="trackArtist">Loading...</div>
+            </div>
+            <button class="expand-btn" id="expandBtn" aria-label="Expand player">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+        <div class="player-expanded">
+            <div class="player-controls">
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="time-display">
+                    <span id="currentTime">0:00</span>
+                    <span id="duration">0:00</span>
+                </div>
+                <div class="volume-container">
+                    <button class="volume-btn" id="volumeBtn" aria-label="Mute/Unmute">
+                        <i class="fas fa-volume-up" id="volumeIcon"></i>
+                    </button>
+                    <div class="volume-slider" id="volumeSlider">
+                        <div class="volume-fill" id="volumeFill"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- ElevenLabs Convai Widget -->
@@ -1117,7 +1493,18 @@
     <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 
     <script>
-        // Generate gold particles
+        // ============================================
+        // LOADING OVERLAY
+        // ============================================
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+            }, 1500);
+        });
+
+        // ============================================
+        // PARTICLES ANIMATION
+        // ============================================
         const particlesContainer = document.getElementById('particles');
         for (let i = 0; i < 50; i++) {
             const particle = document.createElement('div');
@@ -1128,29 +1515,266 @@
             particlesContainer.appendChild(particle);
         }
 
-        // Music Player Toggle using hidden SoundCloud iframe
-        let isPlaying = false;
-        const scPlayer = document.getElementById('scPlayer');
-        const playBtn = document.getElementById('playBtn');
-        const playIcon = document.getElementById('playIcon');
+        // ============================================
+        // MOBILE MENU
+        // ============================================
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileNav = document.getElementById('mobileNav');
+        const overlay = document.getElementById('overlay');
 
-        function toggleMusic() {
-            isPlaying = !isPlaying;
-            
-            if (isPlaying) {
-                // Reload iframe with autoplay enabled
-                scPlayer.src = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2263815089&color=%23d4af37&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false";
-                playBtn.classList.add('playing');
-                playIcon.className = 'fas fa-pause';
-            } else {
-                // Reload iframe with autoplay disabled (stops music)
-                scPlayer.src = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2263815089&color=%23d4af37&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false";
-                playBtn.classList.remove('playing');
-                playIcon.className = 'fas fa-play';
-            }
+        function openMobileMenu() {
+            mobileNav.classList.add('active');
+            overlay.classList.add('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
+            document.body.style.overflow = 'hidden';
         }
 
-        // Scroll animations
+        function closeMobileMenu() {
+            mobileNav.classList.remove('active');
+            overlay.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            document.body.style.overflow = '';
+        }
+
+        mobileMenuBtn.addEventListener('click', () => {
+            if (mobileNav.classList.contains('active')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        });
+
+        overlay.addEventListener('click', closeMobileMenu);
+
+        // Close mobile menu when clicking on links
+        document.querySelectorAll('.mobile-nav a').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        // ============================================
+        // ENHANCED MUSIC PLAYER WITH SOUNDCLOUD API
+        // ============================================
+        const MusicPlayer = {
+            widget: null,
+            isPlaying: false,
+            isReady: false,
+            currentVolume: 70,
+            isMuted: false,
+            duration: 0,
+            currentPosition: 0,
+            trackInfo: null,
+
+            // DOM Elements
+            elements: {
+                iframe: document.getElementById('scWidget'),
+                playBtn: document.getElementById('playBtn'),
+                playIcon: document.getElementById('playIcon'),
+                trackName: document.getElementById('trackName'),
+                trackArtist: document.getElementById('trackArtist'),
+                progressBar: document.getElementById('progressBar'),
+                progressContainer: document.getElementById('progressContainer'),
+                currentTime: document.getElementById('currentTime'),
+                duration: document.getElementById('duration'),
+                volumeBtn: document.getElementById('volumeBtn'),
+                volumeIcon: document.getElementById('volumeIcon'),
+                volumeSlider: document.getElementById('volumeSlider'),
+                volumeFill: document.getElementById('volumeFill'),
+                expandBtn: document.getElementById('expandBtn'),
+                player: document.getElementById('musicPlayer'),
+                errorMessage: document.getElementById('errorMessage')
+            },
+
+            init() {
+                // Load SoundCloud Widget API
+                this.loadSCAPI().then(() => {
+                    this.setupWidget();
+                }).catch(err => {
+                    console.error('Failed to load SoundCloud API:', err);
+                    this.showError('Music player temporarily unavailable');
+                    this.elements.trackArtist.textContent = 'Unavailable';
+                });
+
+                this.bindEvents();
+            },
+
+            loadSCAPI() {
+                return new Promise((resolve, reject) => {
+                    if (window.SC && window.SC.Widget) {
+                        resolve();
+                        return;
+                    }
+
+                    const script = document.createElement('script');
+                    script.src = 'https://w.soundcloud.com/player/api.js';
+                    script.async = true;
+                    script.onload = () => resolve();
+                    script.onerror = () => reject(new Error('Failed to load SoundCloud API'));
+                    document.head.appendChild(script);
+                });
+            },
+
+            setupWidget() {
+                try {
+                    this.widget = SC.Widget(this.elements.iframe);
+                    
+                    this.widget.bind(SC.Widget.Events.READY, () => {
+                        this.isReady = true;
+                        this.widget.getDuration((duration) => {
+                            this.duration = duration;
+                            this.elements.duration.textContent = this.formatTime(duration);
+                        });
+                        this.widget.getCurrentSound((sound) => {
+                            if (sound) {
+                                this.trackInfo = sound;
+                                this.elements.trackName.textContent = sound.title || 'You Became The Money';
+                                this.elements.trackArtist.textContent = sound.user ? sound.user.username : 'Daniel Garcia';
+                            } else {
+                                this.elements.trackArtist.textContent = 'Daniel Garcia';
+                            }
+                        });
+                        this.widget.setVolume(this.currentVolume);
+                        this.startProgressTracking();
+                    });
+
+                    this.widget.bind(SC.Widget.Events.PLAY, () => {
+                        this.isPlaying = true;
+                        this.updatePlayButton();
+                    });
+
+                    this.widget.bind(SC.Widget.Events.PAUSE, () => {
+                        this.isPlaying = false;
+                        this.updatePlayButton();
+                    });
+
+                    this.widget.bind(SC.Widget.Events.FINISH, () => {
+                        this.isPlaying = false;
+                        this.updatePlayButton();
+                        this.elements.progressBar.style.width = '0%';
+                        this.elements.currentTime.textContent = '0:00';
+                    });
+
+                    this.widget.bind(SC.Widget.Events.ERROR, (error) => {
+                        console.error('SoundCloud Widget Error:', error);
+                        this.showError('Failed to load audio. Please try again.');
+                        this.isPlaying = false;
+                        this.updatePlayButton();
+                    });
+
+                } catch (error) {
+                    console.error('Error setting up widget:', error);
+                    this.elements.trackArtist.textContent = 'Unavailable';
+                }
+            },
+
+            bindEvents() {
+                // Play/Pause
+                this.elements.playBtn.addEventListener('click', () => this.togglePlay());
+
+                // Progress bar click
+                this.elements.progressContainer.addEventListener('click', (e) => {
+                    if (!this.isReady) return;
+                    const rect = this.elements.progressContainer.getBoundingClientRect();
+                    const percent = (e.clientX - rect.left) / rect.width;
+                    const seekTime = percent * this.duration;
+                    this.widget.seekTo(seekTime);
+                });
+
+                // Volume
+                this.elements.volumeSlider.addEventListener('click', (e) => {
+                    if (!this.isReady) return;
+                    const rect = this.elements.volumeSlider.getBoundingClientRect();
+                    const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                    this.setVolume(percent * 100);
+                });
+
+                this.elements.volumeBtn.addEventListener('click', () => this.toggleMute());
+
+                // Expand/Collapse
+                this.elements.expandBtn.addEventListener('click', () => {
+                    this.elements.player.classList.toggle('expanded');
+                });
+            },
+
+            togglePlay() {
+                if (!this.isReady) {
+                    this.showError('Player is loading, please wait...');
+                    return;
+                }
+                this.widget.toggle();
+            },
+
+            updatePlayButton() {
+                if (this.isPlaying) {
+                    this.elements.playBtn.classList.add('playing');
+                    this.elements.playIcon.className = 'fas fa-pause';
+                } else {
+                    this.elements.playBtn.classList.remove('playing');
+                    this.elements.playIcon.className = 'fas fa-play';
+                }
+            },
+
+            setVolume(value) {
+                this.currentVolume = value;
+                this.widget.setVolume(value);
+                this.elements.volumeFill.style.width = value + '%';
+                
+                // Update volume icon
+                if (value === 0) {
+                    this.elements.volumeIcon.className = 'fas fa-volume-off';
+                } else if (value < 50) {
+                    this.elements.volumeIcon.className = 'fas fa-volume-down';
+                } else {
+                    this.elements.volumeIcon.className = 'fas fa-volume-up';
+                }
+                
+                this.isMuted = value === 0;
+            },
+
+            toggleMute() {
+                if (this.isMuted) {
+                    this.setVolume(70);
+                } else {
+                    this.setVolume(0);
+                }
+            },
+
+            startProgressTracking() {
+                const updateProgress = () => {
+                    if (this.isPlaying && this.isReady) {
+                        this.widget.getPosition((position) => {
+                            this.currentPosition = position;
+                            const percent = this.duration > 0 ? (position / this.duration) * 100 : 0;
+                            this.elements.progressBar.style.width = percent + '%';
+                            this.elements.currentTime.textContent = this.formatTime(position);
+                        });
+                    }
+                    requestAnimationFrame(updateProgress);
+                };
+                updateProgress();
+            },
+
+            formatTime(ms) {
+                const totalSeconds = Math.floor(ms / 1000);
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            },
+
+            showError(message) {
+                this.elements.errorMessage.textContent = message;
+                this.elements.errorMessage.classList.add('show');
+                setTimeout(() => {
+                    this.elements.errorMessage.classList.remove('show');
+                }, 4000);
+            }
+        };
+
+        // Initialize music player
+        MusicPlayer.init();
+
+        // ============================================
+        // SCROLL ANIMATIONS
+        // ============================================
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -1166,7 +1790,9 @@
 
         document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-        // Smooth scroll
+        // ============================================
+        // SMOOTH SCROLL
+        // ============================================
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -1180,7 +1806,9 @@
             });
         });
 
-        // Navbar scroll effect
+        // ============================================
+        // NAVBAR SCROLL EFFECT
+        // ============================================
         let lastScroll = 0;
         window.addEventListener('scroll', () => {
             const nav = document.querySelector('nav');
@@ -1193,6 +1821,21 @@
             }
             
             lastScroll = currentScroll;
+        });
+
+        // ============================================
+        // KEYBOARD SHORTCUTS
+        // ============================================
+        document.addEventListener('keydown', (e) => {
+            // Spacebar to toggle play (when not typing in an input)
+            if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                MusicPlayer.togglePlay();
+            }
+            // M key to mute
+            if (e.code === 'KeyM' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                MusicPlayer.toggleMute();
+            }
         });
     </script>
 </body>
