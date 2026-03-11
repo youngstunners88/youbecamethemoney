@@ -1136,116 +1136,6 @@
             0% { width: 0%; }
             100% { width: 100%; }
         }
-
-        /* Appointments Section */
-        .appointments-section {
-            background: linear-gradient(180deg, var(--navy-light) 0%, var(--navy) 100%);
-        }
-
-        .appointments-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
-        }
-
-        .pricing-card {
-            background: rgba(26, 31, 58, 0.8);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 15px;
-            padding: 2.5rem;
-            text-align: center;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .pricing-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--gold);
-            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.1);
-        }
-
-        .pricing-card.featured {
-            border-color: var(--gold);
-            transform: scale(1.05);
-        }
-
-        .pricing-card.featured:hover {
-            transform: scale(1.05) translateY(-10px);
-        }
-
-        .pricing-badge {
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--gold);
-            color: var(--navy);
-            padding: 0.5rem 1.5rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .pricing-header h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            color: var(--white);
-        }
-
-        .price {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--gold);
-            margin-bottom: 0.5rem;
-        }
-
-        .pricing-header p {
-            color: var(--gray);
-            font-size: 1rem;
-        }
-
-        .pricing-features {
-            list-style: none;
-            margin: 2rem 0;
-            padding: 0;
-        }
-
-        .pricing-features li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
-            color: var(--gray);
-        }
-
-        .pricing-features li:last-child {
-            border-bottom: none;
-        }
-
-        .calendly-container {
-            background: rgba(26, 31, 58, 0.8);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 15px;
-            padding: 2rem;
-            margin-top: 3rem;
-        }
-
-        @media (max-width: 768px) {
-            .pricing-card.featured {
-                transform: scale(1);
-            }
-            
-            .pricing-card.featured:hover {
-                transform: scale(1) translateY(-10px);
-            }
-        }
     </style>
 </head>
 <body>
@@ -1273,7 +1163,6 @@
             <li><a href="#home">Home</a></li>
             <li><a href="#books">Library</a></li>
             <li><a href="#expertise">Expertise</a></li>
-            <li><a href="#appointments">Appointments</a></li>
             <li><a href="#contact">Connect</a></li>
         </ul>
         <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
@@ -1287,7 +1176,6 @@
         <a href="#home">Home</a>
         <a href="#books">Library</a>
         <a href="#expertise">Expertise</a>
-        <a href="#appointments">Appointments</a>
         <a href="#contact">Connect</a>
     </div>
 
@@ -1523,74 +1411,6 @@
                 "We go from being their goods to GODS..."
             </p>
             <p style="color: var(--gray); margin-top: 1rem; font-size: 0.9rem;">— Daniel Garcia</p>
-        </div>
-    </section>
-
-    <!-- Appointments Section -->
-    <section class="appointments-section" id="appointments">
-        <div class="section-header fade-in">
-            <h2>Book Your Consultation</h2>
-            <div class="gold-line"></div>
-            <p>Schedule 1-on-1 time with Daniel Garcia. Get personalized guidance on banking law, SBLC, insurance wraps, and your path to financial sovereignty.</p>
-        </div>
-
-        <div class="appointments-container">
-            <!-- Pricing Cards -->
-            <div class="pricing-grid">
-                <div class="pricing-card fade-in">
-                    <div class="pricing-header">
-                        <h3>Strategy Call</h3>
-                        <div class="price">$297</div>
-                        <p>60-minute session</p>
-                    </div>
-                    <ul class="pricing-features">
-                        <li>Initial assessment</li>
-                        <li>Strategic roadmap</li>
-                        <li>Next steps clarity</li>
-                        <li>Email summary</li>
-                    </ul>
-                    <a href="#calendly" class="btn btn-primary">Book Now</a>
-                </div>
-
-                <div class="pricing-card featured fade-in">
-                    <div class="pricing-badge">Most Popular</div>
-                    <div class="pricing-header">
-                        <h3>Deep Dive</h3>
-                        <div class="price">$497</div>
-                        <p>90-minute intensive</p>
-                    </div>
-                    <ul class="pricing-features">
-                        <li>Comprehensive review</li>
-                        <li>Document analysis</li>
-                        <li>Custom strategy</li>
-                        <li>30-day follow-up</li>
-                        <li>Priority support</li>
-                    </ul>
-                    <a href="#calendly" class="btn btn-primary">Book Now</a>
-                </div>
-
-                <div class="pricing-card fade-in">
-                    <div class="pricing-header">
-                        <h3>Monthly Retainer</h3>
-                        <div class="price">$1,500</div>
-                        <p>Ongoing guidance</p>
-                    </div>
-                    <ul class="pricing-features">
-                        <li>4 sessions/month</li>
-                        <li>Unlimited email</li>
-                        <li>Document review</li>
-                        <li>Strategy updates</li>
-                        <li>VIP access</li>
-                    </ul>
-                    <a href="#calendly" class="btn btn-primary">Book Now</a>
-                </div>
-            </div>
-
-            <!-- Calendly Embed -->
-            <div class="calendly-container fade-in" id="calendly">
-                <div class="calendly-inline-widget" data-url="https://calendly.com/danielgarcia-youbecamethemoney/30min" style="min-width:320px;height:700px;"></div>
-                <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
-            </div>
         </div>
     </section>
 
