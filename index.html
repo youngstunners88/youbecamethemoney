@@ -362,22 +362,213 @@
         }
         /* Music Player */
         .music-player {
-            position: fixed; bottom: 20px; left: 20px; z-index: 9999;
-            display: flex; align-items: center; gap: 12px;
-            background: rgba(10, 14, 39, 0.95); backdrop-filter: blur(20px);
-            padding: 12px 16px; border-radius: 50px;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 12px 16px;
+            border-radius: 50px;
             border: 1px solid rgba(212, 175, 55, 0.3);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            max-width: 320px;
+        }
+        .music-player:hover {
+            border-color: var(--gold);
+            box-shadow: 0 6px 30px rgba(212, 175, 55, 0.2);
+        }
+        .player-main {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         .play-btn {
-            width: 45px; height: 45px;
+            width: 50px;
+            height: 50px;
             background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
-            border: none; border-radius: 50%; color: var(--navy);
-            font-size: 1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            border: none;
+            border-radius: 50%;
+            color: var(--navy);
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
-        .player-info { flex: 1; }
-        .track-name { font-size: 0.8rem; font-weight: 600; color: var(--papyrus); }
-        .track-artist { font-size: 0.7rem; color: rgba(244, 228, 193, 0.6); }
+        .play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
+        }
+        .play-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .play-btn.playing {
+            animation: pulse-gold 2s infinite;
+        }
+        @keyframes pulse-gold {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
+            50% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
+        }
+        .player-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .track-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--papyrus);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
+        }
+        .track-artist {
+            font-size: 0.75rem;
+            color: rgba(244, 228, 193, 0.6);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .player-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 100%;
+        }
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(212, 175, 55, 0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.65rem;
+            color: rgba(244, 228, 193, 0.6);
+            margin-top: 2px;
+        }
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .volume-btn {
+            background: none;
+            border: none;
+            color: var(--gold);
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0.3s;
+        }
+        .volume-btn:hover {
+            color: var(--gold-light);
+        }
+        .volume-slider {
+            width: 60px;
+            height: 4px;
+            background: rgba(212, 175, 55, 0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+        .volume-fill {
+            height: 100%;
+            background: var(--gold);
+            border-radius: 2px;
+            width: 70%;
+        }
+        .player-expanded {
+            display: none;
+            width: 100%;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        .music-player.expanded {
+            border-radius: 20px;
+            flex-wrap: wrap;
+        }
+        .music-player.expanded .player-expanded {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .expand-btn {
+            background: none;
+            border: none;
+            color: var(--gold);
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 4px;
+            transition: transform 0.3s;
+        }
+        .music-player.expanded .expand-btn {
+            transform: rotate(180deg);
+        }
+        .error-message {
+            position: fixed;
+            bottom: 100px;
+            left: 20px;
+            background: rgba(231, 76, 60, 0.9);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            z-index: 10000;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+        .error-message.show {
+            display: block;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Loading spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        /* Hidden SoundCloud iframe */
+        #scWidget {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: none;
+            opacity: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
         /* ElevenLabs Widget */
         elevenlabs-convai {
             position: fixed;
@@ -671,16 +862,43 @@
         <p class="copyright">© 2026 You Became The Money. All rights reserved. | Daniel Garcia</p>
     </footer>
 
-    <div class="music-player">
-        <button class="play-btn" id="playBtn"><i class="fas fa-play"></i></button>
-        <div class="player-info">
-            <div class="track-name">You Became The Money</div>
-            <div class="track-artist">Daniel Garcia</div>
+    <div class="music-player" id="musicPlayer">
+        <div class="player-main">
+            <button class="play-btn" id="playBtn" aria-label="Play/Pause">
+                <i class="fas fa-play" id="playIcon"></i>
+            </button>
+            <div class="player-info">
+                <div class="track-name" id="trackName">You Became The Money</div>
+                <div class="track-artist" id="trackArtist">Loading...</div>
+            </div>
+            <button class="expand-btn" id="expandBtn" aria-label="Expand player">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+        <div class="player-expanded">
+            <div class="player-controls">
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="time-display">
+                    <span id="currentTime">0:00</span>
+                    <span id="duration">0:00</span>
+                </div>
+                <div class="volume-container">
+                    <button class="volume-btn" id="volumeBtn" aria-label="Mute/Unmute">
+                        <i class="fas fa-volume-up" id="volumeIcon"></i>
+                    </button>
+                    <div class="volume-slider" id="volumeSlider">
+                        <div class="volume-fill" id="volumeFill"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <div class="error-message" id="errorMessage"></div>
 
-    <iframe id="scWidget" style="display:none;" scrolling="no" frameborder="no" 
-        src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2263815089&color=%23d4af37&auto_play=false">
+    <iframe id="scWidget" scrolling="no" frameborder="no" allow="autoplay" 
+        src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2263815089&color=%23d4af37&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false">
     </iframe>
 
     <script>
@@ -717,22 +935,211 @@
         });
 
         // Music Player
-        let widget, isPlaying = false;
-        document.getElementById('playBtn').addEventListener('click', () => {
-            if (!widget) {
-                const script = document.createElement('script');
-                script.src = 'https://w.soundcloud.com/player/api.js';
-                script.onload = () => {
-                    widget = SC.Widget(document.getElementById('scWidget'));
-                    widget.toggle();
+        const MusicPlayer = {
+            widget: null,
+            isPlaying: false,
+            isReady: false,
+            currentVolume: 70,
+            isMuted: false,
+            duration: 0,
+            currentPosition: 0,
+            trackInfo: null,
+
+            elements: {
+                iframe: document.getElementById('scWidget'),
+                playBtn: document.getElementById('playBtn'),
+                playIcon: document.getElementById('playIcon'),
+                trackName: document.getElementById('trackName'),
+                trackArtist: document.getElementById('trackArtist'),
+                progressBar: document.getElementById('progressBar'),
+                progressContainer: document.getElementById('progressContainer'),
+                currentTime: document.getElementById('currentTime'),
+                duration: document.getElementById('duration'),
+                volumeBtn: document.getElementById('volumeBtn'),
+                volumeIcon: document.getElementById('volumeIcon'),
+                volumeSlider: document.getElementById('volumeSlider'),
+                volumeFill: document.getElementById('volumeFill'),
+                expandBtn: document.getElementById('expandBtn'),
+                player: document.getElementById('musicPlayer'),
+                errorMessage: document.getElementById('errorMessage')
+            },
+
+            init() {
+                this.loadSCAPI().then(() => {
+                    this.setupWidget();
+                }).catch(err => {
+                    console.error('Failed to load SoundCloud API:', err);
+                    this.showError('Music player temporarily unavailable');
+                    this.elements.trackArtist.textContent = 'Unavailable';
+                });
+                this.bindEvents();
+            },
+
+            loadSCAPI() {
+                return new Promise((resolve, reject) => {
+                    if (window.SC && window.SC.Widget) {
+                        resolve();
+                        return;
+                    }
+                    const script = document.createElement('script');
+                    script.src = 'https://w.soundcloud.com/player/api.js';
+                    script.async = true;
+                    script.onload = () => resolve();
+                    script.onerror = () => reject(new Error('Failed to load SoundCloud API'));
+                    document.head.appendChild(script);
+                });
+            },
+
+            setupWidget() {
+                try {
+                    this.widget = SC.Widget(this.elements.iframe);
+                    
+                    this.widget.bind(SC.Widget.Events.READY, () => {
+                        this.isReady = true;
+                        this.widget.getDuration((duration) => {
+                            this.duration = duration;
+                            this.elements.duration.textContent = this.formatTime(duration);
+                        });
+                        this.widget.getCurrentSound((sound) => {
+                            if (sound) {
+                                this.trackInfo = sound;
+                                this.elements.trackName.textContent = sound.title || 'You Became The Money';
+                                this.elements.trackArtist.textContent = sound.user ? sound.user.username : 'Daniel Garcia';
+                            } else {
+                                this.elements.trackArtist.textContent = 'Daniel Garcia';
+                            }
+                        });
+                        this.widget.setVolume(this.currentVolume);
+                        this.startProgressTracking();
+                    });
+
+                    this.widget.bind(SC.Widget.Events.PLAY, () => {
+                        this.isPlaying = true;
+                        this.updatePlayButton();
+                    });
+
+                    this.widget.bind(SC.Widget.Events.PAUSE, () => {
+                        this.isPlaying = false;
+                        this.updatePlayButton();
+                    });
+
+                    this.widget.bind(SC.Widget.Events.FINISH, () => {
+                        this.isPlaying = false;
+                        this.updatePlayButton();
+                        this.elements.progressBar.style.width = '0%';
+                        this.elements.currentTime.textContent = '0:00';
+                    });
+
+                    this.widget.bind(SC.Widget.Events.ERROR, (error) => {
+                        console.error('SoundCloud Widget Error:', error);
+                        this.showError('Failed to load audio. Please try again.');
+                        this.isPlaying = false;
+                        this.updatePlayButton();
+                    });
+
+                } catch (error) {
+                    console.error('Error setting up widget:', error);
+                    this.elements.trackArtist.textContent = 'Unavailable';
+                }
+            },
+
+            bindEvents() {
+                this.elements.playBtn.addEventListener('click', () => this.togglePlay());
+
+                this.elements.progressContainer.addEventListener('click', (e) => {
+                    if (!this.isReady) return;
+                    const rect = this.elements.progressContainer.getBoundingClientRect();
+                    const percent = (e.clientX - rect.left) / rect.width;
+                    const seekTime = percent * this.duration;
+                    this.widget.seekTo(seekTime);
+                });
+
+                this.elements.volumeSlider.addEventListener('click', (e) => {
+                    if (!this.isReady) return;
+                    const rect = this.elements.volumeSlider.getBoundingClientRect();
+                    const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                    this.setVolume(percent * 100);
+                });
+
+                this.elements.volumeBtn.addEventListener('click', () => this.toggleMute());
+
+                this.elements.expandBtn.addEventListener('click', () => {
+                    this.elements.player.classList.toggle('expanded');
+                });
+            },
+
+            togglePlay() {
+                if (!this.isReady) {
+                    this.showError('Player is loading, please wait...');
+                    return;
+                }
+                this.widget.toggle();
+            },
+
+            updatePlayButton() {
+                if (this.isPlaying) {
+                    this.elements.playBtn.classList.add('playing');
+                    this.elements.playIcon.className = 'fas fa-pause';
+                } else {
+                    this.elements.playBtn.classList.remove('playing');
+                    this.elements.playIcon.className = 'fas fa-play';
+                }
+            },
+
+            setVolume(value) {
+                this.currentVolume = value;
+                this.widget.setVolume(value);
+                this.elements.volumeFill.style.width = value + '%';
+                if (value === 0) {
+                    this.elements.volumeIcon.className = 'fas fa-volume-off';
+                } else if (value < 50) {
+                    this.elements.volumeIcon.className = 'fas fa-volume-down';
+                } else {
+                    this.elements.volumeIcon.className = 'fas fa-volume-up';
+                }
+                this.isMuted = value === 0;
+            },
+
+            toggleMute() {
+                if (this.isMuted) {
+                    this.setVolume(70);
+                } else {
+                    this.setVolume(0);
+                }
+            },
+
+            startProgressTracking() {
+                const updateProgress = () => {
+                    if (this.isPlaying && this.isReady) {
+                        this.widget.getPosition((position) => {
+                            this.currentPosition = position;
+                            const percent = this.duration > 0 ? (position / this.duration) * 100 : 0;
+                            this.elements.progressBar.style.width = percent + '%';
+                            this.elements.currentTime.textContent = this.formatTime(position);
+                        });
+                    }
+                    requestAnimationFrame(updateProgress);
                 };
-                document.head.appendChild(script);
-            } else {
-                widget.toggle();
+                updateProgress();
+            },
+
+            formatTime(ms) {
+                const totalSeconds = Math.floor(ms / 1000);
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            },
+
+            showError(message) {
+                this.elements.errorMessage.textContent = message;
+                this.elements.errorMessage.classList.add('show');
+                setTimeout(() => {
+                    this.elements.errorMessage.classList.remove('show');
+                }, 4000);
             }
-            isPlaying = !isPlaying;
-            document.getElementById('playBtn').innerHTML = isPlaying ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
-        });
+        };
+
+        MusicPlayer.init();
     </script>
     <!-- ElevenLabs Convai Widget -->
     <elevenlabs-convai agent-id="agent_2401kh49ezxaef3tqynwkb1pyp22"></elevenlabs-convai>
