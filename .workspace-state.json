@@ -1,0 +1,52 @@
+{
+  "version": "1.0.0",
+  "foundation_date": "2026-04-09",
+  "status": "LOCKED",
+  "project": "You Became The Money",
+  "client": "Mr. Garcia",
+  "files": {
+    "index.html": {
+      "lines": 1149,
+      "locked": true,
+      "sections": ["nav", "hero", "services", "books", "ebook", "expertise", "contact", "footer"]
+    },
+    "about.html": {
+      "lines": null,
+      "locked": true,
+      "sections": ["nav", "hero", "founders", "footer"]
+    }
+  },
+  "theme": {
+    "name": "Egyptian/Kemet",
+    "locked": true,
+    "fonts": ["Cinzel", "Cormorant Garamond"],
+    "colors": {
+      "navy": "#0a0e27",
+      "gold": "#d4af37",
+      "papyrus": "#f4e4c1",
+      "charcoal": "#0a0a0a"
+    }
+  },
+  "integrations": {
+    "elevenlabs": {
+      "agent_id": "agent_2401kh49ezxaef3tqynwkb1pyp22",
+      "position": "bottom-right",
+      "locked": true
+    },
+    "soundcloud": {
+      "track_id": "2263815089",
+      "position": "bottom-left",
+      "locked": true
+    }
+  },
+  "books": {
+    "amazon_count": 8,
+    "free_ebook": true,
+    "ebook_standalone": true,
+    "locked": true
+  },
+  "navigation": {
+    "items": ["Home", "Services", "Library", "About Us", "Connect"],
+    "locked": true
+  }
+}

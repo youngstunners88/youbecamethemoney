@@ -1,0 +1,29 @@
+{
+  "name": "YBTM Workspace",
+  "version": "1.0.0",
+  "type": "static-website",
+  "theme": "egyptian-kemet",
+  "structure": {
+    "locked": true,
+    "modular": true,
+    "extracted_assets": true
+  },
+  "optimization": {
+    "token_efficiency": "high",
+    "component_registry": true,
+    "state_management": true,
+    "hot_reload": false
+  },
+  "editor": {
+    "preferred_mode": "precise_line_edits",
+    "avoid": ["full_file_rewrites", "structural_changes"],
+    "confirm_before": ["font_changes", "color_changes", "layout_changes"]
+  },
+  "commands": {
+    "check_state": "cat .workspace-state.json",
+    "view_component": "sed -n 'START,ENDp' index.html",
+    "find_component": "grep -n 'section.*id=\"COMPONENT\"' index.html",
+    "list_assets": "ls -la assets/",
+    "validate_theme": "grep -E 'Cinzel|Cormorant' index.html | head -1"
+  }
+}
