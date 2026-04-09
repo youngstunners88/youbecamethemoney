@@ -6,7 +6,7 @@
   "client": "Mr. Garcia",
   "files": {
     "index.html": {
-      "lines": 1149,
+      "lines": 1245,
       "locked": true,
       "sections": ["nav", "hero", "services", "books", "ebook", "expertise", "contact", "footer"]
     },
