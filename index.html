@@ -378,6 +378,13 @@
         .player-info { flex: 1; }
         .track-name { font-size: 0.8rem; font-weight: 600; color: var(--papyrus); }
         .track-artist { font-size: 0.7rem; color: rgba(244, 228, 193, 0.6); }
+        /* ElevenLabs Widget */
+        elevenlabs-convai {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            z-index: 9998;
+        }
         /* Responsive */
         @media (max-width: 768px) {
             .nav-links { display: none; }
@@ -727,5 +734,8 @@
             document.getElementById('playBtn').innerHTML = isPlaying ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
         });
     </script>
+    <!-- ElevenLabs Convai Widget -->
+    <elevenlabs-convai agent-id="agent_2401kh49ezxaef3tqynwkb1pyp22"></elevenlabs-convai>
+    <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 </body>
 </html>
