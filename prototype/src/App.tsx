@@ -1,16 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LiveLeads from './components/LiveLeads';
 import Pipeline from './components/Pipeline';
 import Metrics from './components/Metrics';
 import VoiceCommand from './components/VoiceCommand';
 import CaseDetail from './components/CaseDetail';
+import CommandCenter from './components/CommandCenter';
+import ContactSheet from './components/ContactSheet';
+import { mockHermesAPI } from './api/mockHermes';
 import type { Lead } from './types';
 
-type Tab = 'leads' | 'pipeline' | 'metrics' | 'voice';
+type Tab = 'leads' | 'pipeline' | 'metrics' | 'voice' | 'admin';
 
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>('leads');
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [leads, setLeads] = useState<Lead[]>([]);
+
+  useEffect(() => {
+    loadLeads();
+  }, []);
+
+  const loadLeads = async () => {
+    const data = await mockHermesAPI.getLeads();
+    setLeads(data);
+  };
 
   const tabs: { id: Tab; label: string }[] = [
     { id: 'leads', label: 'Live Leads' },
@@ -50,6 +63,15 @@ function App() {
                 Online
               </p>
             </div>
+            <button
+              onClick={() => {
+                setActiveTab('admin');
+                setSelectedLead(null);
+              }}
+              className="px-4 py-2 bg-gold/20 hover:bg-gold/30 text-gold font-semibold rounded-lg transition-colors text-sm"
+            >
+              ⚙️ Admin
+            </button>
             <div className="w-8 h-8 bg-navy-700 rounded-full flex items-center justify-center">
               <span className="text-gold font-semibold">DG</span>
             </div>
@@ -89,14 +111,19 @@ function App() {
           <Pipeline onSelectLead={handleSelectLead} />
         ) : activeTab === 'metrics' ? (
           <Metrics />
-        ) : (
+        ) : activeTab === 'voice' ? (
           <VoiceCommand />
-        )}
+        ) : activeTab === 'admin' ? (
+          <CommandCenter leads={leads} />
+        ) : null}
       </main>
 
+      {/* Contact Sheet Footer */}
+      <ContactSheet leads={leads} />
+
       {/* Footer */}
-      <footer className="bg-navy-800 border-t border-gold/10 px-6 py-4 mt-8">
-        <div className="flex items-center justify-between text-xs text-gray-500">
+      <footer className="bg-navy-800 border-t border-gold/10 px-6 py-4 text-xs text-gray-500">
+        <div className="flex items-center justify-between">
           <p>Prototype Phase • Wednesday Demo Ready</p>
           <p>Powered by Hermes Agent • Self-Hosted</p>
         </div>
