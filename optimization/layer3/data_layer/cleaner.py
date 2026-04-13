@@ -1,113 +1,85 @@
-"""
-Data Cleaner: Formats messy data for analysis.
-"""
+"""Data cleaning and normalization."""
 
-from typing import List
 import logging
+from typing import List, Dict, Tuple
 
 logger = logging.getLogger(__name__)
 
-
 class DataCleaner:
-    """Clean and normalize call and outcome data."""
+    """Normalize and validate data from collectors."""
 
-    def clean_calls(self, calls: List[dict]) -> List[dict]:
-        """Normalize call records."""
+    VALID_TEMPERATURES = ["hot", "warm", "luke", "cold"]
+    VALID_SOURCES = ["web", "sms", "telegram", "discord", "organic"]
+    VALID_OUTCOMES = ["completed", "failed", "pending"]
+
+    def clean_calls(self, calls: List) -> Tuple[List[Dict], int]:
+        """Clean and normalize call records."""
         cleaned = []
+        errors = 0
 
         for call in calls:
             try:
                 cleaned_call = {
-                    "id": call.get("id", "unknown"),
-                    "lead_id": call.get("lead_id", "unknown"),
-                    "timestamp": call.get("timestamp", ""),
-                    "duration_seconds": int(call.get("duration_seconds", 0)),
-                    "lead_temperature": self._normalize_temp(call.get("lead_temperature", "luke")),
-                    "lead_source": self._normalize_source(call.get("lead_source", "unknown")),
-                    "service_type": call.get("service_type", "Unknown"),
-                    "transcript": call.get("transcript", ""),
-                    "outcome": self._normalize_outcome(call.get("outcome", "failed")),
-                    "agent_sentiment_score": self._clamp_score(call.get("agent_sentiment_score", 0.5)),
-                    "prospect_sentiment_score": self._clamp_score(call.get("prospect_sentiment_score", 0.5)),
+                    "call_id": str(call.call_id),
+                    "timestamp": str(call.timestamp),
+                    "duration_seconds": max(0, int(call.duration_seconds or 0)),
+                    "temperature": self._normalize_temperature(call.temperature),
+                    "source": self._normalize_source(call.source),
+                    "service_type": str(call.service_type or "inquiry").lower(),
+                    "transcript": str(call.transcript or ""),
+                    "outcome": self._normalize_outcome(call.outcome),
+                    "sentiment_score": self._clamp_sentiment(float(call.sentiment_score or 0.5))
                 }
-
-                # Skip calls with missing critical data
-                if cleaned_call["timestamp"] and cleaned_call["lead_id"]:
-                    cleaned.append(cleaned_call)
-
+                cleaned.append(cleaned_call)
             except Exception as e:
-                logger.warning(f"Skipped invalid call: {e}")
-                continue
+                logger.warning(f"Error cleaning call {call}: {e}")
+                errors += 1
 
-        logger.info(f"Cleaned {len(cleaned)}/{len(calls)} calls")
-        return cleaned
+        logger.info(f"Cleaned {len(cleaned)} calls, {errors} errors")
+        return cleaned, errors
 
-    def clean_outcomes(self, outcomes: List[dict]) -> List[dict]:
-        """Normalize outcome records."""
+    def clean_outcomes(self, outcomes: List[Dict]) -> Tuple[List[Dict], int]:
+        """Clean and normalize outcome records."""
         cleaned = []
+        errors = 0
 
         for outcome in outcomes:
             try:
                 cleaned_outcome = {
-                    "lead_id": outcome.get("lead_id", "unknown"),
-                    "lead_temp_at_call": self._normalize_temp(outcome.get("lead_temp_at_call", "luke")),
-                    "status_before": outcome.get("status_before", "unknown"),
-                    "status_after": outcome.get("status_after", "unknown"),
-                    "case_value": float(outcome.get("case_value", 0)),
-                    "days_to_close": int(outcome.get("days_to_close", 0)),
-                    "service_type": outcome.get("service_type", "Unknown"),
-                    "created_at": outcome.get("created_at", ""),
+                    "lead_id": str(outcome.get("lead_id", "")),
+                    "status": str(outcome.get("status", "in_progress")).lower(),
+                    "case_value": max(0, float(outcome.get("case_value", 0))),
+                    "days_to_close": max(0, int(outcome.get("days_to_close", 0)))
                 }
-
-                if cleaned_outcome["lead_id"]:
-                    cleaned.append(cleaned_outcome)
-
+                cleaned.append(cleaned_outcome)
             except Exception as e:
-                logger.warning(f"Skipped invalid outcome: {e}")
-                continue
+                logger.warning(f"Error cleaning outcome {outcome}: {e}")
+                errors += 1
 
-        logger.info(f"Cleaned {len(cleaned)}/{len(outcomes)} outcomes")
-        return cleaned
+        logger.info(f"Cleaned {len(cleaned)} outcomes, {errors} errors")
+        return cleaned, errors
 
-    @staticmethod
-    def _normalize_temp(temp: str) -> str:
+    def _normalize_temperature(self, temp: str) -> str:
         """Normalize temperature to valid values."""
-        temp = str(temp).lower().strip()
-        if temp in ["hot", "warm", "luke", "cold"]:
-            return temp
-        elif temp in ["very hot", "excellent"]:
-            return "hot"
-        elif temp in ["maybe", "lukewarm"]:
+        if not temp:
             return "luke"
-        else:
-            return "luke"
+        temp_lower = str(temp).lower()
+        return temp_lower if temp_lower in self.VALID_TEMPERATURES else "luke"
 
-    @staticmethod
-    def _normalize_source(source: str) -> str:
-        """Normalize lead source."""
-        source = str(source).lower().strip()
-        valid = ["web", "sms", "telegram", "discord", "organic"]
-        if source in valid:
-            return source
-        else:
-            return "unknown"
+    def _normalize_source(self, source: str) -> str:
+        """Normalize source to valid values."""
+        if not source:
+            return "web"
+        source_lower = str(source).lower()
+        return source_lower if source_lower in self.VALID_SOURCES else "organic"
 
-    @staticmethod
-    def _normalize_outcome(outcome: str) -> str:
-        """Normalize call outcome."""
-        outcome = str(outcome).lower().strip()
-        if outcome in ["completed", "success", "answered"]:
-            return "completed"
-        elif outcome in ["failed", "no_answer", "unanswered"]:
-            return "failed"
-        else:
-            return "unknown"
+    def _normalize_outcome(self, outcome: str) -> str:
+        """Normalize outcome to valid values."""
+        if not outcome:
+            return "pending"
+        outcome_lower = str(outcome).lower()
+        return outcome_lower if outcome_lower in self.VALID_OUTCOMES else "pending"
 
-    @staticmethod
-    def _clamp_score(score) -> float:
-        """Clamp sentiment scores to 0-1."""
-        try:
-            s = float(score)
-            return max(0.0, min(1.0, s))
-        except:
-            return 0.5
+    def _clamp_sentiment(self, score: float) -> float:
+        """Clamp sentiment score to 0-1 range."""
+        return max(0.0, min(1.0, float(score)))

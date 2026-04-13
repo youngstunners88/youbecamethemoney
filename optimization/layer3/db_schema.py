@@ -1,94 +1,86 @@
-"""
-Database schema for Layer 3 insights storage.
+"""Database schema initialization for Layer 3 insights storage."""
 
-Uses SQLite for:
-- Call records
-- Lead outcomes
-- Learned patterns
-- Improvement logs
-"""
+import sqlite3
+import logging
+from pathlib import Path
 
-DB_SCHEMA = """
+logger = logging.getLogger(__name__)
+
+SCHEMA = """
 CREATE TABLE IF NOT EXISTS call_records (
-  id TEXT PRIMARY KEY,
-  lead_id TEXT NOT NULL,
-  timestamp DATETIME NOT NULL,
-  duration_seconds INTEGER,
-  lead_temperature VARCHAR(10),
-  lead_source VARCHAR(20),
-  service_type VARCHAR(50),
-  transcript TEXT,
-  outcome VARCHAR(20),
-  agent_sentiment_score REAL,
-  prospect_sentiment_score REAL,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    call_id TEXT UNIQUE NOT NULL,
+    timestamp TEXT NOT NULL,
+    duration_seconds INTEGER,
+    temperature TEXT,
+    source TEXT,
+    service_type TEXT,
+    transcript TEXT,
+    outcome TEXT,
+    sentiment_score REAL,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS lead_outcomes (
-  id TEXT PRIMARY KEY,
-  lead_id TEXT NOT NULL,
-  lead_temp_at_call VARCHAR(10),
-  status_before VARCHAR(20),
-  status_after VARCHAR(20),
-  case_value DECIMAL(10,2),
-  days_to_close INTEGER,
-  service_type VARCHAR(50),
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    lead_id TEXT UNIQUE NOT NULL,
+    status_before TEXT,
+    status_after TEXT,
+    case_value REAL,
+    days_to_close INTEGER,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS learned_patterns (
-  id TEXT PRIMARY KEY,
-  module VARCHAR(30) NOT NULL,
-  pattern_type VARCHAR(50),
-  pattern_data TEXT,
-  confidence REAL,
-  samples_count INTEGER,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  last_updated DATETIME DEFAULT CURRENT_TIMESTAMP,
-  expires_at DATETIME
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    module_name TEXT NOT NULL,
+    pattern_type TEXT NOT NULL,
+    pattern_data TEXT NOT NULL,
+    confidence REAL,
+    samples_used INTEGER,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    expires_at TEXT
 );
 
 CREATE TABLE IF NOT EXISTS improvement_log (
-  id TEXT PRIMARY KEY,
-  week_number INTEGER,
-  module VARCHAR(30),
-  insight TEXT,
-  action_taken TEXT,
-  impact_metric REAL,
-  impact_confirmed BOOLEAN DEFAULT FALSE,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    week_number INTEGER,
+    cycle_date TEXT,
+    insights_count INTEGER,
+    expected_improvement REAL,
+    expected_improvement_reason TEXT,
+    actions_deployed TEXT,
+    hermes_response TEXT,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS cache (
-  key TEXT PRIMARY KEY,
-  value TEXT,
-  expires_at DATETIME,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    key TEXT PRIMARY KEY,
+    value TEXT,
+    expires_at TEXT
 );
 
--- Indexes for performance
-CREATE INDEX IF NOT EXISTS idx_call_records_lead_id ON call_records(lead_id);
-CREATE INDEX IF NOT EXISTS idx_call_records_timestamp ON call_records(timestamp);
-CREATE INDEX IF NOT EXISTS idx_call_records_outcome ON call_records(outcome);
-CREATE INDEX IF NOT EXISTS idx_lead_outcomes_lead_id ON lead_outcomes(lead_id);
-CREATE INDEX IF NOT EXISTS idx_learned_patterns_module ON learned_patterns(module);
-CREATE INDEX IF NOT EXISTS idx_improvement_log_week ON improvement_log(week_number);
+CREATE INDEX IF NOT EXISTS idx_call_timestamp ON call_records(timestamp);
+CREATE INDEX IF NOT EXISTS idx_lead_outcome_date ON lead_outcomes(created_at);
+CREATE INDEX IF NOT EXISTS idx_pattern_module ON learned_patterns(module_name);
 """
 
-# SQL to create tables
-def init_database(db_path):
+def init_database(db_path: str) -> sqlite3.Connection:
     """Initialize database with schema."""
-    import sqlite3
+    path = Path(db_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
 
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
-    # Execute all statements in schema
-    for statement in DB_SCHEMA.split(';'):
+    for statement in SCHEMA.split(';'):
         if statement.strip():
             cursor.execute(statement)
 
     conn.commit()
-    conn.close()
+    logger.info(f"Database initialized at {db_path}")
+    return conn
+
+def get_connection(db_path: str) -> sqlite3.Connection:
+    """Get database connection."""
+    return sqlite3.connect(db_path)
