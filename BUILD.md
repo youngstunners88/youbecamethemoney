@@ -19,10 +19,15 @@
 - [x] Responsive layout
 - [x] Production build
 
-### Day 4: Demo Prep
-- [ ] Deploy to Vercel
-- [ ] Test all features
-- [ ] Prepare talking points for Mr. Garcia
+### Day 4: Demo Prep (Claude Code sealed it)
+- [x] CaseDetail component — pipeline progress, interaction log, case notes
+- [x] Real Web Speech API (Chrome/Edge mic, interim results, visual waveform)
+- [x] Smart Hermes responses (urgency, pipeline value, consult schedule, UCC, Trust)
+- [x] Lead click-through from LiveLeads + Pipeline → CaseDetail
+- [x] Loading skeleton states
+- [x] vercel.json SPA routing config
+- [x] Production build passing (37 modules, 175KB JS)
+- [ ] Deploy to Vercel (run: cd prototype && npx vercel --prod)
 - [ ] Record demo video (optional)
 
 **Deliverable:** Live dashboard demo for Wednesday
@@ -73,5 +78,5 @@
 ## Current Status
 
 **Phase:** Prototype  
-**Progress:** 85%  
-**Next:** Deploy to Vercel for Wednesday demo
+**Progress:** 98%  
+**Next:** Deploy to Vercel (`cd prototype && npx vercel --prod`) — then it's demo-ready for Mr. Garcia.
