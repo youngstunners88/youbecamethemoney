@@ -21,19 +21,26 @@ const statusColors: Record<string, string> = {
   'closed-lost': 'text-red-400'
 };
 
-export default function LiveLeads() {
+interface LiveLeadsProps {
+  onSelectLead?: (lead: Lead) => void;
+}
+
+export default function LiveLeads({ onSelectLead }: LiveLeadsProps) {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [filterService, setFilterService] = useState<ServiceType | 'all'>('all');
   const [minUrgency, setMinUrgency] = useState<number>(1);
   const [isSimulating, setIsSimulating] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadLeads();
   }, []);
 
   const loadLeads = async () => {
+    setLoading(true);
     const data = await mockHermesAPI.getLeads();
     setLeads(data);
+    setLoading(false);
   };
 
   const startSimulation = () => {
@@ -109,11 +116,20 @@ export default function LiveLeads() {
         </div>
       </div>
 
+      {loading ? (
+        <div className="space-y-3">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="h-24 bg-navy-900/50 rounded-lg animate-pulse border border-gold/5" />
+          ))}
+        </div>
+      ) : null}
+
       <div className="grid gap-4 max-h-[600px] overflow-y-auto">
-        {filteredLeads.slice(0, 20).map((lead) => (
+        {!loading && filteredLeads.slice(0, 20).map((lead) => (
           <div
             key={lead.id}
-            className="bg-navy-900/50 border border-gold/10 rounded-lg p-4 hover:border-gold/30 transition-all"
+            onClick={() => onSelectLead?.(lead)}
+            className={`bg-navy-900/50 border border-gold/10 rounded-lg p-4 transition-all ${onSelectLead ? 'cursor-pointer hover:border-gold/40 hover:bg-navy-900/80' : ''}`}
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-3">
@@ -157,12 +173,17 @@ export default function LiveLeads() {
               <p className="text-gray-400 text-sm italic">"{lead.message}"</p>
             )}
             
-            <div className="flex gap-2 mt-3">
-              {lead.phone && (
-                <span className="text-xs text-gray-500">{lead.phone}</span>
-              )}
-              {lead.email && (
-                <span className="text-xs text-gray-500">{lead.email}</span>
+            <div className="flex items-center justify-between mt-3">
+              <div className="flex gap-2">
+                {lead.phone && (
+                  <span className="text-xs text-gray-500">{lead.phone}</span>
+                )}
+                {lead.email && (
+                  <span className="text-xs text-gray-500">{lead.email}</span>
+                )}
+              </div>
+              {onSelectLead && (
+                <span className="text-xs text-gold/60 hover:text-gold">View case →</span>
               )}
             </div>
           </div>

@@ -3,11 +3,14 @@ import LiveLeads from './components/LiveLeads';
 import Pipeline from './components/Pipeline';
 import Metrics from './components/Metrics';
 import VoiceCommand from './components/VoiceCommand';
+import CaseDetail from './components/CaseDetail';
+import type { Lead } from './types';
 
 type Tab = 'leads' | 'pipeline' | 'metrics' | 'voice';
 
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>('leads');
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
 
   const tabs: { id: Tab; label: string }[] = [
     { id: 'leads', label: 'Live Leads' },
@@ -15,6 +18,15 @@ function App() {
     { id: 'metrics', label: 'Metrics' },
     { id: 'voice', label: 'Voice Command' },
   ];
+
+  const handleSelectLead = (lead: Lead) => {
+    setSelectedLead(lead);
+    setActiveTab('leads');
+  };
+
+  const handleBack = () => {
+    setSelectedLead(null);
+  };
 
   return (
     <div className="min-h-screen bg-navy-900 text-white">
@@ -51,7 +63,10 @@ function App() {
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => {
+                setActiveTab(tab.id);
+                if (tab.id !== 'leads') setSelectedLead(null);
+              }}
               className={`px-6 py-4 font-medium text-sm transition-all border-b-2 ${
                 activeTab === tab.id
                   ? 'text-gold border-gold bg-gold/5'
@@ -66,10 +81,17 @@ function App() {
 
       {/* Main Content */}
       <main className="p-6 max-w-7xl mx-auto">
-        {activeTab === 'leads' && <LiveLeads />}
-        {activeTab === 'pipeline' && <Pipeline />}
-        {activeTab === 'metrics' && <Metrics />}
-        {activeTab === 'voice' && <VoiceCommand />}
+        {activeTab === 'leads' && selectedLead ? (
+          <CaseDetail lead={selectedLead} onBack={handleBack} />
+        ) : activeTab === 'leads' ? (
+          <LiveLeads onSelectLead={handleSelectLead} />
+        ) : activeTab === 'pipeline' ? (
+          <Pipeline onSelectLead={handleSelectLead} />
+        ) : activeTab === 'metrics' ? (
+          <Metrics />
+        ) : (
+          <VoiceCommand />
+        )}
       </main>
 
       {/* Footer */}

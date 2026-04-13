@@ -11,7 +11,11 @@ const columns: { id: LeadStatus; label: string; color: string }[] = [
   { id: 'closed-lost', label: 'Closed Lost', color: 'bg-red-500/20 border-red-500/30' },
 ];
 
-export default function Pipeline() {
+interface PipelineProps {
+  onSelectLead?: (lead: Lead) => void;
+}
+
+export default function Pipeline({ onSelectLead }: PipelineProps) {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [draggedLead, setDraggedLead] = useState<Lead | null>(null);
 
@@ -86,7 +90,8 @@ export default function Pipeline() {
                     key={lead.id}
                     draggable
                     onDragStart={() => handleDragStart(lead)}
-                    className="bg-navy-900/80 border border-gold/10 rounded-lg p-3 cursor-move hover:border-gold/30 transition-all"
+                    onClick={() => onSelectLead?.(lead)}
+                    className={`bg-navy-900/80 border border-gold/10 rounded-lg p-3 cursor-move hover:border-gold/30 transition-all ${onSelectLead ? 'hover:bg-navy-800/80' : ''}`}
                   >
                     <div className="flex items-center justify-between mb-2">
                       <span className="font-medium text-white text-sm truncate">
