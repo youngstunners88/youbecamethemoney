@@ -1,23 +1,27 @@
 """
 Skill 7: hall_of_fame_curator.py
-When a case closes successfully, creates a public Hall of Fame profile.
-Extracts key quotes, generates testimonial, publishes to dashboard.
+Triggered by Hermes when a case closes (won / settled / referred).
+Extracts key quotes, generates anonymized testimonial, publishes to hall_of_fame_profiles.
+Logs execution to skills_audit.
+
+Extends BaseSkill for shared DB, Claude API, and Hermes helpers.
 """
 
-import os
+from __future__ import annotations
+
 import json
-import logging
 import re
+import time
 from dataclasses import dataclass, asdict
 from datetime import datetime
 from typing import Optional
 
-logger = logging.getLogger(__name__)
+from base_skill import BaseSkill
 
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
+VALID_OUTCOMES = frozenset({"won", "settled", "referred"})
 
 
-# ── Data models ───────────────────────────────────────────────
+# ── Data model ─────────────────────────────────────────────────────────────────
 
 @dataclass
 class HallOfFameProfile:
@@ -25,218 +29,322 @@ class HallOfFameProfile:
     interview_id: str
     case_outcome: str           # won | settled | referred
     case_value: int
-    key_quotes: list            # 2–3 anonymized quotes from transcript
-    testimonial: str            # generated 2–3 sentence testimonial
-    headline: str               # short punchy headline for the card
-    jurisdiction: Optional[str]
     service_type: Optional[str]
+    jurisdiction: Optional[str]
+    key_quotes: list[str]       # 2–3 anonymized quotes from transcript
+    testimonial: str            # 2–3 sentence professional testimonial
+    headline: str               # short punchy headline for the card
+    confidence_score: float     # 0–100: how strong the testimonial evidence is
     published: bool
     created_at: str
 
 
-# ── Quote extractor ───────────────────────────────────────────
+# ── Skill class ────────────────────────────────────────────────────────────────
 
-def _extract_quotes_rule_based(transcript: str, n: int = 3) -> list:
-    """Extract strongest sentences from transcript as key quotes."""
-    sentences = re.split(r'(?<=[.!?])\s+', transcript)
-    # Score by length and presence of strong signal words
-    signal_words = ["urgent", "need", "resolve", "ready", "understand", "immediately",
-                    "amount", "deadline", "grateful", "professional", "result"]
-    scored = []
-    for s in sentences:
-        s = s.strip()
-        if 20 < len(s) < 200 and not s.lower().startswith("interviewer"):
-            score = sum(1 for w in signal_words if w in s.lower())
-            scored.append((score, s))
-    scored.sort(reverse=True)
-    return [s for _, s in scored[:n]]
+class HallOfFameCuratorSkill(BaseSkill):
+    """
+    Skill 7 — Hall of Fame Curator.
+    Generates anonymized public profiles for winning cases.
+    Uses Claude API for polished testimonials; rule-based fallback.
+    """
 
+    skill_name = "hall_of_fame_curator"
 
-# ── Testimonial generator ─────────────────────────────────────
+    CLAUDE_PROMPT_TEMPLATE = """\
+You are writing a professional testimonial for a commercial law firm's Hall of Fame page.
+The client gave permission to share their anonymized success story.
 
-def _generate_testimonial_rule_based(profile_data: dict) -> tuple:
-    """Rule-based testimonial when Claude API unavailable."""
-    outcome = profile_data.get("case_outcome", "resolved")
-    value = profile_data.get("case_value", 0)
-    jurisdiction = profile_data.get("jurisdiction", "")
-    service = profile_data.get("service_type", "commercial matter")
-
-    outcome_phrases = {
-        "won": f"successfully resolved their {service}",
-        "settled": f"reached a favorable settlement on their {service}",
-        "referred": f"was connected with the right specialist for their {service}",
-    }
-    outcome_phrase = outcome_phrases.get(outcome, f"resolved their {service}")
-
-    value_str = f"${value:,}" if value > 0 else "significant"
-
-    testimonial = (
-        f"Our client {outcome_phrase} in {jurisdiction + ' ' if jurisdiction else ''}with "
-        f"{value_str} at stake. From the first interview, the team understood the urgency "
-        f"and moved quickly. The outcome exceeded expectations."
-    )
-    headline = f"${value:,} {service.title()} — {outcome.title()}" if value else f"{service.title()} — {outcome.title()}"
-    return testimonial, headline
-
-
-def _generate_with_claude(transcript: str, profile_data: dict) -> Optional[tuple]:
-    """Use Claude to generate a polished testimonial + headline."""
-    if not ANTHROPIC_API_KEY:
-        return None
-    try:
-        import anthropic
-        client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-
-        prompt = f"""You are writing a professional testimonial for a commercial law firm's Hall of Fame.
-
-Case outcome: {profile_data.get('case_outcome')}
-Case value: ${profile_data.get('case_value', 0):,}
-Service type: {profile_data.get('service_type', 'commercial')}
-Jurisdiction: {profile_data.get('jurisdiction', '')}
+Case details:
+- Outcome: {outcome}
+- Case value: ${value:,}
+- Service type: {service}
+- Jurisdiction: {jurisdiction}
 
 Key quotes from client interview:
-{chr(10).join(profile_data.get('key_quotes', [])[:3])}
+{quotes}
 
 Write:
-1. A 2–3 sentence professional testimonial (anonymized, third-person)
-2. A short punchy headline (max 8 words)
+1. A 2–3 sentence professional testimonial (anonymized — no names; third-person)
+2. A punchy headline (max 8 words)
+
+Tone: confident, specific, outcome-focused. Not generic.
 
 Return JSON only:
 {{"testimonial": "...", "headline": "..."}}"""
 
-        msg = client.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=300,
-            messages=[{"role": "user", "content": prompt}]
+    def curate(
+        self,
+        lead_id: str,
+        case_outcome: str,
+        interview_id: str = "",
+        transcript: str = "",
+        case_value: int = 0,
+        service_type: str = "",
+        jurisdiction: str = "",
+        auto_publish: bool = True,
+    ) -> dict:
+        """
+        Main skill entry point. Called by Hermes when case.outcome is set.
+
+        Args:
+            lead_id:       UUID of the lead
+            case_outcome:  'won' | 'settled' | 'referred'
+            interview_id:  UUID of the linked client_interviews row
+            transcript:    Full interview transcript for quote extraction
+            case_value:    Dollar value of the case
+            service_type:  Type of legal service (e.g. 'UCC Discharge')
+            jurisdiction:  State/country
+            auto_publish:  Whether to publish to hall_of_fame_profiles immediately
+
+        Returns:
+            dict with success, profile, and published flag
+        """
+        t0 = time.monotonic()
+        input_payload = {
+            "lead_id": lead_id,
+            "interview_id": interview_id,
+            "case_outcome": case_outcome,
+            "case_value": case_value,
+            "service_type": service_type,
+            "jurisdiction": jurisdiction,
+        }
+
+        if case_outcome not in VALID_OUTCOMES:
+            error = f"Invalid outcome '{case_outcome}'. Must be: {', '.join(VALID_OUTCOMES)}"
+            self._audit(input_payload, {"error": error}, t0, success=False, error=error)
+            return {"success": False, "error": error}
+
+        key_quotes = self._extract_quotes(transcript) if transcript else []
+        confidence_score = self._score_evidence(transcript, key_quotes, case_value)
+
+        profile_data = {
+            "outcome": case_outcome,
+            "value": case_value,
+            "service": service_type or "commercial matter",
+            "jurisdiction": jurisdiction or "Unknown",
+            "quotes": "\n".join(f'- "{q}"' for q in key_quotes) or "(no transcript provided)",
+        }
+
+        testimonial, headline = self._generate_testimonial(transcript, profile_data)
+
+        profile = HallOfFameProfile(
+            lead_id=lead_id,
+            interview_id=interview_id,
+            case_outcome=case_outcome,
+            case_value=case_value,
+            service_type=service_type or None,
+            jurisdiction=jurisdiction or None,
+            key_quotes=key_quotes,
+            testimonial=testimonial,
+            headline=headline,
+            confidence_score=round(confidence_score, 1),
+            published=auto_publish,
+            created_at=datetime.utcnow().isoformat(),
         )
-        data = json.loads(msg.content[0].text.strip())
-        return data["testimonial"], data["headline"]
-    except Exception as e:
-        logger.error(f"Claude testimonial failed: {e}")
-        return None
+
+        self.logger.info(f"Hall of Fame profile: lead={lead_id} headline='{headline}'")
+
+        output = {
+            "success": True,
+            "lead_id": lead_id,
+            "interview_id": interview_id,
+            "profile": asdict(profile),
+            "published": auto_publish,
+        }
+
+        self._persist(profile)
+        self._audit(input_payload, output, t0, success=True)
+
+        return output
+
+    # ── Quote extraction ────────────────────────────────────────────────────────
+
+    def _extract_quotes(self, transcript: str, n: int = 3) -> list[str]:
+        """Extract strongest client sentences from transcript."""
+        signal_words = [
+            "urgent", "need", "resolve", "ready", "understand", "immediately",
+            "amount", "deadline", "grateful", "professional", "result", "outcome",
+            "excellent", "quickly", "exceeded", "recommend",
+        ]
+        sentences = re.split(r'(?<=[.!?])\s+', transcript)
+        scored: list[tuple[int, str]] = []
+        for s in sentences:
+            s = s.strip()
+            # Skip interviewer lines and too-short/long sentences
+            if 20 < len(s) < 200 and not re.match(r'^(Q\d|Interviewer|A:)', s, re.IGNORECASE):
+                score = sum(1 for w in signal_words if w in s.lower())
+                scored.append((score, s))
+        scored.sort(reverse=True)
+        return [s for _, s in scored[:n]]
+
+    # ── Evidence scoring ────────────────────────────────────────────────────────
+
+    def _score_evidence(self, transcript: str, key_quotes: list[str], case_value: int) -> float:
+        """Score how strong the testimonial evidence is (0–100)."""
+        score = 40.0
+        if transcript:            score += 20
+        if len(key_quotes) >= 2:  score += 15
+        if case_value > 50_000:   score += 15
+        if case_value > 200_000:  score += 10
+        return min(100.0, score)
+
+    # ── Testimonial generation ──────────────────────────────────────────────────
+
+    def _generate_testimonial(self, transcript: str, profile_data: dict) -> tuple[str, str]:
+        """Try Claude first; fall back to rule-based."""
+        prompt = self.CLAUDE_PROMPT_TEMPLATE.format(**profile_data)
+        raw = self._call_claude(prompt, max_tokens=350)
+        if raw:
+            try:
+                data = json.loads(raw)
+                return data["testimonial"], data["headline"]
+            except (json.JSONDecodeError, KeyError) as e:
+                self.logger.warning(f"Claude parse error — using rule-based: {e}")
+
+        return self._rule_based_testimonial(profile_data)
+
+    def _rule_based_testimonial(self, p: dict) -> tuple[str, str]:
+        outcome_phrases = {
+            "won":      f"successfully won their {p['service']}",
+            "settled":  f"reached a favorable settlement on their {p['service']}",
+            "referred": f"was connected with the right specialist for their {p['service']}",
+        }
+        phrase = outcome_phrases.get(p["outcome"], f"resolved their {p['service']}")
+        loc = f"in {p['jurisdiction']} " if p["jurisdiction"] != "Unknown" else ""
+        value_str = f"${p['value']:,}" if p["value"] > 0 else "significant stakes"
+
+        testimonial = (
+            f"Our client {phrase} {loc}with {value_str} at stake. "
+            f"From the first consultation, the team understood the urgency and moved decisively. "
+            f"The outcome exceeded expectations."
+        )
+        headline = (
+            f"${p['value']:,} {p['service']} — {p['outcome'].title()}"
+            if p["value"] > 0
+            else f"{p['service']} — {p['outcome'].title()}"
+        )
+        return testimonial, headline
+
+    # ── Persistence ────────────────────────────────────────────────────────────
+
+    def _persist(self, profile: HallOfFameProfile) -> None:
+        conn = self._get_db_conn()
+        if conn is None:
+            return
+        try:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """INSERT INTO hall_of_fame_profiles
+                         (lead_id, interview_id, case_outcome, case_value,
+                          service_type, jurisdiction, key_quotes,
+                          testimonial, headline, confidence_score, published, created_at)
+                       VALUES (%(li)s, %(ii)s, %(co)s, %(cv)s, %(st)s, %(j)s,
+                               %(kq)s, %(t)s, %(h)s, %(cs)s, %(pub)s, NOW())
+                       ON CONFLICT (lead_id) DO UPDATE SET
+                         testimonial=EXCLUDED.testimonial,
+                         headline=EXCLUDED.headline,
+                         published=EXCLUDED.published""",
+                    dict(
+                        li=profile.lead_id,
+                        ii=profile.interview_id or None,
+                        co=profile.case_outcome,
+                        cv=profile.case_value,
+                        st=profile.service_type,
+                        j=profile.jurisdiction,
+                        kq=json.dumps(profile.key_quotes),
+                        t=profile.testimonial,
+                        h=profile.headline,
+                        cs=profile.confidence_score,
+                        pub=profile.published,
+                    ),
+                )
+                cur.execute(
+                    "UPDATE leads SET hall_of_fame=TRUE WHERE id=%(id)s",
+                    dict(id=profile.lead_id),
+                )
+            conn.commit()
+            self.logger.info(f"Hall of Fame profile saved for lead {profile.lead_id}")
+        except Exception as e:
+            self.logger.error(f"DB persist failed: {e}")
+            conn.rollback()
+        finally:
+            conn.close()
+
+    def _audit(self, input_payload: dict, output: dict, t0: float, success: bool, error: Optional[str] = None) -> None:
+        duration_ms = int((time.monotonic() - t0) * 1000)
+        conn = self._get_db_conn()
+        if conn is None:
+            self.logger.info(f"[AUDIT] {self.skill_name} success={success} duration={duration_ms}ms (no DB)")
+            return
+        try:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """INSERT INTO skills_audit
+                         (skill_name, lead_id, interview_id, input_payload,
+                          output_payload, success, error_message, duration_ms)
+                       VALUES (%(sn)s, %(li)s, %(ii)s, %(ip)s, %(op)s, %(su)s, %(em)s, %(dm)s)""",
+                    dict(
+                        sn=self.skill_name,
+                        li=input_payload.get("lead_id") or None,
+                        ii=input_payload.get("interview_id") or None,
+                        ip=json.dumps(input_payload),
+                        op=json.dumps(output),
+                        su=success,
+                        em=error,
+                        dm=duration_ms,
+                    ),
+                )
+            conn.commit()
+        except Exception as e:
+            self.logger.warning(f"Audit log failed (non-fatal): {e}")
+        finally:
+            conn.close()
 
 
-# ── Main curator ──────────────────────────────────────────────
+# ── Public entry point ─────────────────────────────────────────────────────────
 
-def curate_profile(lead_id: str, case_outcome: str, interview_id: str = "",
-                   transcript: str = "", case_value: int = 0,
-                   service_type: str = "", jurisdiction: str = "",
-                   auto_publish: bool = True) -> dict:
-    """
-    Skill 7 entry point. Called by Hermes when a case closes.
-
-    Args:
-        lead_id:      UUID of the lead
-        case_outcome: 'won' | 'settled' | 'referred'
-        interview_id: UUID of the linked interview
-        transcript:   Full interview transcript (for quote extraction)
-        case_value:   Dollar value of the case
-        service_type: Type of legal service
-        jurisdiction: State/country
-        auto_publish: Whether to publish immediately
-
-    Returns:
-        dict with the hall of fame profile
-    """
-    if case_outcome not in ("won", "settled", "referred"):
-        return {"success": False, "error": f"Invalid outcome: {case_outcome}"}
-
-    # Extract key quotes
-    key_quotes = _extract_quotes_rule_based(transcript) if transcript else []
-
-    # Build profile data for generation
-    profile_data = {
-        "case_outcome": case_outcome,
-        "case_value": case_value,
-        "service_type": service_type or "commercial matter",
-        "jurisdiction": jurisdiction,
-        "key_quotes": key_quotes,
-    }
-
-    # Generate testimonial
-    result = _generate_with_claude(transcript, profile_data)
-    if result:
-        testimonial, headline = result
-    else:
-        testimonial, headline = _generate_testimonial_rule_based(profile_data)
-
-    profile = HallOfFameProfile(
+def curate_profile(
+    lead_id: str,
+    case_outcome: str,
+    interview_id: str = "",
+    transcript: str = "",
+    case_value: int = 0,
+    service_type: str = "",
+    jurisdiction: str = "",
+    auto_publish: bool = True,
+) -> dict:
+    """Module-level entry point for Hermes skill dispatch."""
+    return HallOfFameCuratorSkill().curate(
         lead_id=lead_id,
-        interview_id=interview_id,
         case_outcome=case_outcome,
+        interview_id=interview_id,
+        transcript=transcript,
         case_value=case_value,
-        key_quotes=key_quotes,
-        testimonial=testimonial,
-        headline=headline,
-        jurisdiction=jurisdiction or None,
-        service_type=service_type or None,
-        published=auto_publish,
-        created_at=datetime.utcnow().isoformat()
+        service_type=service_type,
+        jurisdiction=jurisdiction,
+        auto_publish=auto_publish,
     )
 
-    logger.info(f"Hall of Fame profile created for lead {lead_id}: {headline}")
 
-    return {
-        "success": True,
-        "lead_id": lead_id,
-        "interview_id": interview_id,
-        "profile": asdict(profile),
-        "published": auto_publish,
-    }
-
-
-def save_profile_to_db(profile_data: dict, db_conn) -> bool:
-    """Persist Hall of Fame profile to PostgreSQL."""
-    try:
-        cursor = db_conn.cursor()
-        p = profile_data["profile"]
-
-        cursor.execute("""
-            INSERT INTO hall_of_fame_profiles
-              (lead_id, interview_id, case_outcome, case_value,
-               key_quotes, testimonial, published, created_at)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, NOW())
-            ON CONFLICT DO NOTHING
-        """, (
-            p["lead_id"], p["interview_id"] or None,
-            p["case_outcome"], p["case_value"],
-            json.dumps(p["key_quotes"]), p["testimonial"],
-            p["published"]
-        ))
-
-        cursor.execute("""
-            UPDATE leads SET hall_of_fame = TRUE WHERE id = %s
-        """, (p["lead_id"],))
-
-        db_conn.commit()
-        cursor.close()
-        logger.info(f"Hall of Fame profile saved for lead {p['lead_id']}")
-        return True
-    except Exception as e:
-        logger.error(f"DB save failed: {e}")
-        db_conn.rollback()
-        return False
-
-
-# ── Example ───────────────────────────────────────────────────
+# ── Smoke test ─────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    SAMPLE_TRANSCRIPT = """
-    Client: I had a promissory note for $85,000 that went into default. I need this resolved immediately.
-    I understand UCC Article 3 applies. I have investors waiting and a 30-day deadline.
-    The amount is $97,000 with interest. I have all documentation ready and I am grateful
-    for the speed with which your team moved on this. The result exceeded my expectations.
+    SAMPLE = """
+I had a promissory note for $85,000 that went into default. I needed this resolved immediately.
+I understood UCC Article 3 applied. I had investors waiting and a 30-day deadline.
+The amount with interest was $97,000. I had all documentation ready.
+I am grateful for the speed with which the team moved on this.
+The result absolutely exceeded my expectations. I would recommend this firm without hesitation.
     """
 
     result = curate_profile(
         lead_id="lead-001",
         case_outcome="won",
         interview_id="interview-001",
-        transcript=SAMPLE_TRANSCRIPT,
-        case_value=97000,
+        transcript=SAMPLE,
+        case_value=97_000,
         service_type="UCC Article 3 Enforcement",
         jurisdiction="California",
-        auto_publish=True
+        auto_publish=True,
     )
-
-    print(json.dumps(result, indent=2))
+    print(json.dumps(result, indent=2, default=str))
