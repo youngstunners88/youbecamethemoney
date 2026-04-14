@@ -1,1 +1,17 @@
 next-app/
+
+# Environment (never commit secrets)
+.env.development
+.env.production
+*.env
+
+# Binary & build waste (token killers)
+assets/images/
+assets/*.pdf
+prototype/dist/
+**/package-lock.json
+repomix-output.xml
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store

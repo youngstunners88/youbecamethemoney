@@ -1,0 +1,46 @@
+{
+  "output": {
+    "filePath": ".repomix/context.xml",
+    "style": "xml",
+    "compress": true,
+    "showLineNumbers": false,
+    "topFilesLength": 10
+  },
+  "include": [
+    "**/*.py",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.html",
+    "**/*.sql",
+    "**/*.md",
+    "**/*.json",
+    ".claude/agents/**",
+    ".claude/commands/gsd/**"
+  ],
+  "ignore": {
+    "useGitignore": true,
+    "useDefaultPatterns": true,
+    "customPatterns": [
+      "assets/images/**",
+      "assets/*.pdf",
+      "assets/css/**",
+      "assets/fonts/**",
+      "prototype/dist/**",
+      "prototype/node_modules/**",
+      "node_modules/**",
+      "**/__pycache__/**",
+      "**/*.pyc",
+      "**/*.db",
+      "**/package-lock.json",
+      ".claude/get-shit-done/**",
+      ".claude/hooks/**",
+      ".claude/gsd-file-manifest.json",
+      "index-old.html",
+      "repomix-output.xml",
+      ".repomix/**"
+    ]
+  },
+  "security": {
+    "enableSecurityCheck": true
+  }
+}

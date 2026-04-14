@@ -1,0 +1,34 @@
+# Binary assets — not useful as AI context
+assets/images/
+assets/*.pdf
+assets/*.PDF
+assets/css/
+assets/fonts/
+assets/js/
+
+# Build artifacts
+prototype/dist/
+prototype/node_modules/
+**/node_modules/
+**/__pycache__/
+**/*.pyc
+optimization/layer3/storage/*.db
+
+# Lock files — never useful to read
+**/package-lock.json
+**/yarn.lock
+**/poetry.lock
+
+# GSD internals — too large, too noisy
+.claude/get-shit-done/
+.claude/hooks/
+.claude/package.json
+.claude/gsd-file-manifest.json
+
+# Old files
+index-old.html
+
+# Temp / logs
+/tmp/
+*.log
+repomix-output.xml
