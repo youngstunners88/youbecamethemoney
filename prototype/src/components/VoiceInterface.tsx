@@ -9,7 +9,7 @@ interface VoiceCommand {
 export default function VoiceInterface() {
   const [isListening, setIsListening] = useState(false);
   const [commands, setCommands] = useState<VoiceCommand[]>([]);
-  const [audioLevel, setAudioLevel] = useState(0);
+  const [_audioLevel, _setAudioLevel] = useState(0);
   const recognitionRef = useRef<any>(null);
 
   const startListening = () => {

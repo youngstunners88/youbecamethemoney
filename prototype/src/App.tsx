@@ -6,10 +6,11 @@ import VoiceCommand from './components/VoiceCommand';
 import CaseDetail from './components/CaseDetail';
 import CommandCenter from './components/CommandCenter';
 import ContactSheet from './components/ContactSheet';
+import LemonsliceInterview from './components/LemonsliceInterview';
 import { mockHermesAPI } from './api/mockHermes';
 import type { Lead } from './types';
 
-type Tab = 'leads' | 'pipeline' | 'metrics' | 'voice' | 'admin';
+type Tab = 'leads' | 'pipeline' | 'metrics' | 'voice' | 'admin' | 'intake';
 
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>('leads');
@@ -30,6 +31,7 @@ function App() {
     { id: 'pipeline', label: 'Pipeline' },
     { id: 'metrics', label: 'Metrics' },
     { id: 'voice', label: 'Voice Command' },
+    { id: 'intake', label: 'Client Intake' },
   ];
 
   const handleSelectLead = (lead: Lead) => {
@@ -115,6 +117,8 @@ function App() {
           <VoiceCommand />
         ) : activeTab === 'admin' ? (
           <CommandCenter leads={leads} />
+        ) : activeTab === 'intake' ? (
+          <LemonsliceInterview />
         ) : null}
       </main>
 

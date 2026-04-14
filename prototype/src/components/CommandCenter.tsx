@@ -16,19 +16,13 @@ interface SocialStats {
   topPerformer: string;
 }
 
-interface BusinessMetrics {
-  monthlyIncome: number;
-  acquisitionSpend: number;
-  roi: number;
-  avgCaseValue: number;
-  conversionRate: number;
-  hermesGrowthRate: number;
-}
+// BusinessMetrics reserved for financials tab (Week 3)
+// interface BusinessMetrics { ... }
 
 export default function CommandCenter({ leads }: CommandCenterProps) {
   const [tab, setTab] = useState<'overview' | 'crm' | 'calls' | 'social' | 'financials' | 'hermes' | 'voice'>('overview');
-  const [metrics, setMetrics] = useState<Metrics | null>(null);
-  const [socialStats, setSocialStats] = useState<SocialStats[]>([
+  const [_metrics, _setMetrics] = useState<Metrics | null>(null);
+  const [socialStats, _setSocialStats] = useState<SocialStats[]>([
     {
       platform: 'instagram',
       followers: 8234,
@@ -53,7 +47,7 @@ export default function CommandCenter({ leads }: CommandCenterProps) {
 
   const loadMetrics = async () => {
     const data = await mockHermesAPI.getMetrics();
-    setMetrics(data);
+    _setMetrics(data);
   };
 
   const hotLeads = leads.filter(l => l.urgencyScore >= 8).length;
