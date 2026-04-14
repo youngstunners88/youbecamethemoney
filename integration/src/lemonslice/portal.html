@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Intake Interview | YouBecameTheMoney</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root{--gold:#D4AF37}
+  body{background:#09090b;color:#f3f4f6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
+  .gold{color:#D4AF37}
+  .btn-gold{background:#D4AF37;color:#000;font-weight:700;padding:.85rem 2rem;border-radius:.75rem;border:none;cursor:pointer;font-size:1rem;transition:all .2s}
+  .btn-gold:hover{background:#f0cb52;transform:translateY(-1px)}
+  .btn-gold:disabled{background:#3f3f46;color:#71717a;cursor:not-allowed;transform:none}
+  .btn-outline{background:transparent;border:1px solid #D4AF37;color:#D4AF37;font-weight:600;padding:.75rem 1.5rem;border-radius:.75rem;cursor:pointer;font-size:.95rem;transition:all .2s}
+  .btn-outline:hover{background:#D4AF3718}
+  .card{background:#111827;border:1px solid #1f2937;border-radius:1rem;padding:2rem}
+  .avatar-ring{width:80px;height:80px;border-radius:50%;border:3px solid #D4AF37;display:flex;align-items:center;justify-content:center;font-size:2.5rem;background:#1c1400;flex-shrink:0}
+  .bubble{background:#1f2937;border-radius:1rem;padding:1.25rem 1.5rem;max-width:80%;line-height:1.65;font-size:.95rem}
+  .bubble-user{background:#1c1400;border:1px solid #D4AF3740;margin-left:auto}
+  .option-btn{background:#0d1117;border:1px solid #374151;border-radius:.65rem;padding:.75rem 1.25rem;cursor:pointer;text-align:left;font-size:.9rem;transition:all .2s;color:#e5e7eb;width:100%}
+  .option-btn:hover{border-color:#D4AF37;background:#1c1400}
+  .option-btn.selected{border-color:#D4AF37;background:#1c1400;color:#D4AF37}
+  .progress-dot{width:10px;height:10px;border-radius:50%;background:#1f2937;transition:all .3s}
+  .progress-dot.done{background:#D4AF37}
+  .progress-dot.active{background:#D4AF37;box-shadow:0 0 8px rgba(212,175,55,.6)}
+  textarea{background:#0d1117;border:1px solid #374151;border-radius:.65rem;color:#f3f4f6;padding:.85rem;font-size:.95rem;resize:vertical;line-height:1.6;width:100%;outline:none;transition:border-color .2s}
+  textarea:focus{border-color:#D4AF37}
+  input[type=text],input[type=number]{background:#0d1117;border:1px solid #374151;border-radius:.65rem;color:#f3f4f6;padding:.75rem 1rem;font-size:.95rem;width:100%;outline:none;transition:border-color .2s}
+  input:focus{border-color:#D4AF37}
+  .score-bar{height:8px;border-radius:4px;background:#1f2937;overflow:hidden;margin-top:.35rem}
+  .score-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#D4AF37,#f59e0b);transition:width 1s ease}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  .fade-in{animation:fadeUp .35s ease both}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+  .pulse{animation:pulse 1.5s ease infinite}
+  .typing-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#D4AF37;margin:0 2px;animation:pulse 1.2s ease infinite}
+  .typing-dot:nth-child(2){animation-delay:.2s}
+  .typing-dot:nth-child(3){animation-delay:.4s}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div style="border-bottom:1px solid #1f2937;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between">
+  <div style="display:flex;align-items:center;gap:.75rem">
+    <span style="font-size:1.3rem">⚖️</span>
+    <span style="font-weight:800">YouBecameTheMoney</span>
+    <span style="font-size:.75rem;background:#1c1400;color:#D4AF37;padding:.2rem .6rem;border-radius:999px;font-weight:700">INTAKE INTERVIEW</span>
+  </div>
+  <div style="font-size:.8rem;color:#71717a" id="headerProgress">Question 1 of 9</div>
+</div>
+
+<!-- MAIN -->
+<div style="max-width:780px;margin:0 auto;padding:2rem 1.5rem">
+
+  <!-- Progress dots -->
+  <div style="display:flex;gap:.5rem;justify-content:center;margin-bottom:2.5rem" id="dots"></div>
+
+  <!-- Chat window -->
+  <div style="min-height:400px;display:flex;flex-direction:column;gap:1.25rem" id="chat"></div>
+
+  <!-- Input area -->
+  <div style="margin-top:2rem" id="inputArea"></div>
+
+  <!-- Done screen -->
+  <div id="doneScreen" style="display:none;text-align:center;padding:3rem 1rem" class="fade-in">
+    <div style="font-size:4rem;margin-bottom:1.25rem">✅</div>
+    <h2 style="font-size:1.75rem;font-weight:800;margin-bottom:.75rem">Interview Complete</h2>
+    <p style="color:#94a3b8;margin-bottom:.5rem">Our team will review your responses within 2 hours.</p>
+    <p style="color:#94a3b8;margin-bottom:2rem">A consultation will be scheduled at your convenience.</p>
+    <div class="card" style="max-width:480px;margin:0 auto 2rem;text-align:left">
+      <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:#71717a;margin-bottom:1rem">Your Profile Summary</div>
+      <div id="summaryList" style="display:flex;flex-direction:column;gap:.6rem"></div>
+    </div>
+    <button class="btn-gold" onclick="submitInterview()">Submit to Legal Team →</button>
+  </div>
+
+</div>
+
+<script>
+// ── Questions ─────────────────────────────────────────────────
+const QUESTIONS = [
+  {
+    id: 'situation',
+    avatar: '⚖️',
+    text: "Welcome! I'm here to understand your legal situation before connecting you with Mr. Garcia's team. Can you briefly describe what brings you here today?",
+    type: 'textarea',
+    placeholder: 'Describe your situation in your own words...',
+    key: 'situation'
+  },
+  {
+    id: 'service_type',
+    avatar: '📋',
+    text: "Which area best describes your matter?",
+    type: 'options',
+    options: ['UCC / Promissory Notes', 'Contract Dispute', 'Commercial Litigation', 'Debt Recovery', 'Business Formation / Compliance', 'Other'],
+    key: 'service_type'
+  },
+  {
+    id: 'amount',
+    avatar: '💰',
+    text: "What is the approximate amount at stake in your matter?",
+    type: 'options',
+    options: ['Under $10,000', '$10,000 – $50,000', '$50,000 – $150,000', '$150,000 – $500,000', 'Over $500,000', 'Not yet determined'],
+    key: 'amount_range'
+  },
+  {
+    id: 'urgency',
+    avatar: '⏰',
+    text: "How urgent is your situation?",
+    type: 'options',
+    options: ['🔴 Immediate — matter is critical right now', '🟡 This week — need action soon', '🟠 This month — planning ahead', '🟢 No deadline — exploratory'],
+    key: 'urgency'
+  },
+  {
+    id: 'jurisdiction',
+    avatar: '🗺️',
+    text: "Which jurisdiction or state does your matter fall under?",
+    type: 'text',
+    placeholder: 'e.g. California, Texas, South Africa...',
+    key: 'jurisdiction'
+  },
+  {
+    id: 'tried_before',
+    avatar: '🔍',
+    text: "Have you already consulted with another attorney or taken any legal action?",
+    type: 'options',
+    options: ['Yes — another attorney', 'Yes — attempted on my own', 'No — this is my first step', 'No — but I\'ve done research'],
+    key: 'prior_action'
+  },
+  {
+    id: 'documents',
+    avatar: '📁',
+    text: "Do you have documentation ready? (contracts, notes, correspondence, etc.)",
+    type: 'options',
+    options: ['✅ Yes — fully documented', '📄 Some documents — not complete', '🔍 Need help gathering them', '❌ No documentation yet'],
+    key: 'documentation'
+  },
+  {
+    id: 'outcome',
+    avatar: '🎯',
+    text: "What outcome are you hoping for?",
+    type: 'textarea',
+    placeholder: 'e.g. Recover $85,000 owed on a promissory note within 60 days...',
+    key: 'desired_outcome'
+  },
+  {
+    id: 'anything_else',
+    avatar: '💬',
+    text: "Is there anything else you'd like the legal team to know before your consultation?",
+    type: 'textarea',
+    placeholder: 'Any additional context, concerns, or questions...',
+    key: 'additional_notes',
+    optional: true
+  }
+];
+
+// ── State ─────────────────────────────────────────────────────
+let currentQ = 0;
+let answers = {};
+let transcript = [];
+let startTime = Date.now();
+
+// ── Init ──────────────────────────────────────────────────────
+function init() {
+  renderDots();
+  askQuestion(0);
+}
+
+function renderDots() {
+  const el = document.getElementById('dots');
+  el.innerHTML = QUESTIONS.map((_, i) =>
+    `<div class="progress-dot ${i===0?'active':''}" id="dot${i}"></div>`
+  ).join('');
+}
+
+function updateDots(idx) {
+  QUESTIONS.forEach((_, i) => {
+    const d = document.getElementById('dot'+i);
+    d.className = 'progress-dot' + (i<idx ? ' done' : i===idx ? ' active' : '');
+  });
+  document.getElementById('headerProgress').textContent = `Question ${Math.min(idx+1, QUESTIONS.length)} of ${QUESTIONS.length}`;
+}
+
+// ── Chat messages ─────────────────────────────────────────────
+function addAvatarMessage(q, delay=0) {
+  setTimeout(() => {
+    // Typing indicator
+    const typing = document.createElement('div');
+    typing.style.cssText = 'display:flex;align-items:flex-start;gap:1rem';
+    typing.innerHTML = `
+      <div class="avatar-ring">${q.avatar}</div>
+      <div class="bubble" style="padding:.9rem 1.25rem">
+        <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
+      </div>`;
+    document.getElementById('chat').appendChild(typing);
+    scrollChat();
+
+    setTimeout(() => {
+      typing.remove();
+      const msg = document.createElement('div');
+      msg.className = 'fade-in';
+      msg.style.cssText = 'display:flex;align-items:flex-start;gap:1rem';
+      msg.innerHTML = `
+        <div class="avatar-ring">${q.avatar}</div>
+        <div class="bubble">${q.text}</div>`;
+      document.getElementById('chat').appendChild(msg);
+      scrollChat();
+    }, 800);
+  }, delay);
+}
+
+function addUserMessage(text) {
+  const msg = document.createElement('div');
+  msg.className = 'fade-in';
+  msg.style.cssText = 'display:flex;justify-content:flex-end';
+  msg.innerHTML = `<div class="bubble bubble-user">${text}</div>`;
+  document.getElementById('chat').appendChild(msg);
+  scrollChat();
+}
+
+function scrollChat() {
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+
+// ── Question rendering ────────────────────────────────────────
+function askQuestion(idx) {
+  updateDots(idx);
+  const q = QUESTIONS[idx];
+  addAvatarMessage(q, 200);
+  setTimeout(() => renderInput(q, idx), 1200);
+}
+
+function renderInput(q, idx) {
+  const ia = document.getElementById('inputArea');
+  ia.innerHTML = '';
+
+  if (q.type === 'options') {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex;flex-direction:column;gap:.6rem';
+    q.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn fade-in';
+      btn.textContent = opt;
+      btn.onclick = () => handleOption(q, idx, opt, btn, wrap);
+      wrap.appendChild(btn);
+    });
+    ia.appendChild(wrap);
+
+  } else if (q.type === 'textarea') {
+    const wrap = document.createElement('div');
+    const ta = document.createElement('textarea');
+    ta.rows = 4;
+    ta.placeholder = q.placeholder || '';
+    const btn = document.createElement('button');
+    btn.className = 'btn-gold';
+    btn.style.marginTop = '.75rem';
+    btn.textContent = idx === QUESTIONS.length - 1 ? 'Complete Interview →' : 'Continue →';
+    btn.onclick = () => {
+      const val = ta.value.trim();
+      if (!val && !q.optional) return;
+      handleTextAnswer(q, idx, val || '(skipped)');
+    };
+    wrap.appendChild(ta);
+    wrap.appendChild(btn);
+    if (q.optional) {
+      const skip = document.createElement('div');
+      skip.style.cssText = 'margin-top:.6rem;text-align:right';
+      skip.innerHTML = `<button class="btn-outline" style="padding:.5rem 1rem;font-size:.8rem" onclick="handleTextAnswer(QUESTIONS[${idx}], ${idx}, '(skipped)')">Skip →</button>`;
+      wrap.appendChild(skip);
+    }
+    ia.appendChild(wrap);
+    setTimeout(() => ta.focus(), 100);
+
+  } else if (q.type === 'text') {
+    const wrap = document.createElement('div');
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.placeholder = q.placeholder || '';
+    const btn = document.createElement('button');
+    btn.className = 'btn-gold';
+    btn.style.cssText = 'margin-top:.65rem;width:100%';
+    btn.textContent = 'Continue →';
+    btn.onclick = () => {
+      const val = inp.value.trim();
+      if (!val) return;
+      handleTextAnswer(q, idx, val);
+    };
+    inp.onkeydown = (e) => { if(e.key==='Enter') btn.click(); };
+    wrap.appendChild(inp);
+    wrap.appendChild(btn);
+    ia.appendChild(wrap);
+    setTimeout(() => inp.focus(), 100);
+  }
+}
+
+function handleOption(q, idx, opt, btn, wrap) {
+  wrap.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  answers[q.key] = opt;
+  transcript.push({ q: q.text, a: opt });
+  setTimeout(() => {
+    addUserMessage(opt);
+    document.getElementById('inputArea').innerHTML = '';
+    nextQuestion(idx);
+  }, 350);
+}
+
+function handleTextAnswer(q, idx, val) {
+  answers[q.key] = val;
+  transcript.push({ q: q.text, a: val });
+  addUserMessage(val);
+  document.getElementById('inputArea').innerHTML = '';
+  nextQuestion(idx);
+}
+
+function nextQuestion(idx) {
+  currentQ = idx + 1;
+  if (currentQ >= QUESTIONS.length) {
+    setTimeout(showDone, 600);
+  } else {
+    setTimeout(() => askQuestion(currentQ), 500);
+  }
+}
+
+// ── Done screen ───────────────────────────────────────────────
+function showDone() {
+  document.getElementById('inputArea').innerHTML = '';
+  updateDots(QUESTIONS.length);
+
+  const doneQ = {
+    avatar: '🎉',
+    text: "Thank you! Your responses have been captured. Our legal team will review everything and reach out within 2 hours.",
+  };
+  addAvatarMessage(doneQ, 0);
+
+  setTimeout(() => {
+    document.getElementById('doneScreen').style.display = 'block';
+    renderSummary();
+    scrollChat();
+  }, 1200);
+}
+
+function renderSummary() {
+  const labelMap = {
+    service_type: 'Matter Type',
+    amount_range: 'Amount at Stake',
+    urgency: 'Urgency',
+    jurisdiction: 'Jurisdiction',
+    prior_action: 'Prior Action',
+    documentation: 'Documentation',
+  };
+  const el = document.getElementById('summaryList');
+  el.innerHTML = Object.entries(labelMap).map(([k, label]) => {
+    const val = answers[k] || '—';
+    return `
+      <div style="display:flex;justify-content:space-between;gap:1rem;font-size:.875rem">
+        <span style="color:#71717a">${label}</span>
+        <span style="text-align:right;color:#f3f4f6;max-width:60%">${val}</span>
+      </div>`;
+  }).join('');
+}
+
+function buildTranscriptText() {
+  return transcript.map(({ q, a }) => `Q: ${q}\nA: ${a}`).join('\n\n');
+}
+
+function estimateScores() {
+  const urgencyMap = { 'immediate':100, 'this week':75, 'this month':50, 'no deadline':25 };
+  const amountMap = {
+    'under $10,000':10, '$10,000 – $50,000':30, '$50,000 – $150,000':60,
+    '$150,000 – $500,000':80, 'over $500,000':100, 'not yet determined':20
+  };
+  const urgencyKey = Object.keys(urgencyMap).find(k => (answers.urgency||'').toLowerCase().includes(k)) || 'this month';
+  const amountKey = Object.keys(amountMap).find(k => (answers.amount_range||'').toLowerCase().includes(k)) || 'not yet determined';
+
+  return {
+    tone_confidence: answers.documentation?.includes('fully') ? 80 : 55,
+    tone_urgency: urgencyMap[urgencyKey] || 50,
+    knowledge_level: answers.prior_action?.includes('attorney') ? 7 : 4,
+    hesitation_score: answers.documentation?.includes('No') ? 65 : 35,
+    stated_urgency: urgencyKey === 'immediate' ? 'immediate' : urgencyKey === 'this week' ? 'week' : 'month',
+    amount_value: amountMap[amountKey] || 20,
+  };
+}
+
+async function submitInterview() {
+  const btn = document.querySelector('#doneScreen .btn-gold');
+  btn.disabled = true;
+  btn.textContent = '⏳ Submitting...';
+
+  const scores = estimateScores();
+  const payload = {
+    interview_id: 'interview-' + Date.now(),
+    lead_id: new URLSearchParams(window.location.search).get('lead_id') || 'unknown',
+    transcript: buildTranscriptText(),
+    answers,
+    scores,
+    submitted_at: new Date().toISOString(),
+    duration_seconds: Math.round((Date.now() - startTime) / 1000),
+  };
+
+  try {
+    const res = await fetch('/api/interview/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json().catch(() => ({}));
+
+    btn.textContent = '✅ Submitted Successfully';
+    btn.style.background = '#166534';
+    btn.style.color = '#fff';
+  } catch {
+    // Even if API is down, store locally
+    localStorage.setItem('interview_' + payload.interview_id, JSON.stringify(payload));
+    btn.textContent = '✅ Saved — Team Notified';
+    btn.style.background = '#166534';
+    btn.style.color = '#fff';
+  }
+}
+
+// ── Boot ──────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>

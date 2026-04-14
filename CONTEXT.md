@@ -150,3 +150,95 @@ This CONTEXT.md is a living document. As you move through the sprint:
 - Refine skill definitions based on real case data
 - Update success metrics weekly
 - Edit this file after each phase to reflect what you've learned
+
+---
+
+## Lemonslice Interview Portal (Week 2 Addition)
+
+### Overview
+Avatar-driven intake interview that captures behavioral signals before Margarita's call.
+Replaces cold intake with warm, structured video-style Q&A.
+
+### Portal Flow
+```
+Lead receives link → Opens portal.html → Avatar asks 9 questions →
+Answers captured (transcript + structured data) →
+/api/interview/submit → interview_analyzer.py →
+warmth_score updated → Dashboard shows profile → Margarita calls informed
+```
+
+### 9 Interview Questions
+1. Describe your situation (open text)
+2. Matter type (UCC / Contract / Litigation / Debt / Formation / Other)
+3. Amount at stake (range selection)
+4. Urgency (immediate / week / month / exploratory)
+5. Jurisdiction (text input)
+6. Prior legal action taken?
+7. Documentation ready?
+8. Desired outcome (open text)
+9. Anything else? (optional)
+
+### Behavioral Signals Extracted
+| Signal | Type | Range | Source |
+|--------|------|-------|--------|
+| tone_confidence | Float | 0–100 | NLP on free-text answers |
+| tone_urgency | Float | 0–100 | Urgency + amount combination |
+| knowledge_level | Int | 1–10 | Legal term usage |
+| hesitation_score | Float | 0–100 | Vague language frequency |
+| stated_urgency | Enum | immediate/week/month | Question 4 |
+| stated_amount | Int | dollars | Question 3 |
+| stated_jurisdiction | Varchar | state/country | Question 5 |
+
+### warmth_score Update Formula
+```
+warmth_score (new) = warmth_score (old) + warmth_delta
+warmth_delta range: -20 to +30
+
++20: high confidence + immediate urgency + known jurisdiction
++10: hot lead markers present
+ 0: neutral / inconclusive
+-10: heavy hesitation + no documentation + no urgency
+```
+
+### Hall of Fame (Skill 7)
+When a case closes (won / settled / referred):
+1. `hall_of_fame_curator.py` is triggered by Hermes
+2. Extracts 2–3 key quotes from interview transcript
+3. Generates anonymized testimonial (Claude API or rule-based)
+4. Publishes to `hall_of_fame_profiles` table
+5. Dashboard shows Hall of Fame tab
+
+### Files Added
+```
+database/migrations/001_client_interviews.sql    ← Run this first
+optimization/skills/interview_analyzer.py        ← Skill 6
+optimization/skills/hall_of_fame_curator.py      ← Skill 7
+integration/src/lemonslice/portal.html           ← Interview portal UI
+integration/src/lemonslice/interview_api.py      ← Backend API
+```
+
+### Running the Portal
+```bash
+# Start interview server (port 8090)
+python3 integration/src/lemonslice/interview_api.py
+
+# Open portal
+open http://localhost:8090/portal
+
+# Share with leads
+https://your-domain.com:8090/portal?lead_id=UUID
+```
+
+### Integration with Layer 3
+Layer 3 learning cycle now incorporates interview data:
+- interview quality → conversion prediction adjustment
+- urgency patterns → optimal timing refinement
+- knowledge level → script complexity calibration
+- hesitation patterns → Margarita follow-up strategy
+
+### Timeline
+| Week | Deliverable |
+|------|-------------|
+| Week 2 (now) | Portal live, interview_analyzer, hall_of_fame_curator |
+| Week 3 | Lemonslice video integration (real recordings) |
+| Week 4 | Hall of Fame public display on dashboard |
