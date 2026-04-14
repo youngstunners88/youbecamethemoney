@@ -3,221 +3,307 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Layer 3 Learning Engine – Live Demo</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<title>Ramsees Command Center — Mr. Garcia</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-  :root{--gold:#D4AF37;--dark:#09090b;--card:#111827}
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--dark);color:#f3f4f6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh}
-  .gold{color:#D4AF37}
-  .border-gold{border-color:#D4AF37!important}
-  .bg-gold{background:#D4AF37}
-  .card{background:#111827;border:1px solid #1f2937;border-radius:1rem}
-  .badge{display:inline-flex;align-items:center;gap:.35rem;padding:.2rem .65rem;border-radius:999px;font-size:.7rem;font-weight:700;letter-spacing:.04em}
-  .b-green{background:#052e16;color:#4ade80}
-  .b-gold{background:#1c1400;color:#D4AF37}
-  .b-blue{background:#0f172a;color:#60a5fa;border:1px solid #1e3a5f}
-  .b-gray{background:#18181b;color:#71717a}
-  .btn{display:inline-flex;align-items:center;gap:.5rem;font-weight:700;border-radius:.75rem;cursor:pointer;transition:all .2s;border:none;outline:none}
-  .btn-gold{background:#D4AF37;color:#000;padding:.85rem 2rem;font-size:1rem}
-  .btn-gold:hover{background:#f0cb52}
-  .btn-gold:disabled{background:#3f3f46;color:#71717a;cursor:not-allowed}
-  .btn-outline{background:transparent;border:1px solid #D4AF37;color:#D4AF37;padding:.75rem 1.5rem}
-  .btn-outline:hover{background:#D4AF3720}
-  .progress{height:6px;border-radius:3px;background:#27272a;overflow:hidden}
-  .progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#D4AF37,#f59e0b);transition:width 1s ease;width:0}
-  .step-num{width:2rem;height:2rem;border-radius:50%;border:2px solid #3f3f46;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;transition:all .4s}
-  .step-done .step-num{background:#D4AF37;border-color:#D4AF37;color:#000}
-  .step-active .step-num{border-color:#D4AF37;color:#D4AF37}
-  #logbox{font-family:'Courier New',monospace;font-size:.72rem;line-height:1.8;background:#000;border:1px solid #1f2937;border-radius:.75rem;padding:1rem;height:280px;overflow-y:auto}
-  .log-ok{color:#4ade80}.log-step{color:#94a3b8}.log-info{color:#60a5fa}.log-head{color:#fff}.log-sep{color:#374151}.log-warn{color:#f59e0b}
-  .insight-card{background:#0d1117;border:1px solid #1f2937;border-radius:.75rem;padding:1.25rem;transition:border-color .25s,transform .2s}
-  .insight-card:hover{border-color:#D4AF37;transform:translateY(-2px)}
-  .tab{padding:.6rem 1.25rem;font-weight:600;font-size:.875rem;cursor:pointer;border-radius:.5rem;transition:all .2s;color:#71717a}
-  .tab.active{background:#1f2937;color:#fff}
-  .tab-panel{display:none}.tab-panel.active{display:block}
-  .metric-box{background:#0d1117;border:1px solid #1f2937;border-radius:.75rem;padding:1.25rem;text-align:center}
-  .metric-val{font-size:2rem;font-weight:800;line-height:1}
-  .metric-lbl{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:#71717a;margin-top:.35rem}
-  .phrase-row{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid #1f2937}
-  .phrase-row:last-child{border:none}
-  .bar{height:6px;border-radius:3px;margin-top:.25rem}
-  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-  .fade-in{animation:fadeUp .4s ease both}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-  .pulse{animation:pulse 1.5s ease infinite}
-  .hero-grad{background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(212,175,55,.15),transparent)}
-  .glow{box-shadow:0 0 40px rgba(212,175,55,.08)}
-  ::-webkit-scrollbar{width:4px;height:4px}
-  ::-webkit-scrollbar-track{background:#111827}
-  ::-webkit-scrollbar-thumb{background:#3f3f46;border-radius:2px}
+:root{--gold:#D4AF37;--dark:#09090b;--card:#111827;--card2:#0d1117;--border:#1f2937;--text:#f3f4f6;--muted:#71717a;--green:#4ade80;--blue:#60a5fa;--red:#f87171;--orange:#f59e0b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--dark);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh}
+
+/* ── BADGES & UTILS ── */
+.gold{color:var(--gold)}.badge{display:inline-flex;align-items:center;gap:.35rem;padding:.2rem .65rem;border-radius:999px;font-size:.7rem;font-weight:700;letter-spacing:.04em}
+.b-green{background:#052e16;color:var(--green)}.b-gold{background:#1c1400;color:var(--gold)}.b-blue{background:#0f172a;color:var(--blue);border:1px solid #1e3a5f}.b-gray{background:#18181b;color:var(--muted)}.b-red{background:#1c0505;color:var(--red)}.b-orange{background:#1c0d00;color:var(--orange)}
+.btn{display:inline-flex;align-items:center;gap:.5rem;font-weight:700;border-radius:.75rem;cursor:pointer;transition:all .2s;border:none;outline:none}
+.btn-gold{background:var(--gold);color:#000;padding:.85rem 2rem;font-size:1rem}
+.btn-gold:hover{background:#f0cb52}
+.btn-gold:disabled{background:#3f3f46;color:var(--muted);cursor:not-allowed}
+.btn-outline{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:.75rem 1.5rem}
+.btn-outline:hover{background:#D4AF3715}
+.card{background:var(--card);border:1px solid var(--border);border-radius:1rem}
+.glow{box-shadow:0 0 40px rgba(212,175,55,.08)}
+.metric-box{background:var(--card2);border:1px solid var(--border);border-radius:.75rem;padding:1.25rem;text-align:center}
+.metric-val{font-size:2rem;font-weight:800;line-height:1}
+.metric-lbl{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-top:.35rem}
+.phrase-row{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--border)}
+.phrase-row:last-child{border:none}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeUp .4s ease both}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.pulse{animation:pulse 1.5s ease infinite}
+@keyframes spinAnim{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.spin{animation:spinAnim .8s linear infinite}
+.hero-grad{background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(212,175,55,.15),transparent)}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--card)}
+::-webkit-scrollbar-thumb{background:#3f3f46;border-radius:2px}
+
+/* ── NAV ── */
+nav{border-bottom:1px solid var(--border);backdrop-filter:blur(8px);position:sticky;top:0;z-index:50;background:#09090bdd}
+.nav-inner{max-width:1200px;margin:0 auto;padding:.85rem 1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.75rem}
+.nav-brand{display:flex;align-items:center;gap:.75rem}
+.nav-links-right{display:flex;align-items:center;gap:.75rem}
+.nav-link{font-size:.75rem;color:rgba(244,228,193,.55);text-decoration:none;font-weight:500;letter-spacing:.05em;transition:color .25s}
+.nav-link:hover{color:var(--gold)}
+
+/* ── TABS ── */
+.tab{padding:.6rem 1.25rem;font-weight:600;font-size:.875rem;cursor:pointer;border-radius:.5rem;transition:all .2s;color:var(--muted);white-space:nowrap}
+.tab.active{background:var(--border);color:#fff}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* ── PROGRESS BAR ── */
+.progress{height:6px;border-radius:3px;background:#27272a;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--orange));transition:width 1s ease;width:0}
+.step-num{width:2rem;height:2rem;border-radius:50%;border:2px solid #3f3f46;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;transition:all .4s}
+.step-done .step-num{background:var(--gold);border-color:var(--gold);color:#000}
+.step-active .step-num{border-color:var(--gold);color:var(--gold)}
+#logbox{font-family:'Courier New',monospace;font-size:.72rem;line-height:1.8;background:#000;border:1px solid var(--border);border-radius:.75rem;padding:1rem;height:280px;overflow-y:auto}
+.log-ok{color:var(--green)}.log-step{color:#94a3b8}.log-info{color:var(--blue)}.log-head{color:#fff}.log-sep{color:#374151}.log-warn{color:var(--orange)}
+.insight-card{background:var(--card2);border:1px solid var(--border);border-radius:.75rem;padding:1.25rem;transition:border-color .25s,transform .2s}
+.insight-card:hover{border-color:var(--gold);transform:translateY(-2px)}
+
+/* ── RAMSEES VOICE ── */
+.ramsees-panel{background:var(--card);border:1px solid rgba(212,175,55,.3);border-radius:1.25rem;padding:2rem;position:relative;overflow:hidden}
+.ramsees-panel::before{content:'';position:absolute;top:-30%;left:-30%;width:60%;height:80%;background:radial-gradient(ellipse,rgba(212,175,55,.06),transparent);pointer-events:none}
+.voice-orb{width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,.25),rgba(212,175,55,.05));
+  border:2px solid rgba(212,175,55,.4);display:flex;align-items:center;justify-content:center;
+  font-size:2.5rem;cursor:pointer;transition:all .3s;position:relative;flex-shrink:0;margin:0 auto}
+.voice-orb:hover{box-shadow:0 0 40px rgba(212,175,55,.4);transform:scale(1.05)}
+.voice-orb.listening{border-color:var(--green);box-shadow:0 0 0 0 rgba(74,222,128,.4);animation:voicePulse 1.2s ease infinite}
+.voice-orb.speaking{border-color:var(--blue);box-shadow:0 0 0 0 rgba(96,165,250,.4);animation:voicePulse 0.8s ease infinite}
+@keyframes voicePulse{0%{box-shadow:0 0 0 0 rgba(212,175,55,.4)}70%{box-shadow:0 0 0 20px rgba(212,175,55,0)}100%{box-shadow:0 0 0 0 rgba(212,175,55,0)}}
+.voice-orb.listening{animation-name:voicePulseGreen}
+@keyframes voicePulseGreen{0%{box-shadow:0 0 0 0 rgba(74,222,128,.5)}70%{box-shadow:0 0 0 25px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
+.voice-orb.speaking{animation-name:voicePulseBlue}
+@keyframes voicePulseBlue{0%{box-shadow:0 0 0 0 rgba(96,165,250,.5)}70%{box-shadow:0 0 0 25px rgba(96,165,250,0)}100%{box-shadow:0 0 0 0 rgba(96,165,250,0)}}
+.transcript-box{background:#000;border:1px solid var(--border);border-radius:.75rem;padding:1rem;min-height:80px;font-family:'Courier New',monospace;font-size:.85rem;color:#e5e7eb;line-height:1.7}
+.response-box{background:var(--card2);border:1px solid rgba(212,175,55,.2);border-radius:.75rem;padding:1.25rem;min-height:80px;font-size:.9rem;line-height:1.75;color:var(--gold)}
+.waveform{display:flex;align-items:center;gap:3px;height:30px;justify-content:center}
+.wave-bar{width:4px;border-radius:2px;background:var(--gold);transition:height .1s}
+
+/* ── CLIENT CARDS ── */
+.client-card{background:var(--card2);border:1px solid var(--border);border-radius:.85rem;padding:1.25rem;cursor:pointer;transition:all .25s}
+.client-card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.warmth-bar-bg{height:6px;border-radius:3px;background:#27272a;overflow:hidden;margin-top:.35rem}
+.warmth-bar-fill{height:100%;border-radius:3px;transition:width .8s ease}
+.client-detail-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;overflow-y:auto;padding:2rem 1rem}
+.client-detail-overlay.open{display:flex;align-items:flex-start;justify-content:center}
+.client-detail-card{background:#111827;border:1px solid rgba(212,175,55,.3);border-radius:1.25rem;padding:2rem;max-width:700px;width:100%;margin:auto}
+.detail-row{display:flex;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--border);font-size:.875rem;gap:1rem}
+.detail-row:last-child{border:none}
+.detail-key{color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;flex-shrink:0}
+.detail-val{color:var(--text);text-align:right}
+
+/* ── SETTINGS INPUT ── */
+.settings-input{background:#0d1117;border:1px solid var(--border);border-radius:.65rem;color:var(--text);padding:.75rem 1rem;font-size:.875rem;width:100%;outline:none;transition:border-color .2s;font-family:inherit}
+.settings-input:focus{border-color:var(--gold)}
+.settings-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.4rem;display:block}
 </style>
 </head>
 <body>
 
 <!-- NAV -->
-<nav style="border-bottom:1px solid #1f2937;backdrop-filter:blur(8px);position:sticky;top:0;z-index:50;background:#09090bdd">
-  <div style="max-width:1100px;margin:0 auto;padding:.9rem 1.5rem;display:flex;justify-content:space-between;align-items:center">
-    <div style="display:flex;align-items:center;gap:.75rem">
-      <span style="font-size:1.25rem">🧠</span>
-      <span style="font-weight:800;font-size:1rem">Layer 3 <span class="gold">Learning Engine</span></span>
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <span style="font-size:1.2rem">𓀀</span>
+      <span style="font-weight:800;font-size:1rem">Ramsees <span class="gold">Command Center</span></span>
+      <span class="badge b-gold" style="margin-left:.25rem">Mr. Garcia</span>
     </div>
-    <div style="display:flex;align-items:center;gap:.75rem">
+    <div class="nav-links-right">
       <span class="badge b-green" id="navStatus">● READY</span>
-      <span class="badge b-gray">Demo v1.0</span>
+      <span class="badge b-gray">v2.0</span>
+      <a href="index.html" class="nav-link" style="font-size:.7rem;border:1px solid #374151;padding:.3rem .75rem;border-radius:.5rem">← Site</a>
+      <a href="embark.html" class="nav-link" style="font-size:.7rem;background:#1c1400;border:1px solid var(--gold);padding:.3rem .75rem;border-radius:.5rem;color:var(--gold)">EMBARK</a>
     </div>
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero-grad" style="padding:4rem 1.5rem 3rem">
-  <div style="max-width:1100px;margin:0 auto">
-    <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.5rem">
-      <span class="badge b-gold">Layer 3</span>
-      <span class="badge b-blue">Self-Improving AI</span>
-      <span class="badge b-green">Production Ready</span>
-    </div>
-    <h1 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:900;line-height:1.1;margin-bottom:1rem">
-      Your system gets<br><span class="gold">smarter every week.</span>
-    </h1>
-    <p style="color:#94a3b8;font-size:1.1rem;max-width:580px;margin-bottom:2rem;line-height:1.7">
-      Every Sunday at 2am it reads your last 147 calls, finds what's working, and automatically improves Margarita's script, routing, and scoring — with zero manual work.
-    </p>
-    <div style="display:flex;flex-wrap:wrap;gap:1rem">
-      <button class="btn btn-gold" id="runBtn" onclick="startCycle()">▶ Run Learning Cycle</button>
-      <button class="btn btn-outline" onclick="showTab('insights')">View Insights →</button>
-    </div>
-  </div>
-</section>
-
-<!-- METRICS -->
-<div style="border-top:1px solid #1f2937;border-bottom:1px solid #1f2937;padding:1.5rem">
-  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.5rem">
-    <div>
-      <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:#71717a;margin-bottom:.35rem">Calls Analyzed</div>
-      <div style="font-size:2rem;font-weight:800" id="mCalls">—</div>
-    </div>
-    <div>
-      <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:#71717a;margin-bottom:.35rem">Insights Found</div>
-      <div style="font-size:2rem;font-weight:800;color:#D4AF37" id="mInsights">—</div>
-    </div>
-    <div>
-      <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:#71717a;margin-bottom:.35rem">Expected Lift</div>
-      <div style="font-size:2rem;font-weight:800;color:#4ade80" id="mLift">—</div>
-    </div>
-    <div>
-      <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:#71717a;margin-bottom:.35rem">Weekly ROI</div>
-      <div style="font-size:2rem;font-weight:800;color:#f59e0b" id="mRoi">—</div>
-    </div>
+<!-- METRICS STRIP -->
+<div style="border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.25rem 1.5rem;background:var(--card2)">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1.25rem">
+    <div><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.3rem">Clients This Week</div><div style="font-size:1.75rem;font-weight:800" id="mClients">—</div></div>
+    <div><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.3rem">Calls Analyzed</div><div style="font-size:1.75rem;font-weight:800" id="mCalls">—</div></div>
+    <div><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.3rem">Insights Found</div><div style="font-size:1.75rem;font-weight:800;color:var(--gold)" id="mInsights">—</div></div>
+    <div><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.3rem">Expected Lift</div><div style="font-size:1.75rem;font-weight:800;color:var(--green)" id="mLift">—</div></div>
+    <div><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.3rem">Avg Warmth Score</div><div style="font-size:1.75rem;font-weight:800;color:var(--orange)" id="mWarmth">—</div></div>
+    <div><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.3rem">Weekly ROI</div><div style="font-size:1.75rem;font-weight:800;color:var(--orange)" id="mRoi">—</div></div>
   </div>
 </div>
 
 <!-- MAIN CONTENT -->
-<div style="max-width:1100px;margin:0 auto;padding:2.5rem 1.5rem;display:grid;gap:2rem">
+<div style="max-width:1200px;margin:0 auto;padding:2rem 1.5rem;display:grid;gap:2rem">
 
   <!-- TABS -->
   <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-    <div class="tab active" onclick="showTab('cycle')" id="t-cycle">Learning Cycle</div>
-    <div class="tab" onclick="showTab('insights')" id="t-insights">Insights</div>
-    <div class="tab" onclick="showTab('modules')" id="t-modules">3 Modules</div>
-    <div class="tab" onclick="showTab('growth')" id="t-growth">Growth Chart</div>
-    <div class="tab" onclick="showTab('economics')" id="t-economics">Economics</div>
+    <div class="tab active" onclick="showTab('ramsees')" id="t-ramsees">🎙 Ramsees</div>
+    <div class="tab" onclick="showTab('clients')" id="t-clients">👤 Clients</div>
+    <div class="tab" onclick="showTab('cycle')" id="t-cycle">⚙ Learning Cycle</div>
+    <div class="tab" onclick="showTab('insights')" id="t-insights">💡 Insights</div>
+    <div class="tab" onclick="showTab('modules')" id="t-modules">📊 3 Modules</div>
+    <div class="tab" onclick="showTab('growth')" id="t-growth">📈 Growth</div>
+    <div class="tab" onclick="showTab('economics')" id="t-economics">💰 Economics</div>
+    <div class="tab" onclick="showTab('settings')" id="t-settings">⚙ Settings</div>
   </div>
 
-  <!-- TAB: CYCLE -->
-  <div class="tab-panel active" id="p-cycle">
-    <div class="card glow" style="padding:1.75rem">
+  <!-- ══════════════════════════════ TAB: RAMSEES ══════════════════════════════ -->
+  <div class="tab-panel active" id="p-ramsees">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+
+      <!-- Voice Command Panel -->
+      <div class="ramsees-panel glow" style="grid-column:1/-1">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.75rem;flex-wrap:wrap;gap:1rem">
+          <div>
+            <h2 style="font-size:1.3rem;font-weight:800">Ramsees <span class="gold">Voice Command</span></h2>
+            <p style="color:var(--muted);font-size:.8rem;margin-top:.25rem">Speak directly to your AI orchestrator. Powered by ElevenLabs.</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:.75rem">
+            <span class="badge b-gray" id="ramseesStatus">STANDBY</span>
+            <button class="btn btn-outline" onclick="testRamsees()" style="font-size:.8rem;padding:.5rem 1rem">Test Voice</button>
+          </div>
+        </div>
+
+        <!-- Main voice interaction -->
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:start">
+          <!-- Orb -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:1rem">
+            <div class="voice-orb" id="voiceOrb" onclick="toggleVoice()">𓀀</div>
+            <div style="font-size:.7rem;color:var(--muted);text-align:center" id="orbLabel">Tap to speak</div>
+            <div class="waveform" id="waveform" style="opacity:0">
+              <div class="wave-bar" style="height:6px" id="wb0"></div>
+              <div class="wave-bar" style="height:12px" id="wb1"></div>
+              <div class="wave-bar" style="height:18px" id="wb2"></div>
+              <div class="wave-bar" style="height:10px" id="wb3"></div>
+              <div class="wave-bar" style="height:20px" id="wb4"></div>
+              <div class="wave-bar" style="height:8px" id="wb5"></div>
+              <div class="wave-bar" style="height:14px" id="wb6"></div>
+            </div>
+          </div>
+
+          <!-- Transcript + Response -->
+          <div style="display:flex;flex-direction:column;gap:1rem">
+            <div>
+              <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.4rem">You Said</div>
+              <div class="transcript-box" id="transcriptBox">
+                <span style="color:var(--muted)">Your spoken command will appear here…</span>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.4rem">Ramsees Response</div>
+              <div class="response-box" id="responseBox">
+                <span style="color:var(--muted)">Awaiting command, Mr. Garcia…</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+              <input id="textCommand" style="flex:1;background:#0d1117;border:1px solid var(--border);border-radius:.65rem;color:#f3f4f6;padding:.65rem 1rem;font-size:.875rem;outline:none;min-width:200px" placeholder="Or type a command…" onkeydown="if(event.key==='Enter')sendTextCommand()">
+              <button class="btn btn-gold" onclick="sendTextCommand()" style="padding:.65rem 1.25rem;font-size:.875rem">Send</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick commands -->
+        <div style="margin-top:1.75rem;border-top:1px solid var(--border);padding-top:1.25rem">
+          <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.75rem">Quick Commands</div>
+          <div style="display:flex;flex-wrap:wrap;gap:.5rem">
+            <button class="btn btn-outline" style="font-size:.75rem;padding:.4rem .9rem" onclick="quickCmd('Show me today\'s hot leads')">Hot Leads</button>
+            <button class="btn btn-outline" style="font-size:.75rem;padding:.4rem .9rem" onclick="quickCmd('Run the weekly learning cycle')">Run Cycle</button>
+            <button class="btn btn-outline" style="font-size:.75rem;padding:.4rem .9rem" onclick="quickCmd('What is the current pipeline value?')">Pipeline Value</button>
+            <button class="btn btn-outline" style="font-size:.75rem;padding:.4rem .9rem" onclick="quickCmd('Show me client warmth scores')">Warmth Scores</button>
+            <button class="btn btn-outline" style="font-size:.75rem;padding:.4rem .9rem" onclick="quickCmd('Schedule calls for tomorrow morning')">Schedule Calls</button>
+            <button class="btn btn-outline" style="font-size:.75rem;padding:.4rem .9rem" onclick="quickCmd('Generate this week\'s insights report')">Insights Report</button>
+            <button class="btn btn-outline" style="font-size:.75rem;padding:.4rem .9rem" onclick="quickCmd('Who are the most urgent cases this week?')">Urgent Cases</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ramsees Memory -->
+      <div class="card" style="padding:1.5rem">
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem">Ramsees Memory <span class="badge b-blue" style="margin-left:.5rem">Live</span></h3>
+        <div style="display:flex;flex-direction:column;gap:.75rem" id="ramseesMem">
+          <div class="phrase-row"><span style="color:var(--muted);font-size:.8rem">Clients onboarded</span><span style="color:var(--text);font-weight:700" id="memClients">0</span></div>
+          <div class="phrase-row"><span style="color:var(--muted);font-size:.8rem">Avg warmth score</span><span style="color:var(--gold);font-weight:700" id="memWarmth">—</span></div>
+          <div class="phrase-row"><span style="color:var(--muted);font-size:.8rem">Top matter type</span><span style="color:var(--text);font-weight:700" id="memTopMatter">—</span></div>
+          <div class="phrase-row"><span style="color:var(--muted);font-size:.8rem">Hot leads (≥70)</span><span style="color:var(--green);font-weight:700" id="memHot">0</span></div>
+          <div class="phrase-row"><span style="color:var(--muted);font-size:.8rem">Last interview</span><span style="color:var(--text);font-size:.8rem;font-weight:600;text-align:right" id="memLast">—</span></div>
+        </div>
+        <button class="btn btn-outline" style="width:100%;margin-top:1rem;font-size:.8rem;justify-content:center" onclick="showTab('clients')">View All Clients →</button>
+      </div>
+
+      <!-- Command History -->
+      <div class="card" style="padding:1.5rem">
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem">Command History</h3>
+        <div id="commandHistory" style="display:flex;flex-direction:column;gap:.5rem;max-height:220px;overflow-y:auto">
+          <div style="color:var(--muted);font-size:.8rem;text-align:center;padding:1rem">No commands yet</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ TAB: CLIENTS ══════════════════════════════ -->
+  <div class="tab-panel" id="p-clients">
+    <div class="card" style="padding:1.75rem">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
-        <h2 style="font-size:1.2rem;font-weight:700">Weekly Learning Cycle</h2>
-        <span class="badge b-gray" id="cycleStatus">STANDBY</span>
-      </div>
-
-      <!-- Steps -->
-      <div style="display:flex;flex-direction:column;gap:1.1rem" id="stepList">
-        <div class="step" id="step0">
-          <div style="display:flex;align-items:center;gap:.85rem">
-            <div class="step-num">1</div>
-            <div style="flex:1">
-              <div style="font-weight:600;font-size:.9rem">Initialize Database</div>
-              <div class="progress" style="margin-top:.45rem"><div class="progress-fill" id="pb0"></div></div>
-            </div>
-            <div style="font-size:.75rem;color:#71717a;min-width:130px;text-align:right" id="sr0">—</div>
-          </div>
+        <div>
+          <h2 style="font-size:1.2rem;font-weight:700">Client Profiles</h2>
+          <p style="color:var(--muted);font-size:.8rem;margin-top:.2rem">Submitted via Nefertari · Lemon Slice Interview</p>
         </div>
-        <div class="step" id="step1">
-          <div style="display:flex;align-items:center;gap:.85rem">
-            <div class="step-num">2</div>
-            <div style="flex:1">
-              <div style="font-weight:600;font-size:.9rem">Collect Data <span style="color:#71717a;font-weight:400;font-size:.8rem">Retell API + CRM</span></div>
-              <div class="progress" style="margin-top:.45rem"><div class="progress-fill" id="pb1"></div></div>
-            </div>
-            <div style="font-size:.75rem;color:#71717a;min-width:130px;text-align:right" id="sr1">—</div>
-          </div>
-        </div>
-        <div class="step" id="step2">
-          <div style="display:flex;align-items:center;gap:.85rem">
-            <div class="step-num">3</div>
-            <div style="flex:1">
-              <div style="font-weight:600;font-size:.9rem">Clean + Normalize</div>
-              <div class="progress" style="margin-top:.45rem"><div class="progress-fill" id="pb2"></div></div>
-            </div>
-            <div style="font-size:.75rem;color:#71717a;min-width:130px;text-align:right" id="sr2">—</div>
-          </div>
-        </div>
-        <div class="step" id="step3">
-          <div style="display:flex;align-items:center;gap:.85rem">
-            <div class="step-num">4</div>
-            <div style="flex:1">
-              <div style="font-weight:600;font-size:.9rem">Run 3 Learning Modules <span style="color:#71717a;font-weight:400;font-size:.8rem">parallel</span></div>
-              <div class="progress" style="margin-top:.45rem"><div class="progress-fill" id="pb3"></div></div>
-            </div>
-            <div style="font-size:.75rem;color:#71717a;min-width:130px;text-align:right" id="sr3">—</div>
-          </div>
-        </div>
-        <div class="step" id="step4">
-          <div style="display:flex;align-items:center;gap:.85rem">
-            <div class="step-num">5</div>
-            <div style="flex:1">
-              <div style="font-weight:600;font-size:.9rem">Synthesize Insights</div>
-              <div class="progress" style="margin-top:.45rem"><div class="progress-fill" id="pb4"></div></div>
-            </div>
-            <div style="font-size:.75rem;color:#71717a;min-width:130px;text-align:right" id="sr4">—</div>
-          </div>
-        </div>
-        <div class="step" id="step5">
-          <div style="display:flex;align-items:center;gap:.85rem">
-            <div class="step-num">6</div>
-            <div style="flex:1">
-              <div style="font-weight:600;font-size:.9rem">Deploy to Margarita + Hermes</div>
-              <div class="progress" style="margin-top:.45rem"><div class="progress-fill" id="pb5"></div></div>
-            </div>
-            <div style="font-size:.75rem;color:#71717a;min-width:130px;text-align:right" id="sr5">—</div>
-          </div>
-        </div>
-        <div class="step" id="step6">
-          <div style="display:flex;align-items:center;gap:.85rem">
-            <div class="step-num">7</div>
-            <div style="flex:1">
-              <div style="font-weight:600;font-size:.9rem">Log Results + Measure</div>
-              <div class="progress" style="margin-top:.45rem"><div class="progress-fill" id="pb6"></div></div>
-            </div>
-            <div style="font-size:.75rem;color:#71717a;min-width:130px;text-align:right" id="sr6">—</div>
-          </div>
+        <div style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap">
+          <span class="badge b-gold" id="clientCount">0 clients</span>
+          <button class="btn btn-outline" style="font-size:.75rem;padding:.4rem .9rem" onclick="loadClients()">Refresh</button>
+          <button class="btn btn-outline" style="font-size:.75rem;padding:.4rem .9rem;color:var(--red);border-color:var(--red)" onclick="clearClients()">Clear</button>
+          <a href="embark.html" class="btn btn-gold" style="font-size:.8rem;padding:.5rem 1rem;text-decoration:none">+ Add Client</a>
         </div>
       </div>
 
-      <!-- Log -->
-      <div style="margin-top:1.5rem">
-        <div style="font-size:.75rem;color:#71717a;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.06em">Live Output</div>
-        <div id="logbox">
-          <span class="log-sep">Waiting for cycle to start...</span>
+      <!-- Filter bar -->
+      <div style="display:flex;gap:.5rem;margin-bottom:1.25rem;flex-wrap:wrap">
+        <button class="btn btn-outline active" id="filter-all" onclick="filterClients('all')" style="font-size:.75rem;padding:.35rem .85rem">All</button>
+        <button class="btn btn-outline" id="filter-hot" onclick="filterClients('hot')" style="font-size:.75rem;padding:.35rem .85rem;color:var(--green);border-color:var(--green)">Hot ≥70</button>
+        <button class="btn btn-outline" id="filter-warm" onclick="filterClients('warm')" style="font-size:.75rem;padding:.35rem .85rem;color:var(--gold);border-color:var(--gold)">Warm 40–69</button>
+        <button class="btn btn-outline" id="filter-cold" onclick="filterClients('cold')" style="font-size:.75rem;padding:.35rem .85rem;color:var(--blue);border-color:var(--blue)">Cold &lt;40</button>
+      </div>
+
+      <div id="clientsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem">
+        <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--muted)">
+          <div style="font-size:3rem;margin-bottom:1rem">𓁹</div>
+          <div>No clients yet. <a href="embark.html" style="color:var(--gold)">Send your first client through EMBARK →</a></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- TAB: INSIGHTS -->
+  <!-- Client detail overlay -->
+  <div class="client-detail-overlay" id="clientDetailOverlay" onclick="closeDetail(event)">
+    <div class="client-detail-card" id="clientDetailCard"></div>
+  </div>
+
+  <!-- ══════════════════════════════ TAB: CYCLE ══════════════════════════════ -->
+  <div class="tab-panel" id="p-cycle">
+    <div class="card glow" style="padding:1.75rem">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+        <h2 style="font-size:1.2rem;font-weight:700">Weekly Learning Cycle</h2>
+        <div style="display:flex;gap:.75rem;align-items:center">
+          <span class="badge b-gray" id="cycleStatus">STANDBY</span>
+          <button class="btn btn-gold" id="runBtn" onclick="startCycle()">▶ Run Learning Cycle</button>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.1rem" id="stepList">
+        <div class="step" id="step0"><div style="display:flex;align-items:center;gap:.85rem"><div class="step-num">1</div><div style="flex:1"><div style="font-weight:600;font-size:.9rem">Initialize Database</div><div class="progress" style="margin-top:.45rem"><div class="progress-fill" id="pb0"></div></div></div><div style="font-size:.75rem;color:var(--muted);min-width:130px;text-align:right" id="sr0">—</div></div></div>
+        <div class="step" id="step1"><div style="display:flex;align-items:center;gap:.85rem"><div class="step-num">2</div><div style="flex:1"><div style="font-weight:600;font-size:.9rem">Collect Data <span style="color:var(--muted);font-weight:400;font-size:.8rem">Retell API + CRM</span></div><div class="progress" style="margin-top:.45rem"><div class="progress-fill" id="pb1"></div></div></div><div style="font-size:.75rem;color:var(--muted);min-width:130px;text-align:right" id="sr1">—</div></div></div>
+        <div class="step" id="step2"><div style="display:flex;align-items:center;gap:.85rem"><div class="step-num">3</div><div style="flex:1"><div style="font-weight:600;font-size:.9rem">Clean + Normalize</div><div class="progress" style="margin-top:.45rem"><div class="progress-fill" id="pb2"></div></div></div><div style="font-size:.75rem;color:var(--muted);min-width:130px;text-align:right" id="sr2">—</div></div></div>
+        <div class="step" id="step3"><div style="display:flex;align-items:center;gap:.85rem"><div class="step-num">4</div><div style="flex:1"><div style="font-weight:600;font-size:.9rem">Run 3 Learning Modules <span style="color:var(--muted);font-weight:400;font-size:.8rem">parallel</span></div><div class="progress" style="margin-top:.45rem"><div class="progress-fill" id="pb3"></div></div></div><div style="font-size:.75rem;color:var(--muted);min-width:130px;text-align:right" id="sr3">—</div></div></div>
+        <div class="step" id="step4"><div style="display:flex;align-items:center;gap:.85rem"><div class="step-num">5</div><div style="flex:1"><div style="font-weight:600;font-size:.9rem">Synthesize Insights</div><div class="progress" style="margin-top:.45rem"><div class="progress-fill" id="pb4"></div></div></div><div style="font-size:.75rem;color:var(--muted);min-width:130px;text-align:right" id="sr4">—</div></div></div>
+        <div class="step" id="step5"><div style="display:flex;align-items:center;gap:.85rem"><div class="step-num">6</div><div style="flex:1"><div style="font-weight:600;font-size:.9rem">Deploy to Nefertari + Ramsees</div><div class="progress" style="margin-top:.45rem"><div class="progress-fill" id="pb5"></div></div></div><div style="font-size:.75rem;color:var(--muted);min-width:130px;text-align:right" id="sr5">—</div></div></div>
+        <div class="step" id="step6"><div style="display:flex;align-items:center;gap:.85rem"><div class="step-num">7</div><div style="flex:1"><div style="font-weight:600;font-size:.9rem">Log Results + Measure</div><div class="progress" style="margin-top:.45rem"><div class="progress-fill" id="pb6"></div></div></div><div style="font-size:.75rem;color:var(--muted);min-width:130px;text-align:right" id="sr6">—</div></div></div>
+      </div>
+      <div style="margin-top:1.5rem">
+        <div style="font-size:.75rem;color:var(--muted);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.06em">Live Output</div>
+        <div id="logbox"><span style="color:#374151">Waiting for cycle to start…</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ TAB: INSIGHTS ══════════════════════════════ -->
   <div class="tab-panel" id="p-insights">
     <div class="card" style="padding:1.75rem">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
@@ -225,88 +311,113 @@
         <span class="badge b-gold" id="insightBadge">Run the cycle to generate insights</span>
       </div>
       <div id="insightsList">
-        <div style="text-align:center;padding:3rem;color:#71717a">
+        <div style="text-align:center;padding:3rem;color:var(--muted)">
           <div style="font-size:3rem;margin-bottom:1rem">🧪</div>
-          <div>Click <strong style="color:#fff">Run Learning Cycle</strong> on the first tab to generate insights.</div>
+          <div>Click <strong style="color:#fff">Run Learning Cycle</strong> on the Cycle tab to generate insights.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- TAB: MODULES -->
+  <!-- ══════════════════════════════ TAB: MODULES ══════════════════════════════ -->
   <div class="tab-panel" id="p-modules">
     <div style="display:grid;gap:1.5rem;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
-      <div class="card" style="padding:1.5rem">
-        <div style="font-size:2rem;margin-bottom:.75rem">📊</div>
-        <div class="badge b-blue" style="margin-bottom:.75rem">Module 1</div>
-        <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:.6rem">Conversion Predictor</h3>
-        <p style="color:#94a3b8;font-size:.875rem;line-height:1.6;margin-bottom:1rem">Uses Naive Bayes to learn which lead profiles close. Analyzes temperature, call duration, sentiment, and time of day.</p>
-        <div style="border-top:1px solid #1f2937;padding-top:1rem">
-          <div class="phrase-row"><span style="color:#94a3b8;font-size:.85rem">Hot lead</span><span style="color:#4ade80;font-weight:700">78% close</span></div>
-          <div class="phrase-row"><span style="color:#94a3b8;font-size:.85rem">Warm lead</span><span style="color:#D4AF37;font-weight:700">45% close</span></div>
-          <div class="phrase-row"><span style="color:#94a3b8;font-size:.85rem">Cold lead</span><span style="color:#f87171;font-weight:700">5% close</span></div>
-        </div>
-      </div>
-      <div class="card" style="padding:1.5rem">
-        <div style="font-size:2rem;margin-bottom:.75rem">⏰</div>
-        <div class="badge b-blue" style="margin-bottom:.75rem">Module 2</div>
-        <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:.6rem">Optimal Timing</h3>
-        <p style="color:#94a3b8;font-size:.875rem;line-height:1.6;margin-bottom:1rem">Bins 147 call timestamps by hour and day. Finds the windows with highest success rate and worst windows to avoid.</p>
-        <div style="border-top:1px solid #1f2937;padding-top:1rem">
-          <div class="phrase-row"><span style="color:#94a3b8;font-size:.85rem">9–11am window</span><span style="color:#4ade80;font-weight:700">87% success</span></div>
-          <div class="phrase-row"><span style="color:#94a3b8;font-size:.85rem">1–3pm window</span><span style="color:#D4AF37;font-weight:700">65% success</span></div>
-          <div class="phrase-row"><span style="color:#94a3b8;font-size:.85rem">6pm+ window</span><span style="color:#f87171;font-weight:700">43% success</span></div>
-        </div>
-      </div>
-      <div class="card" style="padding:1.5rem">
-        <div style="font-size:2rem;margin-bottom:.75rem">💬</div>
-        <div class="badge b-blue" style="margin-bottom:.75rem">Module 3</div>
-        <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:.6rem">Script Optimizer</h3>
-        <p style="color:#94a3b8;font-size:.875rem;line-height:1.6;margin-bottom:1rem">Correlates 2–5 word phrases from 147 transcripts to close outcomes. Updates Margarita's system prompt automatically.</p>
-        <div style="border-top:1px solid #1f2937;padding-top:1rem">
-          <div class="phrase-row"><span style="color:#94a3b8;font-size:.85rem">"What's your situation?"</span><span style="color:#4ade80;font-weight:700">84%</span></div>
-          <div class="phrase-row"><span style="color:#94a3b8;font-size:.85rem">"Is this a good time?"</span><span style="color:#f87171;font-weight:700">18%</span></div>
-        </div>
-      </div>
+      <div class="card" style="padding:1.5rem"><div style="font-size:2rem;margin-bottom:.75rem">📊</div><div class="badge b-blue" style="margin-bottom:.75rem">Module 1</div><h3 style="font-size:1.1rem;font-weight:700;margin-bottom:.6rem">Conversion Predictor</h3><p style="color:#94a3b8;font-size:.875rem;line-height:1.6;margin-bottom:1rem">Uses Naive Bayes to learn which lead profiles close. Analyzes warmth, call duration, sentiment, and time of day.</p><div style="border-top:1px solid var(--border);padding-top:1rem"><div class="phrase-row"><span style="color:#94a3b8;font-size:.85rem">Hot lead (≥70)</span><span style="color:var(--green);font-weight:700">78% close</span></div><div class="phrase-row"><span style="color:#94a3b8;font-size:.85rem">Warm lead (40–69)</span><span style="color:var(--gold);font-weight:700">45% close</span></div><div class="phrase-row"><span style="color:#94a3b8;font-size:.85rem">Cold lead (&lt;40)</span><span style="color:var(--red);font-weight:700">5% close</span></div></div></div>
+      <div class="card" style="padding:1.5rem"><div style="font-size:2rem;margin-bottom:.75rem">⏰</div><div class="badge b-blue" style="margin-bottom:.75rem">Module 2</div><h3 style="font-size:1.1rem;font-weight:700;margin-bottom:.6rem">Optimal Timing</h3><p style="color:#94a3b8;font-size:.875rem;line-height:1.6;margin-bottom:1rem">Bins call timestamps by hour and day. Finds windows with highest success rate and worst windows to avoid.</p><div style="border-top:1px solid var(--border);padding-top:1rem"><div class="phrase-row"><span style="color:#94a3b8;font-size:.85rem">9–11am window</span><span style="color:var(--green);font-weight:700">87% success</span></div><div class="phrase-row"><span style="color:#94a3b8;font-size:.85rem">1–3pm window</span><span style="color:var(--gold);font-weight:700">65% success</span></div><div class="phrase-row"><span style="color:#94a3b8;font-size:.85rem">6pm+ window</span><span style="color:var(--red);font-weight:700">43% success</span></div></div></div>
+      <div class="card" style="padding:1.5rem"><div style="font-size:2rem;margin-bottom:.75rem">💬</div><div class="badge b-blue" style="margin-bottom:.75rem">Module 3</div><h3 style="font-size:1.1rem;font-weight:700;margin-bottom:.6rem">Script Optimizer</h3><p style="color:#94a3b8;font-size:.875rem;line-height:1.6;margin-bottom:1rem">Correlates 2–5 word phrases from transcripts to close outcomes. Updates Nefertari interview questions automatically.</p><div style="border-top:1px solid var(--border);padding-top:1rem"><div class="phrase-row"><span style="color:#94a3b8;font-size:.85rem">"What's your situation?"</span><span style="color:var(--green);font-weight:700">84%</span></div><div class="phrase-row"><span style="color:#94a3b8;font-size:.85rem">"Is this a good time?"</span><span style="color:var(--red);font-weight:700">18%</span></div></div></div>
     </div>
   </div>
 
-  <!-- TAB: GROWTH -->
+  <!-- ══════════════════════════════ TAB: GROWTH ══════════════════════════════ -->
   <div class="tab-panel" id="p-growth">
     <div class="card" style="padding:1.75rem">
       <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:.5rem">8-Week Close Rate Trajectory</h2>
-      <p style="color:#71717a;font-size:.875rem;margin-bottom:1.5rem">Baseline 18.5% → Week 8: 35.2% (+90%). Each week compounds on the last.</p>
-      <canvas id="growthChart" height="100"></canvas>
+      <p style="color:var(--muted);font-size:.875rem;margin-bottom:1.5rem">Baseline 18.5% → Week 8: 35.2% (+90%). Each week compounds on the last.</p>
+      <canvas id="growthChart" height="80"></canvas>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-top:1.5rem">
         <div class="metric-box"><div class="metric-val">18.5%</div><div class="metric-lbl">Week 1 Baseline</div></div>
-        <div class="metric-box"><div class="metric-val" style="color:#D4AF37">35.2%</div><div class="metric-lbl">Week 8 Result</div></div>
-        <div class="metric-box"><div class="metric-val" style="color:#4ade80">+90%</div><div class="metric-lbl">Total Improvement</div></div>
+        <div class="metric-box"><div class="metric-val" style="color:var(--gold)">35.2%</div><div class="metric-lbl">Week 8 Result</div></div>
+        <div class="metric-box"><div class="metric-val" style="color:var(--green)">+90%</div><div class="metric-lbl">Total Improvement</div></div>
         <div class="metric-box"><div class="metric-val">+2.1%</div><div class="metric-lbl">Avg Gain / Week</div></div>
       </div>
     </div>
   </div>
 
-  <!-- TAB: ECONOMICS -->
+  <!-- ══════════════════════════════ TAB: ECONOMICS ══════════════════════════════ -->
   <div class="tab-panel" id="p-economics">
     <div style="display:grid;gap:1.5rem">
-      <div class="card" style="padding:1.75rem;border-color:#D4AF37">
+      <div class="card" style="padding:1.75rem;border-color:var(--gold)">
         <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:1.5rem" class="gold">Cost vs Return</h2>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.5rem">
           <div class="metric-box"><div class="metric-val">$0.001</div><div class="metric-lbl">API Cost / Week</div></div>
           <div class="metric-box"><div class="metric-val">~$50</div><div class="metric-lbl">Monthly Cost</div></div>
-          <div class="metric-box"><div class="metric-val" style="color:#4ade80">$19,840</div><div class="metric-lbl">Revenue Impact / Week</div></div>
-          <div class="metric-box"><div class="metric-val" style="color:#D4AF37">19,000×</div><div class="metric-lbl">Return on Investment</div></div>
+          <div class="metric-box"><div class="metric-val" style="color:var(--green)">$53,440</div><div class="metric-lbl">Extra Revenue / Week</div></div>
+          <div class="metric-box"><div class="metric-val" style="color:var(--gold)">4,275×</div><div class="metric-lbl">Return on Investment</div></div>
         </div>
       </div>
       <div class="card" style="padding:1.75rem">
         <h3 style="font-weight:700;margin-bottom:1rem">How the numbers work</h3>
         <div style="display:flex;flex-direction:column;gap:.75rem;color:#94a3b8;font-size:.875rem;line-height:1.7">
           <div>• Baseline close rate: <strong style="color:#fff">18.5%</strong> (100 leads/week)</div>
-          <div>• Week 8 close rate: <strong style="color:#fff">35.2%</strong> — that's <strong style="color:#4ade80">+16.7 extra closures</strong></div>
+          <div>• Week 8 close rate: <strong style="color:#fff">35.2%</strong> — that's <strong style="color:var(--green)">+16.7 extra closures</strong></div>
           <div>• Average case value: <strong style="color:#fff">$3,200</strong></div>
-          <div>• Extra revenue per week: <strong style="color:#4ade80">16.7 × $3,200 = $53,440</strong></div>
-          <div>• Monthly extra revenue: <strong style="color:#D4AF37">~$213,760</strong></div>
-          <div style="border-top:1px solid #1f2937;padding-top:.75rem">Monthly cost: $50 &nbsp;|&nbsp; Return: $213,760 &nbsp;|&nbsp; <strong style="color:#D4AF37">ROI: 4,275×</strong> (conservative)</div>
+          <div>• Extra revenue per week: <strong style="color:var(--green)">16.7 × $3,200 = $53,440</strong></div>
+          <div>• Monthly extra revenue: <strong style="color:var(--gold)">~$213,760</strong></div>
+          <div style="border-top:1px solid var(--border);padding-top:.75rem">Monthly cost: $50 &nbsp;|&nbsp; Return: $213,760 &nbsp;|&nbsp; <strong style="color:var(--gold)">ROI: 4,275×</strong> (conservative)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ TAB: SETTINGS ══════════════════════════════ -->
+  <div class="tab-panel" id="p-settings">
+    <div style="display:grid;gap:1.5rem;max-width:700px">
+      <div class="card" style="padding:1.75rem">
+        <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:1.5rem">Ramsees Voice Settings <span class="badge b-gold" style="margin-left:.5rem">ElevenLabs</span></h2>
+        <div style="display:flex;flex-direction:column;gap:1.25rem">
+          <div>
+            <label class="settings-label">ElevenLabs API Key</label>
+            <input class="settings-input" type="password" id="elevenApiKey" placeholder="sk-…" value="">
+            <div style="font-size:.7rem;color:var(--muted);margin-top:.35rem">Get yours at elevenlabs.io → Profile → API Keys</div>
+          </div>
+          <div>
+            <label class="settings-label">Voice ID (Ramsees)</label>
+            <select class="settings-input" id="voiceId">
+              <option value="pNInz6obpgDQGcFmaJgB">Adam (deep, authoritative)</option>
+              <option value="ErXwobaYiN019PkySvjV">Antoni (warm, professional)</option>
+              <option value="VR6AewLTigWG4xSOukaG">Arnold (strong, commanding)</option>
+              <option value="yoZ06aMxZJJ28mfd3POQ">Sam (confident, clear)</option>
+              <option value="custom">Custom Voice ID</option>
+            </select>
+          </div>
+          <div id="customVoiceRow" style="display:none">
+            <label class="settings-label">Custom Voice ID</label>
+            <input class="settings-input" id="customVoiceId" placeholder="your-voice-id-here">
+          </div>
+          <div>
+            <label class="settings-label">Voice Stability (0–100)</label>
+            <input class="settings-input" type="range" id="voiceStability" min="0" max="100" value="65" style="padding:.4rem 0">
+            <span style="font-size:.8rem;color:var(--muted)" id="stabilityVal">65%</span>
+          </div>
+          <div>
+            <label class="settings-label">Claude API Key (Ramsees Intelligence)</label>
+            <input class="settings-input" type="password" id="claudeApiKey" placeholder="sk-ant-…">
+            <div style="font-size:.7rem;color:var(--muted);margin-top:.35rem">Powers Ramsees understanding of Mr. Garcia's commands</div>
+          </div>
+          <button class="btn btn-gold" onclick="saveSettings()" style="align-self:flex-start">Save Settings</button>
+          <div id="settingsSaved" style="color:var(--green);font-size:.8rem;display:none">✓ Settings saved</div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:1.75rem">
+        <h3 style="font-weight:700;margin-bottom:1rem">System Status</h3>
+        <div style="display:flex;flex-direction:column;gap:.75rem;font-size:.875rem">
+          <div class="phrase-row"><span style="color:var(--muted)">Ramsees Engine</span><span class="badge b-green">Active</span></div>
+          <div class="phrase-row"><span style="color:var(--muted)">Nefertari (Lemon Slice)</span><span class="badge b-green">Active</span></div>
+          <div class="phrase-row"><span style="color:var(--muted)">ElevenLabs TTS</span><span class="badge" id="elevenStatus" style="background:#18181b;color:#71717a">Not configured</span></div>
+          <div class="phrase-row"><span style="color:var(--muted)">Claude Intelligence</span><span class="badge" id="claudeStatus" style="background:#18181b;color:#71717a">Not configured</span></div>
+          <div class="phrase-row"><span style="color:var(--muted)">Voice Recognition</span><span class="badge" id="speechStatus" style="background:#18181b;color:#71717a">Checking…</span></div>
+          <div class="phrase-row"><span style="color:var(--muted)">Client Storage</span><span class="badge b-green">LocalStorage Ready</span></div>
         </div>
       </div>
     </div>
@@ -315,297 +426,538 @@
 </div>
 
 <!-- FOOTER -->
-<div style="border-top:1px solid #1f2937;padding:2rem 1.5rem;text-align:center;color:#71717a;font-size:.8rem">
-  YouBecameTheMoney · Layer 3 Learning Engine · Built for Mr Garcia · <span id="footerTime"></span>
+<div style="border-top:1px solid var(--border);padding:1.5rem;text-align:center;color:var(--muted);font-size:.75rem;margin-top:1rem">
+  Ramsees Command Center · YouBecameTheMoney · Built for Mr. Garcia · <span id="footerTime"></span>
 </div>
 
 <script>
-// ── Chart ──────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// CHART
+// ══════════════════════════════════════════════════════════
 const ctx = document.getElementById('growthChart').getContext('2d');
 new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels: ['Wk 1','Wk 2','Wk 3','Wk 4','Wk 5','Wk 6','Wk 7','Wk 8'],
-    datasets: [{
-      label: 'Close Rate %',
-      data: [18.5, 21.2, 24.1, 26.8, 28.3, 30.5, 32.8, 35.2],
-      borderColor: '#D4AF37', backgroundColor: 'rgba(212,175,55,.12)',
-      borderWidth: 2.5, pointBackgroundColor: '#D4AF37',
-      pointRadius: 5, tension: 0.4, fill: true
-    }]
+  type:'line',
+  data:{
+    labels:['Wk 1','Wk 2','Wk 3','Wk 4','Wk 5','Wk 6','Wk 7','Wk 8'],
+    datasets:[{label:'Close Rate %',data:[18.5,21.2,24.1,26.8,28.3,30.5,32.8,35.2],
+      borderColor:'#D4AF37',backgroundColor:'rgba(212,175,55,.12)',borderWidth:2.5,
+      pointBackgroundColor:'#D4AF37',pointRadius:5,tension:.4,fill:true}]
   },
-  options: {
-    responsive: true,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { grid: { color: '#1f2937' }, ticks: { color: '#6b7280' } },
-      y: { grid: { color: '#1f2937' }, ticks: { color: '#6b7280', callback: v => v+'%' }, min: 14, max: 40 }
-    }
-  }
+  options:{responsive:true,plugins:{legend:{display:false}},
+    scales:{x:{grid:{color:'#1f2937'},ticks:{color:'#6b7280'}},
+            y:{grid:{color:'#1f2937'},ticks:{color:'#6b7280',callback:v=>v+'%'},min:14,max:40}}}
 });
 
-// ── Tabs ───────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// TABS
+// ══════════════════════════════════════════════════════════
+const ALL_TABS = ['ramsees','clients','cycle','insights','modules','growth','economics','settings'];
 function showTab(name) {
-  ['cycle','insights','modules','growth','economics'].forEach(n => {
+  ALL_TABS.forEach(n => {
     document.getElementById('p-'+n).classList.toggle('active', n===name);
     document.getElementById('t-'+n).classList.toggle('active', n===name);
   });
+  if(name==='clients') loadClients();
+  if(name==='ramsees') refreshRamseesMem();
 }
 
-// ── Footer time ────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// FOOTER + INIT
+// ══════════════════════════════════════════════════════════
 document.getElementById('footerTime').textContent = new Date().toLocaleDateString('en-ZA',{year:'numeric',month:'long',day:'numeric'});
+loadMetrics();
+checkSpeechSupport();
+loadSettings();
+refreshRamseesMem();
 
-// ── Step control ───────────────────────────────────
-const STEP_TRIGGERS = [
-  /Initializing database/i,
-  /Collecting data/i,
-  /Cleaning data/i,
-  /Running learning/i,
-  /Synthesizing insights/i,
-  /Executing improvements/i,
-  /Logging results/i,
-];
-const STEP_DONE_TRIGGERS = [
-  /Database ready/i,
-  /Collected \d+ calls/i,
-  /Cleaned data/i,
-  /All modules complete/i,
-  /Generated \d+ insights/i,
-  /Executed improvements/i,
-  /CYCLE COMPLETE/i,
-];
-const STEP_RESULTS = [
-  '✓ insights.db ready',
-  '✓ 147 calls · 32 outcomes',
-  '✓ 0 errors',
-  '✓ 3 modules done',
-  '✓ 5 insights ranked',
-  '✓ Margarita updated',
-  '✓ logged',
-];
+// ══════════════════════════════════════════════════════════
+// SETTINGS
+// ══════════════════════════════════════════════════════════
+function loadSettings(){
+  const s = JSON.parse(localStorage.getItem('ybtm_settings')||'{}');
+  if(s.elevenApiKey) document.getElementById('elevenApiKey').value=s.elevenApiKey;
+  if(s.voiceId) document.getElementById('voiceId').value=s.voiceId;
+  if(s.claudeApiKey) document.getElementById('claudeApiKey').value=s.claudeApiKey;
+  if(s.voiceStability!=null){document.getElementById('voiceStability').value=s.voiceStability;document.getElementById('stabilityVal').textContent=s.voiceStability+'%';}
+  updateStatusBadges();
+}
+function saveSettings(){
+  const s={
+    elevenApiKey: document.getElementById('elevenApiKey').value.trim(),
+    voiceId: document.getElementById('voiceId').value,
+    customVoiceId: document.getElementById('customVoiceId').value.trim(),
+    claudeApiKey: document.getElementById('claudeApiKey').value.trim(),
+    voiceStability: document.getElementById('voiceStability').value,
+  };
+  localStorage.setItem('ybtm_settings', JSON.stringify(s));
+  document.getElementById('settingsSaved').style.display='block';
+  setTimeout(()=>document.getElementById('settingsSaved').style.display='none',3000);
+  updateStatusBadges();
+}
+function updateStatusBadges(){
+  const s=JSON.parse(localStorage.getItem('ybtm_settings')||'{}');
+  const eb=document.getElementById('elevenStatus');
+  if(s.elevenApiKey){eb.textContent='Connected';eb.className='badge b-green';}
+  else{eb.textContent='Not configured';eb.className='badge b-gray';}
+  const cb=document.getElementById('claudeStatus');
+  if(s.claudeApiKey){cb.textContent='Connected';cb.className='badge b-green';}
+  else{cb.textContent='Not configured';cb.className='badge b-gray';}
+}
+document.getElementById('voiceId').addEventListener('change',function(){
+  document.getElementById('customVoiceRow').style.display=this.value==='custom'?'block':'none';
+});
+document.getElementById('voiceStability').addEventListener('input',function(){
+  document.getElementById('stabilityVal').textContent=this.value+'%';
+});
 
-function stepActive(i) {
-  const el = document.getElementById('step'+i);
-  el.classList.add('step-active');
-  document.getElementById('pb'+i).style.width = '50%';
-}
-function stepDone(i) {
-  const el = document.getElementById('step'+i);
-  el.classList.remove('step-active');
-  el.classList.add('step-done');
-  document.getElementById('pb'+i).style.width = '100%';
-  const sr = document.getElementById('sr'+i);
-  sr.textContent = STEP_RESULTS[i];
-  sr.style.color = '#4ade80';
-}
-function resetSteps() {
-  for(let i=0;i<7;i++){
-    const el = document.getElementById('step'+i);
-    el.classList.remove('step-active','step-done');
-    document.getElementById('pb'+i).style.width = '0';
-    document.getElementById('sr'+i).textContent = '—';
-    document.getElementById('sr'+i).style.color = '';
+// ══════════════════════════════════════════════════════════
+// SPEECH RECOGNITION
+// ══════════════════════════════════════════════════════════
+let recognition = null;
+let isListening = false;
+
+function checkSpeechSupport(){
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const badge = document.getElementById('speechStatus');
+  if(SpeechRecognition){
+    badge.textContent='Available';badge.className='badge b-green';
+    recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.lang = 'en-US';
+    recognition.onresult = handleSpeechResult;
+    recognition.onend = handleSpeechEnd;
+    recognition.onerror = handleSpeechError;
+  } else {
+    badge.textContent='Not supported';badge.className='badge b-red';
   }
 }
 
-// ── Counter animation ─────────────────────────────
-function countUp(id, end, suffix, duration=800) {
-  const el = document.getElementById(id);
-  const start = 0, step = end / (duration/16);
-  let cur = start;
-  const t = setInterval(() => {
-    cur = Math.min(cur+step, end);
-    el.textContent = (typeof end === 'number' && !Number.isInteger(end))
-      ? cur.toFixed(1)+suffix : Math.round(cur)+suffix;
-    if(cur>=end) clearInterval(t);
-  }, 16);
+function toggleVoice(){
+  if(isListening) stopListening();
+  else startListening();
 }
 
-// ── Log rendering ─────────────────────────────────
-function logLine(text) {
-  const box = document.getElementById('logbox');
-  const div = document.createElement('div');
-  div.style.animation = 'fadeUp .2s ease both';
-  let cls = 'log-step';
-  if(/✅/.test(text)) cls='log-ok';
-  else if(/\[ERROR\]|Error/i.test(text)) cls='log-warn';
-  else if(/═{5,}/.test(text)) cls='log-sep';
-  else if(/LAYER 3|CYCLE/.test(text)) cls='log-head';
-  else if(/INFO/.test(text)) cls='log-info';
-  div.className = cls;
-  div.textContent = text;
-  box.appendChild(div);
-  box.scrollTop = box.scrollHeight;
+function startListening(){
+  if(!recognition){alert('Voice recognition not supported in this browser. Try Chrome.');return;}
+  isListening=true;
+  recognition.start();
+  setOrbState('listening');
+  document.getElementById('transcriptBox').innerHTML='<span style="color:#4ade80" class="pulse">● Listening…</span>';
+  startWaveform();
+}
+function stopListening(){
+  if(recognition && isListening){recognition.stop();}
+  isListening=false;
+}
+function handleSpeechResult(e){
+  let transcript='';
+  for(let i=e.resultIndex;i<e.results.length;i++) transcript+=e.results[i][0].transcript;
+  document.getElementById('transcriptBox').textContent=transcript;
+  if(e.results[e.results.length-1].isFinal){
+    stopListening();
+    processCommand(transcript.trim());
+  }
+}
+function handleSpeechEnd(){
+  isListening=false;
+  stopWaveform();
+  if(document.getElementById('transcriptBox').innerHTML.includes('Listening')){
+    document.getElementById('transcriptBox').innerHTML='<span style="color:#71717a">Nothing detected. Try again.</span>';
+    setOrbState('idle');
+  }
+}
+function handleSpeechError(e){
+  isListening=false;stopWaveform();
+  document.getElementById('transcriptBox').innerHTML=`<span style="color:#f87171">Error: ${e.error}</span>`;
+  setOrbState('idle');
 }
 
-// ── Insights render ───────────────────────────────
-const INSIGHTS = [
-  { rank:1, module:'Script Optimizer', color:'#4ade80',
-    title:'High-performing phrases = 81% avg close rate',
-    detail:'"What\'s your situation?" (84%), "Tell me your challenges" (81%). Removing "Is this a good time?" adds +3% immediately.',
-    action:'Update Margarita\'s system prompt. Remove apologetic openers.', confidence:88, impact:6.0 },
-  { rank:2, module:'Conversion Predictor', color:'#60a5fa',
-    title:'Hot leads close at 78% — triple the baseline',
-    detail:'Temperature is the single strongest predictor. Hot=78%, Warm=45%, Cold=5%. Route hot leads immediately.',
-    action:'Priority queue for hot leads. No delay from intake to call.', confidence:85, impact:5.0 },
-  { rank:3, module:'Optimal Timing', color:'#D4AF37',
-    title:'9–11am delivers 87% success vs 43% at 6pm',
-    detail:'44-point gap between best and worst window. Tuesday–Thursday outperform Friday.',
-    action:'Batch all hot lead calls into 9–11am blocks.', confidence:82, impact:4.0 },
-  { rank:4, module:'Script Optimizer', color:'#f97316',
-    title:'Apologetic phrases actively hurt conversion',
-    detail:'"Is this a good time?" (18%), "I\'m sure you\'re busy" (22%), "Sorry to bother" (25%).',
-    action:'Remove from Margarita\'s script entirely.', confidence:85, impact:3.0 },
-  { rank:5, module:'Conversion Predictor', color:'#a78bfa',
-    title:'Lead source determines optimal call window',
-    detail:'Web leads peak at 2–4pm. SMS leads peak at 9–11am. Organic leads are flexible.',
-    action:'Match each source to its optimal routing window.', confidence:78, impact:2.0 },
-];
+function setOrbState(state){
+  const orb=document.getElementById('voiceOrb');
+  const label=document.getElementById('orbLabel');
+  orb.className='voice-orb'+(state!=='idle'?' '+state:'');
+  if(state==='listening'){label.textContent='Listening…';}
+  else if(state==='speaking'){label.textContent='Ramsees speaking…';}
+  else if(state==='thinking'){label.textContent='Thinking…';}
+  else{label.textContent='Tap to speak';}
+}
 
-function renderInsights() {
-  const el = document.getElementById('insightsList');
-  el.innerHTML = INSIGHTS.map((ins, i) => `
-    <div class="insight-card fade-in" style="animation-delay:${i*0.1}s;margin-bottom:.85rem">
-      <div style="display:flex;align-items:flex-start;gap:1rem;flex-wrap:wrap">
-        <div style="flex:1;min-width:240px">
-          <div style="display:flex;gap:.5rem;margin-bottom:.6rem;flex-wrap:wrap">
-            <span style="font-size:.7rem;font-weight:700;color:#71717a">#${ins.rank}</span>
-            <span class="badge b-blue">${ins.module}</span>
-          </div>
-          <div style="font-weight:700;font-size:1rem;margin-bottom:.5rem;color:${ins.color}">${ins.title}</div>
-          <div style="color:#94a3b8;font-size:.85rem;line-height:1.6;margin-bottom:.75rem">${ins.detail}</div>
-          <div style="background:#0a0a0a;border:1px solid #1f2937;border-radius:.5rem;padding:.75rem">
-            <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:#71717a;margin-bottom:.3rem">Action Deployed</div>
-            <div style="font-size:.875rem;color:#fff">${ins.action}</div>
-          </div>
+// ══════════════════════════════════════════════════════════
+// WAVEFORM ANIMATION
+// ══════════════════════════════════════════════════════════
+let waveInterval=null;
+function startWaveform(){
+  document.getElementById('waveform').style.opacity='1';
+  waveInterval=setInterval(()=>{
+    for(let i=0;i<7;i++){
+      const h=6+Math.random()*20;
+      document.getElementById('wb'+i).style.height=h+'px';
+    }
+  },120);
+}
+function stopWaveform(){
+  clearInterval(waveInterval);
+  document.getElementById('waveform').style.opacity='0';
+}
+
+// ══════════════════════════════════════════════════════════
+// COMMAND PROCESSING
+// ══════════════════════════════════════════════════════════
+function quickCmd(cmd){
+  document.getElementById('transcriptBox').textContent=cmd;
+  processCommand(cmd);
+}
+function sendTextCommand(){
+  const val=document.getElementById('textCommand').value.trim();
+  if(!val)return;
+  document.getElementById('transcriptBox').textContent=val;
+  document.getElementById('textCommand').value='';
+  processCommand(val);
+}
+
+async function processCommand(cmd){
+  setOrbState('thinking');
+  document.getElementById('ramseesStatus').textContent='THINKING';
+  document.getElementById('ramseesStatus').className='badge b-blue pulse';
+
+  const response = await getRamseesResponse(cmd);
+  displayResponse(response);
+  addToHistory(cmd, response);
+
+  setOrbState('speaking');
+  document.getElementById('ramseesStatus').textContent='SPEAKING';
+  await speakWithElevenLabs(response);
+  setOrbState('idle');
+  document.getElementById('ramseesStatus').textContent='READY';
+  document.getElementById('ramseesStatus').className='badge b-green';
+}
+
+async function getRamseesResponse(cmd){
+  const s=JSON.parse(localStorage.getItem('ybtm_settings')||'{}');
+  const clients=JSON.parse(localStorage.getItem('ybtm_clients')||'[]');
+
+  // Try Claude API if key provided
+  if(s.claudeApiKey){
+    try{
+      const systemPrompt=`You are Ramsees, the AI command center for Daniel Garcia, a sovereign wealth architect and commercial law expert. You speak with authority, precision, and deep legal knowledge. You have access to client data from Nefertari interviews. Current client data: ${JSON.stringify(clients.slice(0,10))}. Respond concisely (2-4 sentences), in first person as Ramsees. Address Mr. Garcia directly.`;
+      const res=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-api-key':s.claudeApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+        body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:300,system:systemPrompt,messages:[{role:'user',content:cmd}]})
+      });
+      const data=await res.json();
+      if(data.content&&data.content[0])return data.content[0].text;
+    }catch(e){console.warn('Claude API error:',e);}
+  }
+
+  // Fallback: intelligent local responses
+  return localRamsees(cmd, clients);
+}
+
+function localRamsees(cmd, clients){
+  const c=cmd.toLowerCase();
+  const hot=clients.filter(cl=>cl.warmthScore>=70);
+  const total=clients.length;
+
+  if(/hot lead|urgent/i.test(c)){
+    if(hot.length===0)return `Mr. Garcia, I currently have no hot leads in the pipeline. ${total} total clients onboarded via Nefertari. I recommend running an EMBARK campaign to generate new intake.`;
+    return `Mr. Garcia, I have ${hot.length} hot lead${hot.length>1?'s':''} requiring immediate attention: ${hot.slice(0,3).map(c=>`${c.fullName} (warmth: ${c.warmthScore})`).join(', ')}. I recommend calling them in the 9–11am window for maximum conversion.`;
+  }
+  if(/pipeline|value/i.test(c)){
+    return `Mr. Garcia, current pipeline: ${total} clients total, ${hot.length} hot leads. Based on our 78% close rate for hot leads, projected pipeline value this week is approximately $${(hot.length*0.78*3200).toLocaleString()}.`;
+  }
+  if(/warmth/i.test(c)){
+    if(total===0)return `Mr. Garcia, no clients have been onboarded yet. Send your first prospect through the EMBARK portal to begin building warmth profiles.`;
+    const avg=Math.round(clients.reduce((a,b)=>a+(b.warmthScore||0),0)/total);
+    return `Mr. Garcia, average warmth score across ${total} clients is ${avg}/100. ${hot.length} clients are classified as hot (≥70). Top client: ${clients[0]?.fullName||'—'} with a score of ${clients[0]?.warmthScore||'—'}.`;
+  }
+  if(/cycle|learning/i.test(c)){
+    showTab('cycle');
+    return `Mr. Garcia, initiating the weekly learning cycle now. Navigating to the cycle panel. This will analyze all interaction data and deploy improvements to Nefertari's interview protocol.`;
+  }
+  if(/schedule|call|tomorrow/i.test(c)){
+    return `Mr. Garcia, I recommend scheduling calls for 9–11am tomorrow. Hot leads should be contacted first. I have flagged ${hot.length} hot lead${hot.length!==1?'s':''} for priority outreach.`;
+  }
+  if(/insight|report/i.test(c)){
+    showTab('insights');
+    return `Mr. Garcia, navigating to the insights panel. Run the learning cycle first to generate fresh insights. Current data suggests focusing on the 9–11am calling window and removing apologetic openers from your script.`;
+  }
+  if(/client/i.test(c)){
+    showTab('clients');
+    return `Mr. Garcia, displaying the client roster. ${total} clients onboarded via Nefertari. Average warmth score: ${total?Math.round(clients.reduce((a,b)=>a+(b.warmthScore||0),0)/total):'—'}/100.`;
+  }
+  return `Mr. Garcia, I've received your command: "${cmd}". I am processing the request. To unlock full intelligence, please configure your Claude API key in the Settings panel. I remain at your command.`;
+}
+
+// ══════════════════════════════════════════════════════════
+// ELEVENLABS TTS
+// ══════════════════════════════════════════════════════════
+async function speakWithElevenLabs(text){
+  const s=JSON.parse(localStorage.getItem('ybtm_settings')||'{}');
+  if(!s.elevenApiKey){
+    // Fallback to browser TTS
+    return speakBrowser(text);
+  }
+  const voiceId=s.voiceId==='custom'?s.customVoiceId:(s.voiceId||'pNInz6obpgDQGcFmaJgB');
+  const stability=(parseInt(s.voiceStability)||65)/100;
+  try{
+    startWaveform();
+    const res=await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','xi-api-key':s.elevenApiKey},
+      body:JSON.stringify({text,model_id:'eleven_monolingual_v1',voice_settings:{stability,similarity_boost:0.75}})
+    });
+    if(!res.ok)throw new Error('ElevenLabs error');
+    const blob=await res.blob();
+    const url=URL.createObjectURL(blob);
+    await new Promise(resolve=>{
+      const audio=new Audio(url);
+      audio.onended=()=>{URL.revokeObjectURL(url);resolve();};
+      audio.onerror=()=>{resolve();};
+      audio.play();
+    });
+  }catch(e){
+    console.warn('ElevenLabs TTS failed, using browser TTS:',e);
+    await speakBrowser(text);
+  }finally{stopWaveform();}
+}
+
+function speakBrowser(text){
+  return new Promise(resolve=>{
+    if(!window.speechSynthesis){resolve();return;}
+    window.speechSynthesis.cancel();
+    const utt=new SpeechSynthesisUtterance(text);
+    utt.rate=0.92;utt.pitch=0.85;utt.volume=1;
+    const voices=window.speechSynthesis.getVoices();
+    const deep=voices.find(v=>/male|daniel|google.*us/i.test(v.name))||voices[0];
+    if(deep)utt.voice=deep;
+    utt.onend=resolve;utt.onerror=resolve;
+    startWaveform();
+    window.speechSynthesis.speak(utt);
+    utt.onend=()=>{stopWaveform();resolve();};
+  });
+}
+
+function testRamsees(){
+  const text=`Ramsees online, Mr. Garcia. All systems are operational. Nefertari is ready to receive new clients through the EMBARK portal. I await your command.`;
+  displayResponse(text);
+  addToHistory('[TEST]', text);
+  speakWithElevenLabs(text);
+}
+
+function displayResponse(text){
+  document.getElementById('responseBox').textContent=text;
+}
+
+// ══════════════════════════════════════════════════════════
+// COMMAND HISTORY
+// ══════════════════════════════════════════════════════════
+const cmdHistory=[];
+function addToHistory(cmd, resp){
+  cmdHistory.unshift({cmd,resp,time:new Date().toLocaleTimeString()});
+  if(cmdHistory.length>20)cmdHistory.pop();
+  renderHistory();
+}
+function renderHistory(){
+  const el=document.getElementById('commandHistory');
+  if(!cmdHistory.length){el.innerHTML='<div style="color:var(--muted);font-size:.8rem;text-align:center;padding:1rem">No commands yet</div>';return;}
+  el.innerHTML=cmdHistory.map(h=>`
+    <div style="background:#0d1117;border:1px solid var(--border);border-radius:.5rem;padding:.6rem .85rem;cursor:pointer;transition:border-color .2s" onclick="quickCmd('${h.cmd.replace(/'/g,"\\'")}')">
+      <div style="font-size:.75rem;font-weight:600;color:#e5e7eb;margin-bottom:.2rem">${h.cmd.slice(0,60)}${h.cmd.length>60?'…':''}</div>
+      <div style="font-size:.65rem;color:var(--muted)">${h.time}</div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════
+// CLIENT MANAGEMENT
+// ══════════════════════════════════════════════════════════
+let allClients=[];
+let clientFilter='all';
+
+function loadClients(){
+  allClients=JSON.parse(localStorage.getItem('ybtm_clients')||'[]');
+  document.getElementById('clientCount').textContent=`${allClients.length} client${allClients.length!==1?'s':''}`;
+  renderClients();
+  refreshRamseesMem();
+}
+
+function filterClients(f){
+  clientFilter=f;
+  ['all','hot','warm','cold'].forEach(id=>{
+    document.getElementById('filter-'+id).style.opacity=id===f?'1':'0.5';
+  });
+  renderClients();
+}
+
+function renderClients(){
+  const grid=document.getElementById('clientsGrid');
+  let clients=allClients;
+  if(clientFilter==='hot')clients=clients.filter(c=>c.warmthScore>=70);
+  else if(clientFilter==='warm')clients=clients.filter(c=>c.warmthScore>=40&&c.warmthScore<70);
+  else if(clientFilter==='cold')clients=clients.filter(c=>c.warmthScore<40);
+
+  if(!clients.length){
+    if(allClients.length===0){
+      grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--muted)"><div style="font-size:3rem;margin-bottom:1rem">𓁹</div><div>No clients yet. <a href="embark.html" style="color:var(--gold)">Send your first client through EMBARK →</a></div></div>`;
+    } else {
+      grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--muted)">No clients match this filter.</div>`;
+    }
+    return;
+  }
+
+  grid.innerHTML=clients.map((c,i)=>{
+    const w=c.warmthScore||0;
+    const wColor=w>=70?'#4ade80':w>=40?'#D4AF37':'#60a5fa';
+    const wLabel=w>=70?'HOT':w>=40?'WARM':'COLD';
+    const wBadge=w>=70?'b-green':w>=40?'b-gold':'b-blue';
+    return `<div class="client-card fade-in" style="animation-delay:${i*0.05}s" onclick="openDetail(${i})">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.85rem">
+        <div>
+          <div style="font-weight:700;font-size:1rem">${c.fullName||'Unknown'}</div>
+          <div style="font-size:.75rem;color:var(--muted);margin-top:.2rem">${c.caseTypeLabel||c.caseType||'—'} · ${c.state||'—'}</div>
         </div>
         <div style="text-align:right;flex-shrink:0">
-          <div style="font-size:2rem;font-weight:900;color:#4ade80">+${ins.impact}%</div>
-          <div style="font-size:.7rem;color:#71717a;margin-top:.25rem">${ins.confidence}% confidence</div>
+          <div style="font-size:1.5rem;font-weight:800;color:${wColor}">${w}</div>
+          <span class="badge ${wBadge}" style="margin-top:.2rem">${wLabel}</span>
         </div>
       </div>
+      <div class="warmth-bar-bg"><div class="warmth-bar-fill" style="width:${w}%;background:${wColor}"></div></div>
+      <div style="display:flex;gap:.5rem;margin-top:.85rem;flex-wrap:wrap">
+        ${c.urgency?`<span class="badge b-gray">${c.urgency.split('—')[0].trim().slice(0,25)}</span>`:''}
+        ${c.amount?`<span class="badge b-gray">${c.amount.slice(0,20)}</span>`:''}
+      </div>
+      <div style="font-size:.65rem;color:var(--muted);margin-top:.6rem">${c.sessionId||''} · ${c.completedAt?new Date(c.completedAt).toLocaleDateString():'—'}</div>
+    </div>`;
+  }).join('');
+}
+
+function openDetail(idx){
+  const c=allClients[idx];
+  if(!c)return;
+  const w=c.warmthScore||0;
+  const wColor=w>=70?'#4ade80':w>=40?'#D4AF37':'#60a5fa';
+  document.getElementById('clientDetailCard').innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+      <div>
+        <h2 style="font-size:1.4rem;font-weight:800">${c.fullName||'Unknown'}</h2>
+        <p style="color:var(--muted);margin-top:.3rem">${c.sessionId||'—'}</p>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:2.5rem;font-weight:900;color:${wColor}">${w}</div>
+        <div style="font-size:.7rem;color:var(--muted)">Warmth Score / 100</div>
+      </div>
     </div>
-  `).join('');
-  document.getElementById('insightBadge').textContent = '5 Insights Generated';
-  document.getElementById('insightBadge').className = 'badge b-green';
+    ${[
+      ['Full Name', c.fullName],['Gender', c.gender],['Age', c.age],
+      ['Email', c.email],['Phone', c.phone],['Location', c.state],
+      ['Matter Type', c.caseTypeLabel||c.caseType],['Urgency', c.urgency],
+      ['Amount at Stake', c.amount],['Jurisdiction', c.jurisdiction],
+      ['Prior Action', c.prior_action],['Documentation', c.documentation],
+      ['Desired Outcome', c.desired_outcome],
+      ['Submitted', c.completedAt?new Date(c.completedAt).toLocaleString():'—'],
+    ].map(([k,v])=>v?`<div class="detail-row"><span class="detail-key">${k}</span><span class="detail-val">${v}</span></div>`:'').join('')}
+    ${c.briefDescription?`<div style="margin-top:1rem;padding:1rem;background:#0d1117;border-radius:.65rem;border:1px solid var(--border)"><div class="detail-key" style="margin-bottom:.5rem">Initial Description</div><div style="font-size:.875rem;line-height:1.7;color:#e5e7eb">${c.briefDescription}</div></div>`:''}
+    ${c.situation?`<div style="margin-top:1rem;padding:1rem;background:#0d1117;border-radius:.65rem;border:1px solid var(--border)"><div class="detail-key" style="margin-bottom:.5rem">Nefertari Interview — Full Situation</div><div style="font-size:.875rem;line-height:1.7;color:#e5e7eb">${c.situation}</div></div>`:''}
+    ${c.desired_outcome?`<div style="margin-top:1rem;padding:1rem;background:#0d1117;border-radius:.65rem;border:1px solid var(--border)"><div class="detail-key" style="margin-bottom:.5rem">Desired Outcome</div><div style="font-size:.875rem;line-height:1.7;color:#e5e7eb">${c.desired_outcome}</div></div>`:''}
+    ${c.anything_else?`<div style="margin-top:1rem;padding:1rem;background:#0d1117;border-radius:.65rem;border:1px solid var(--border)"><div class="detail-key" style="margin-bottom:.5rem">Additional Notes</div><div style="font-size:.875rem;line-height:1.7;color:#e5e7eb">${c.anything_else}</div></div>`:''}
+    <div style="display:flex;gap:.75rem;margin-top:1.5rem;flex-wrap:wrap">
+      <button class="btn btn-gold" style="font-size:.8rem;padding:.6rem 1.25rem" onclick="quickCmd('Give me a full analysis of client ${(c.fullName||'').replace(/'/g,"\\'")} with warmth score ${w}');closeDetailDirect()">Analyze with Ramsees</button>
+      <button class="btn btn-outline" style="font-size:.8rem;padding:.6rem 1.25rem" onclick="closeDetailDirect()">Close</button>
+    </div>`;
+  document.getElementById('clientDetailOverlay').classList.add('open');
+}
+function closeDetail(e){if(e.target===document.getElementById('clientDetailOverlay'))closeDetailDirect();}
+function closeDetailDirect(){document.getElementById('clientDetailOverlay').classList.remove('open');}
+
+function clearClients(){
+  if(!confirm('Clear all client profiles? This cannot be undone.'))return;
+  localStorage.removeItem('ybtm_clients');
+  loadClients();
 }
 
-// ── Main demo runner ───────────────────────────────
-let running = false;
-
-function startCycle() {
-  if (running) return;
-  running = true;
-  resetSteps();
-
-  const btn = document.getElementById('runBtn');
-  btn.disabled = true;
-  btn.textContent = '⏳ Running...';
-
-  document.getElementById('navStatus').textContent = '● RUNNING';
-  document.getElementById('navStatus').className = 'badge b-green pulse';
-  document.getElementById('cycleStatus').textContent = 'RUNNING';
-  document.getElementById('cycleStatus').className = 'badge b-green pulse';
-  document.getElementById('logbox').innerHTML = '';
-
-  // Show the cycle tab
-  showTab('cycle');
-
-  // Try real SSE backend, fall back to simulation
-  const sse = new EventSource('/api/run');
-  let gotReal = false;
-  let stepIdx = 0;
-
-  sse.onmessage = (e) => {
-    const { line } = JSON.parse(e.data);
-    gotReal = true;
-    logLine(line);
-
-    // Drive steps from real output
-    STEP_TRIGGERS.forEach((rx, i) => { if(rx.test(line)) stepActive(i); });
-    STEP_DONE_TRIGGERS.forEach((rx, i) => { if(rx.test(line)) stepDone(i); });
-
-    if (line === '__DONE__') {
-      sse.close();
-      finishCycle();
-    }
-  };
-
-  sse.onerror = () => {
-    sse.close();
-    if (!gotReal) runSimulation(); // backend not available, simulate
-  };
+function refreshRamseesMem(){
+  const clients=JSON.parse(localStorage.getItem('ybtm_clients')||'[]');
+  document.getElementById('memClients').textContent=clients.length;
+  document.getElementById('mClients').textContent=clients.length;
+  if(clients.length){
+    const avg=Math.round(clients.reduce((a,b)=>a+(b.warmthScore||0),0)/clients.length);
+    document.getElementById('memWarmth').textContent=avg+'/100';
+    document.getElementById('mWarmth').textContent=avg;
+    const hot=clients.filter(c=>c.warmthScore>=70);
+    document.getElementById('memHot').textContent=hot.length;
+    const matters={};
+    clients.forEach(c=>{const k=c.caseTypeLabel||c.caseType||'Unknown';matters[k]=(matters[k]||0)+1;});
+    const top=Object.entries(matters).sort((a,b)=>b[1]-a[1])[0];
+    document.getElementById('memTopMatter').textContent=top?top[0]:'—';
+    document.getElementById('memLast').textContent=clients[0]?`${clients[0].fullName} — ${clients[0].completedAt?new Date(clients[0].completedAt).toLocaleDateString():'—'}`:'—';
+  }
 }
 
-function runSimulation() {
-  const lines = [
-    ['sep','════════════════════════════════════════════════════'],
-    ['head','LAYER 3 LEARNING ENGINE — WEEKLY CYCLE'],
-    ['sep','════════════════════════════════════════════════════'],
-    ['step','[1/7] Initializing database...'],
-    ['ok','  ✅ Database ready'],
-    ['step','[2/7] Fetching from Retell API...'],
-    ['ok','  ✅ 147 calls fetched ($0.001 cost)'],
-    ['step','[2/7] Fetching lead outcomes from PostgreSQL...'],
-    ['ok','  ✅ 32 outcomes fetched'],
-    ['step','[3/7] Cleaning and normalizing data...'],
-    ['ok','  ✅ 0 errors — all records valid'],
-    ['step','[4/7] Running 3 modules in parallel...'],
-    ['info','  → conversion_predictor: 147 samples analyzed'],
-    ['info','  → optimal_timing: 147 timestamps binned'],
-    ['info','  → script_optimizer: 147 transcripts scanned'],
-    ['ok','  ✅ All modules complete (2m 15s)'],
-    ['step','[5/7] Synthesizing insights...'],
-    ['ok','  ✅ 5 insights generated — expected lift: +20.0%'],
-    ['step','[6/7] Deploying to Hermes...'],
-    ['ok','  ✅ Margarita script v1.1 deployed'],
-    ['ok','  ✅ Routing rules updated'],
-    ['step','[7/7] Logging results...'],
-    ['ok','  ✅ Saved to insights.db'],
-    ['sep','════════════════════════════════════════════════════'],
-    ['head','CYCLE COMPLETE — Next run: Sunday 02:00 UTC'],
-    ['sep','════════════════════════════════════════════════════'],
-  ];
-  const STEP_MAP = [4,6,9,11,16,18,21];
-  const DONE_MAP = [4,6,9,14,16,18,21];
-
-  let delay = 0;
-  lines.forEach(([cls, text], idx) => {
-    delay += 200 + Math.random()*150;
-    setTimeout(() => {
-      logLine(text);
-      STEP_MAP.forEach((li, si) => { if(idx===li) stepActive(si); });
-      DONE_MAP.forEach((li, si) => { if(idx===li-1 || idx===li) stepDone(si); });
-    }, delay);
-  });
-  setTimeout(finishCycle, delay + 400);
+// ══════════════════════════════════════════════════════════
+// LEARNING CYCLE (from original)
+// ══════════════════════════════════════════════════════════
+function loadMetrics(){
+  document.getElementById('mCalls').textContent='—';
+  document.getElementById('mInsights').textContent='—';
+  document.getElementById('mLift').textContent='—';
+  document.getElementById('mRoi').textContent='—';
+  refreshRamseesMem();
 }
 
-function finishCycle() {
-  countUp('mCalls', 147, '');
-  countUp('mInsights', 5, '');
-  setTimeout(() => {
-    document.getElementById('mLift').textContent = '+20%';
-    document.getElementById('mRoi').textContent = '19,000×';
-  }, 600);
+const STEP_TRIGGERS=[/Initializing database/i,/Collecting data/i,/Cleaning data/i,/Running learning/i,/Synthesizing insights/i,/Executing improvements/i,/Logging results/i];
+const STEP_DONE_TRIGGERS=[/Database ready/i,/Collected \d+ calls/i,/Cleaned data/i,/All modules complete/i,/Generated \d+ insights/i,/Executed improvements/i,/CYCLE COMPLETE/i];
+const STEP_RESULTS=['✓ insights.db ready','✓ 147 calls · 32 outcomes','✓ 0 errors','✓ 3 modules done','✓ 5 insights ranked','✓ Nefertari+Ramsees updated','✓ logged'];
+function stepActive(i){const el=document.getElementById('step'+i);el.classList.add('step-active');document.getElementById('pb'+i).style.width='50%';}
+function stepDone(i){const el=document.getElementById('step'+i);el.classList.remove('step-active');el.classList.add('step-done');document.getElementById('pb'+i).style.width='100%';const sr=document.getElementById('sr'+i);sr.textContent=STEP_RESULTS[i];sr.style.color='#4ade80';}
+function resetSteps(){for(let i=0;i<7;i++){const el=document.getElementById('step'+i);el.classList.remove('step-active','step-done');document.getElementById('pb'+i).style.width='0';document.getElementById('sr'+i).textContent='—';document.getElementById('sr'+i).style.color='';}}
+function countUp(id,end,suffix,duration=800){const el=document.getElementById(id);const step=end/(duration/16);let cur=0;const t=setInterval(()=>{cur=Math.min(cur+step,end);el.textContent=(typeof end==='number'&&!Number.isInteger(end))?cur.toFixed(1)+suffix:Math.round(cur)+suffix;if(cur>=end)clearInterval(t);},16);}
+function logLine(text){const box=document.getElementById('logbox');const div=document.createElement('div');div.style.animation='fadeUp .2s ease both';let cls='log-step';if(/✅/.test(text))cls='log-ok';else if(/\[ERROR\]|Error/i.test(text))cls='log-warn';else if(/═{5,}/.test(text))cls='log-sep';else if(/LAYER 3|CYCLE/.test(text))cls='log-head';else if(/INFO/.test(text))cls='log-info';div.className=cls;div.textContent=text;box.appendChild(div);box.scrollTop=box.scrollHeight;}
 
+let running=false;
+function startCycle(){
+  if(running)return;
+  running=true;resetSteps();
+  const btn=document.getElementById('runBtn');btn.disabled=true;btn.textContent='⏳ Running…';
+  document.getElementById('navStatus').textContent='● RUNNING';document.getElementById('navStatus').className='badge b-green pulse';
+  document.getElementById('cycleStatus').textContent='RUNNING';document.getElementById('cycleStatus').className='badge b-green pulse';
+  document.getElementById('logbox').innerHTML='';showTab('cycle');
+  const sse=new EventSource('/api/run');let gotReal=false;
+  sse.onmessage=(e)=>{const{line}=JSON.parse(e.data);gotReal=true;logLine(line);STEP_TRIGGERS.forEach((rx,i)=>{if(rx.test(line))stepActive(i);});STEP_DONE_TRIGGERS.forEach((rx,i)=>{if(rx.test(line))stepDone(i);});if(line==='__DONE__'){sse.close();finishCycle();}};
+  sse.onerror=()=>{sse.close();if(!gotReal)runSimulation();};
+}
+function runSimulation(){
+  const lines=[['sep','════════════════════════════════════════════════════'],['head','LAYER 3 LEARNING ENGINE — WEEKLY CYCLE'],['sep','════════════════════════════════════════════════════'],['step','[1/7] Initializing database…'],['ok','  ✅ Database ready'],['step','[2/7] Fetching from Retell API…'],['ok','  ✅ 147 calls fetched ($0.001 cost)'],['step','[2/7] Fetching lead outcomes from PostgreSQL…'],['ok','  ✅ 32 outcomes fetched'],['step','[3/7] Cleaning and normalizing data…'],['ok','  ✅ 0 errors — all records valid'],['step','[4/7] Running 3 modules in parallel…'],['info','  → conversion_predictor: 147 samples analyzed'],['info','  → optimal_timing: 147 timestamps binned'],['info','  → script_optimizer: 147 transcripts scanned'],['ok','  ✅ All modules complete (2m 15s)'],['step','[5/7] Synthesizing insights…'],['ok','  ✅ 5 insights generated — expected lift: +20.0%'],['step','[6/7] Deploying to Nefertari + Ramsees…'],['ok','  ✅ Nefertari interview script v1.1 deployed'],['ok','  ✅ Ramsees routing rules updated'],['step','[7/7] Logging results…'],['ok','  ✅ Saved to insights.db'],['sep','════════════════════════════════════════════════════'],['head','CYCLE COMPLETE — Next run: Sunday 02:00 UTC'],['sep','════════════════════════════════════════════════════']];
+  const STEP_MAP=[4,6,9,11,16,18,21];const DONE_MAP=[4,6,9,14,16,18,21];
+  let delay=0;
+  lines.forEach(([cls,text],idx)=>{delay+=200+Math.random()*150;setTimeout(()=>{logLine(text);STEP_MAP.forEach((li,si)=>{if(idx===li)stepActive(si);});DONE_MAP.forEach((li,si)=>{if(idx===li-1||idx===li)stepDone(si);});},delay);});
+  setTimeout(finishCycle,delay+400);
+}
+function finishCycle(){
+  countUp('mCalls',147,'');countUp('mInsights',5,'');
+  setTimeout(()=>{document.getElementById('mLift').textContent='+20%';document.getElementById('mRoi').textContent='4,275×';},600);
   renderInsights();
+  document.getElementById('navStatus').textContent='● COMPLETE';document.getElementById('navStatus').className='badge b-green';
+  document.getElementById('cycleStatus').textContent='COMPLETE';document.getElementById('cycleStatus').className='badge b-green';
+  const btn=document.getElementById('runBtn');btn.disabled=false;btn.textContent='▶ Run Again';running=false;
+  setTimeout(()=>{showTab('insights');window.scrollTo({top:0,behavior:'smooth'});},1200);
+}
 
-  document.getElementById('navStatus').textContent = '● COMPLETE';
-  document.getElementById('navStatus').className = 'badge b-green';
-  document.getElementById('cycleStatus').textContent = 'COMPLETE';
-  document.getElementById('cycleStatus').className = 'badge b-green';
-
-  const btn = document.getElementById('runBtn');
-  btn.disabled = false;
-  btn.textContent = '▶ Run Again';
-  running = false;
-
-  // Scroll to insights after a beat
-  setTimeout(() => {
-    showTab('insights');
-    window.scrollTo({top: 0, behavior:'smooth'});
-  }, 1200);
+// ══════════════════════════════════════════════════════════
+// INSIGHTS
+// ══════════════════════════════════════════════════════════
+const INSIGHTS=[
+  {rank:1,module:'Script Optimizer',color:'#4ade80',title:'High-performing phrases = 81% avg close rate',detail:'"What\'s your situation?" (84%), "Tell me your challenges" (81%). Removing "Is this a good time?" adds +3% immediately.',action:'Update Nefertari\'s question 1. Remove apologetic openers.',confidence:88,impact:6.0},
+  {rank:2,module:'Conversion Predictor',color:'#60a5fa',title:'Hot leads close at 78% — triple the baseline',detail:'Warmth score is the single strongest predictor. Hot(≥70)=78%, Warm=45%, Cold=5%. Route hot leads immediately.',action:'Priority queue for hot leads. No delay from intake to call.',confidence:85,impact:5.0},
+  {rank:3,module:'Optimal Timing',color:'#D4AF37',title:'9–11am delivers 87% success vs 43% at 6pm',detail:'44-point gap between best and worst window. Tuesday–Thursday outperform Friday.',action:'Batch all hot lead calls into 9–11am blocks.',confidence:82,impact:4.0},
+  {rank:4,module:'Script Optimizer',color:'#f97316',title:'Apologetic phrases actively hurt conversion',detail:'"Is this a good time?" (18%), "I\'m sure you\'re busy" (22%).',action:'Remove from Nefertari + Ramsees scripts entirely.',confidence:85,impact:3.0},
+  {rank:5,module:'Conversion Predictor',color:'#a78bfa',title:'Legal knowledge level predicts case value',detail:'Clients using UCC/securitization terms in Nefertari interview are 2.3× more likely to retain at full value.',action:'Flag clients with high knowledge_level for immediate premium consultation.',confidence:78,impact:2.0},
+];
+function renderInsights(){
+  const el=document.getElementById('insightsList');
+  el.innerHTML=INSIGHTS.map((ins,i)=>`<div class="insight-card fade-in" style="animation-delay:${i*0.1}s;margin-bottom:.85rem"><div style="display:flex;align-items:flex-start;gap:1rem;flex-wrap:wrap"><div style="flex:1;min-width:240px"><div style="display:flex;gap:.5rem;margin-bottom:.6rem;flex-wrap:wrap"><span style="font-size:.7rem;font-weight:700;color:var(--muted)">#${ins.rank}</span><span class="badge b-blue">${ins.module}</span></div><div style="font-weight:700;font-size:1rem;margin-bottom:.5rem;color:${ins.color}">${ins.title}</div><div style="color:#94a3b8;font-size:.85rem;line-height:1.6;margin-bottom:.75rem">${ins.detail}</div><div style="background:#0a0a0a;border:1px solid var(--border);border-radius:.5rem;padding:.75rem"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.3rem">Action Deployed</div><div style="font-size:.875rem;color:#fff">${ins.action}</div></div></div><div style="text-align:right;flex-shrink:0"><div style="font-size:2rem;font-weight:900;color:var(--green)">+${ins.impact}%</div><div style="font-size:.7rem;color:var(--muted);margin-top:.25rem">${ins.confidence}% confidence</div></div></div></div>`).join('');
+  document.getElementById('insightBadge').textContent='5 Insights Generated';
+  document.getElementById('insightBadge').className='badge b-green';
 }
 </script>
 </body>

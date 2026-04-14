@@ -119,6 +119,17 @@
         }
         .nav-links a:hover { color: var(--gold); text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
         .nav-links a:hover::after { width: 100%; }
+        .nav-links .embark-nav-btn {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            color: var(--navy) !important; -webkit-text-fill-color: var(--navy) !important;
+            padding: 0.45rem 1.25rem; border-radius: 30px; font-weight: 700;
+            letter-spacing: 3px; transition: all 0.3s; box-shadow: 0 0 20px rgba(212,175,55,0.3);
+        }
+        .nav-links .embark-nav-btn:hover {
+            transform: translateY(-2px); box-shadow: 0 6px 30px rgba(212,175,55,0.5);
+            color: var(--navy) !important; -webkit-text-fill-color: var(--navy) !important;
+        }
+        .nav-links .embark-nav-btn::after { display: none; }
         .mobile-menu-btn { display: none; background: none; border: none; color: var(--gold); font-size: 1.5rem; cursor: pointer; }
         section { padding: 100px 5%; position: relative; }
         .hero {
@@ -648,6 +659,7 @@
             <li><a href="#books">Library</a></li>
             <li><a href="about.html">About Us</a></li>
             <li><a href="#contact">Connect</a></li>
+            <li><a href="embark.html" class="embark-nav-btn">EMBARK</a></li>
         </ul>
         <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
     </nav>

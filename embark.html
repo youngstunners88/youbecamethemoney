@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Begin your journey with Daniel Garcia — Sovereign Wealth Architect. Complete your profile and speak with Nefertari.">
+<title>EMBARK | You Became The Money</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{
+  --navy:#0a0e27;--navy-light:#1a1f3a;--gold:#d4af37;--gold-light:#f4d03f;
+  --lapis:#1e3a5f;--papyrus:#f4e4c1;--charcoal:#0a0a0a;--dark-card:#111827;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--navy);color:var(--papyrus);min-height:100vh;overflow-x:hidden}
+.bg-animation{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;
+  background:radial-gradient(circle at 20% 50%,rgba(212,175,55,.08) 0%,transparent 50%),
+             radial-gradient(circle at 80% 80%,rgba(30,58,95,.3) 0%,transparent 50%),
+             linear-gradient(135deg,var(--navy) 0%,var(--charcoal) 100%);}
+.sand-particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+.sand-grain{position:absolute;width:2px;height:2px;background:var(--gold);border-radius:50%;opacity:0;animation:sandDrift 10s infinite ease-in-out}
+@keyframes sandDrift{0%,100%{transform:translate(0,0);opacity:0}10%{opacity:.5}50%{transform:translate(80px,-40vh);opacity:.2}90%{opacity:.4}}
+
+/* NAV */
+nav{position:fixed;top:0;width:100%;padding:.85rem 5%;background:rgba(10,14,39,.95);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(212,175,55,.25);z-index:1000;display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo-img{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);box-shadow:0 0 15px rgba(212,175,55,.35)}
+.logo-text{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:600;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold-light) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px}
+.nav-back{font-family:'Cinzel',serif;font-size:.75rem;text-transform:uppercase;letter-spacing:2px;color:rgba(244,228,193,.6);
+  text-decoration:none;display:flex;align-items:center;gap:.5rem;transition:color .3s}
+.nav-back:hover{color:var(--gold)}
+
+/* PHASES */
+.phase{display:none;animation:fadeSlideUp .5s ease both}
+.phase.active{display:block}
+@keyframes fadeSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO HEADER */
+.portal-hero{text-align:center;padding:8rem 5% 4rem;max-width:800px;margin:0 auto}
+.hero-badge-embark{display:inline-block;padding:.5rem 1.75rem;border:1px solid var(--gold);color:var(--gold);
+  font-family:'Cinzel',serif;font-size:.75rem;text-transform:uppercase;letter-spacing:4px;margin-bottom:1.75rem;
+  animation:glowPulse 3s infinite;border-radius:30px}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 0 0 rgba(212,175,55,.35)}50%{box-shadow:0 0 0 12px rgba(212,175,55,.0)}}
+.portal-hero h1{font-family:'Cinzel',serif;font-size:clamp(2.5rem,6vw,4.5rem);line-height:1.15;margin-bottom:1rem;
+  background:linear-gradient(135deg,var(--papyrus) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.portal-hero p{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:rgba(244,228,193,.75);line-height:1.75;max-width:580px;margin:0 auto 2.5rem}
+
+/* FORM CARD */
+.form-card{background:rgba(17,24,39,.85);border:1px solid rgba(212,175,55,.2);border-radius:1.5rem;
+  padding:2.5rem;max-width:680px;margin:0 auto 3rem;backdrop-filter:blur(10px);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.form-section-title{font-family:'Cinzel',serif;font-size:.75rem;text-transform:uppercase;letter-spacing:3px;
+  color:var(--gold);margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem}
+.form-section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(212,175,55,.4),transparent)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
+.form-group{display:flex;flex-direction:column;gap:.5rem}
+.form-group.full{grid-column:1/-1}
+label{font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(244,228,193,.6);font-family:'Cinzel',serif}
+input[type=text],input[type=email],input[type=tel],input[type=number],select,textarea{
+  background:rgba(10,14,39,.8);border:1px solid rgba(212,175,55,.2);border-radius:.65rem;
+  color:var(--papyrus);padding:.8rem 1rem;font-size:.95rem;font-family:'Inter',sans-serif;
+  width:100%;outline:none;transition:all .3s;appearance:none;-webkit-appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,.1)}
+select option{background:#0a0e27;color:var(--papyrus)}
+textarea{resize:vertical;min-height:100px;line-height:1.6}
+.btn-embark{width:100%;padding:1.1rem 2rem;background:linear-gradient(135deg,var(--gold) 0%,var(--gold-light) 100%);
+  color:var(--navy);font-family:'Cinzel',serif;font-weight:700;font-size:.9rem;text-transform:uppercase;
+  letter-spacing:3px;border:none;border-radius:.85rem;cursor:pointer;transition:all .4s;margin-top:1rem}
+.btn-embark:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(212,175,55,.4)}
+.btn-embark:disabled{background:#374151;color:#6b7280;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* PROGRESS STEPS */
+.progress-steps{display:flex;justify-content:center;gap:0;max-width:400px;margin:0 auto 3rem;position:relative}
+.progress-steps::before{content:'';position:absolute;top:15px;left:10%;right:10%;height:2px;background:rgba(212,175,55,.2)}
+.step-item{display:flex;flex-direction:column;align-items:center;gap:.5rem;flex:1;position:relative;z-index:1}
+.step-circle{width:32px;height:32px;border-radius:50%;border:2px solid rgba(212,175,55,.3);display:flex;align-items:center;
+  justify-content:center;font-family:'Cinzel',serif;font-size:.75rem;font-weight:700;background:var(--navy);transition:all .4s;color:rgba(244,228,193,.4)}
+.step-circle.active{border-color:var(--gold);color:var(--gold);box-shadow:0 0 12px rgba(212,175,55,.4)}
+.step-circle.done{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.step-label{font-family:'Cinzel',serif;font-size:.6rem;text-transform:uppercase;letter-spacing:2px;color:rgba(244,228,193,.4);text-align:center}
+.step-label.active{color:var(--gold)}
+
+/* NEFERTARI CHAT */
+.chat-container{max-width:680px;margin:0 auto 3rem}
+.nefertari-header{display:flex;align-items:center;gap:1rem;background:rgba(17,24,39,.85);
+  border:1px solid rgba(212,175,55,.3);border-radius:1rem 1rem 0 0;padding:1.25rem 1.5rem;
+  border-bottom:none}
+.nefertari-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#1c1400,#2a2000);
+  border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;
+  box-shadow:0 0 20px rgba(212,175,55,.3)}
+.nefertari-name{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold);font-weight:600}
+.nefertari-title{font-size:.75rem;color:rgba(244,228,193,.5);margin-top:.2rem}
+.nefertari-status{display:flex;align-items:center;gap:.4rem;font-size:.7rem;color:#4ade80;margin-left:auto}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:dotPulse 2s infinite}
+@keyframes dotPulse{0%,100%{opacity:1}50%{opacity:.3}}
+.chat-window{background:rgba(10,14,39,.9);border:1px solid rgba(212,175,55,.15);border-radius:0 0 1rem 1rem;
+  padding:1.5rem;min-height:380px;display:flex;flex-direction:column;gap:1.25rem;overflow-y:auto;max-height:480px}
+.msg{display:flex;gap:.85rem;align-items:flex-start;animation:fadeSlideUp .35s ease both}
+.msg-avatar{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.msg-avatar.nef{background:linear-gradient(135deg,#1c1400,#2a2000);border:1px solid var(--gold)}
+.msg-avatar.user{background:#1e3a5f;border:1px solid rgba(30,58,95,.8);margin-left:auto;order:2}
+.msg-bubble{background:rgba(31,41,55,.8);border-radius:.75rem;padding:1rem 1.25rem;max-width:82%;
+  font-size:.9rem;line-height:1.65;border:1px solid rgba(255,255,255,.06)}
+.msg-bubble.user-bubble{background:rgba(28,20,0,.7);border-color:rgba(212,175,55,.25);margin-left:auto}
+.msg.user{flex-direction:row-reverse}
+.typing-indicator{display:flex;gap:4px;padding:.6rem 1rem;background:rgba(31,41,55,.6);border-radius:.65rem;width:fit-content;border:1px solid rgba(255,255,255,.06)}
+.typing-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:typingBounce 1.2s ease infinite}
+.typing-dot:nth-child(2){animation-delay:.15s}.typing-dot:nth-child(3){animation-delay:.3s}
+@keyframes typingBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+/* INPUT AREA */
+.chat-input-area{max-width:680px;margin:0 auto 1rem;display:flex;gap:.75rem}
+.chat-input{flex:1;background:rgba(10,14,39,.8);border:1px solid rgba(212,175,55,.25);border-radius:.85rem;
+  color:var(--papyrus);padding:.85rem 1.25rem;font-size:.95rem;font-family:'Inter',sans-serif;outline:none;transition:all .3s}
+.chat-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,.08)}
+.send-btn{background:var(--gold);color:var(--navy);border:none;border-radius:.85rem;padding:.85rem 1.25rem;
+  cursor:pointer;font-size:1rem;transition:all .3s;flex-shrink:0}
+.send-btn:hover{background:var(--gold-light);transform:translateY(-1px)}
+.send-btn:disabled{background:#374151;color:#6b7280;cursor:not-allowed;transform:none}
+
+/* OPTIONS */
+.options-grid{max-width:680px;margin:.5rem auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.65rem}
+.opt-btn{background:rgba(10,14,39,.8);border:1px solid rgba(212,175,55,.2);border-radius:.65rem;
+  padding:.75rem 1rem;cursor:pointer;font-size:.875rem;color:var(--papyrus);transition:all .25s;text-align:left;font-family:'Inter',sans-serif}
+.opt-btn:hover{border-color:var(--gold);background:rgba(28,20,0,.5);color:var(--gold)}
+.opt-btn.selected{border-color:var(--gold);background:rgba(28,20,0,.7);color:var(--gold);font-weight:600}
+
+/* COMPLETION SCREEN */
+.completion-card{background:rgba(17,24,39,.9);border:1px solid rgba(212,175,55,.4);border-radius:1.5rem;
+  padding:3rem 2.5rem;max-width:600px;margin:2rem auto;text-align:center;box-shadow:0 0 60px rgba(212,175,55,.1)}
+.ankh-icon{font-size:3.5rem;margin-bottom:1.5rem;display:block;color:var(--gold);animation:glowPulse 3s infinite}
+.completion-card h2{font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);margin-bottom:1rem}
+.completion-card p{color:rgba(244,228,193,.7);line-height:1.75;margin-bottom:.5rem;font-size:.95rem}
+.profile-summary{background:rgba(10,14,39,.8);border:1px solid rgba(212,175,55,.2);border-radius:1rem;
+  padding:1.5rem;margin:2rem 0;text-align:left}
+.summary-row{display:flex;justify-content:space-between;align-items:flex-start;padding:.6rem 0;
+  border-bottom:1px solid rgba(255,255,255,.06);font-size:.875rem;gap:1rem}
+.summary-row:last-child{border:none}
+.summary-key{color:rgba(244,228,193,.5);text-transform:uppercase;font-size:.7rem;letter-spacing:.08em;flex-shrink:0}
+.summary-val{color:var(--papyrus);font-weight:500;text-align:right}
+.warmth-score{font-size:2.5rem;font-weight:900;color:var(--gold);margin:.5rem 0}
+.btn-back-home{display:inline-flex;align-items:center;gap:.5rem;padding:.85rem 2rem;
+  background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:.75rem;
+  font-family:'Cinzel',serif;font-size:.75rem;text-transform:uppercase;letter-spacing:3px;
+  cursor:pointer;transition:all .3s;text-decoration:none;margin-top:1.5rem}
+.btn-back-home:hover{background:rgba(212,175,55,.1);transform:translateY(-1px)}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .form-row{grid-template-columns:1fr}
+  .portal-hero{padding:6rem 1.5rem 3rem}
+  .form-card{padding:1.75rem 1.25rem}
+  .chat-window{min-height:320px;max-height:380px}
+  .options-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-animation"></div>
+<div class="sand-particles" id="sandParticles"></div>
+
+<nav>
+  <a href="index.html" class="logo">
+    <img src="https://i.imgur.com/Rq5suc9.jpeg" alt="Daniel Garcia" class="logo-img">
+    <span class="logo-text">You Became The Money</span>
+  </a>
+  <a href="index.html" class="nav-back"><i class="fas fa-arrow-left"></i> Return</a>
+</nav>
+
+<!-- ===== PHASE 1: PROFILE ONBOARDING ===== -->
+<div class="phase active" id="phase1">
+  <div class="portal-hero">
+    <div class="hero-badge-embark">𓁹 Begin Your Journey 𓁹</div>
+    <h1>Embark</h1>
+    <p>Before you speak with Nefertari, let us know who you are. Your sovereign journey begins here.</p>
+  </div>
+
+  <div class="progress-steps" style="padding:0 1.5rem;max-width:400px;margin:0 auto 2.5rem">
+    <div class="step-item">
+      <div class="step-circle active" id="sc1">I</div>
+      <div class="step-label active">Profile</div>
+    </div>
+    <div class="step-item">
+      <div class="step-circle" id="sc2">II</div>
+      <div class="step-label">Interview</div>
+    </div>
+    <div class="step-item">
+      <div class="step-circle" id="sc3">III</div>
+      <div class="step-label">Complete</div>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-section-title">Personal Details</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="firstName">First Name *</label>
+        <input type="text" id="firstName" placeholder="First name" required>
+      </div>
+      <div class="form-group">
+        <label for="lastName">Last Name *</label>
+        <input type="text" id="lastName" placeholder="Last name" required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="gender">Gender</label>
+        <select id="gender">
+          <option value="">Select…</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Non-binary</option>
+          <option>Prefer not to say</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="age">Age *</label>
+        <input type="number" id="age" placeholder="Your age" min="18" max="100" required>
+      </div>
+    </div>
+
+    <div class="form-section-title" style="margin-top:1.75rem">Contact</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <input type="email" id="email" placeholder="your@email.com" required>
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" placeholder="(555) 000-0000">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group full">
+        <label for="state">State / Country *</label>
+        <input type="text" id="state" placeholder="e.g. Florida, USA" required>
+      </div>
+    </div>
+
+    <div class="form-section-title" style="margin-top:1.75rem">Your Matter</div>
+    <div class="form-row">
+      <div class="form-group full">
+        <label for="caseType">Primary Matter Type *</label>
+        <select id="caseType" required>
+          <option value="">Select your matter…</option>
+          <option value="discharge">Debt Discharge</option>
+          <option value="mortgage">Mortgage / Foreclosure</option>
+          <option value="credit">Credit Card Debt</option>
+          <option value="child_support">Child Support</option>
+          <option value="criminal">Criminal / Administrative</option>
+          <option value="ucc">UCC / Commercial</option>
+          <option value="sblc">SBLC / Banking Instruments</option>
+          <option value="trust">Trust / Estate</option>
+          <option value="business">Business Structuring</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group full">
+        <label for="briefDesc">Brief Description *</label>
+        <textarea id="briefDesc" placeholder="Describe your situation in a few sentences…" required></textarea>
+      </div>
+    </div>
+
+    <button class="btn-embark" onclick="proceedToInterview()">
+      Continue to Interview with Nefertari <i class="fas fa-arrow-right" style="margin-left:.5rem"></i>
+    </button>
+  </div>
+</div>
+
+<!-- ===== PHASE 2: NEFERTARI INTERVIEW ===== -->
+<div class="phase" id="phase2">
+  <div class="portal-hero" style="padding:8rem 5% 2rem">
+    <div class="hero-badge-embark">𓁹 Lemon Slice Interview 𓁹</div>
+    <h1 style="font-size:clamp(2rem,5vw,3.5rem)">Nefertari</h1>
+    <p style="font-size:1.1rem">Nefertari will guide you through 9 questions to fully understand your sovereign path. Speak freely — all is recorded for Mr. Garcia.</p>
+  </div>
+
+  <div class="progress-steps" style="padding:0 1.5rem;max-width:400px;margin:0 auto 2rem">
+    <div class="step-item">
+      <div class="step-circle done" id="sc1b"><i class="fas fa-check" style="font-size:.6rem"></i></div>
+      <div class="step-label">Profile</div>
+    </div>
+    <div class="step-item">
+      <div class="step-circle active" id="sc2b">II</div>
+      <div class="step-label active">Interview</div>
+    </div>
+    <div class="step-item">
+      <div class="step-circle" id="sc3b">III</div>
+      <div class="step-label">Complete</div>
+    </div>
+  </div>
+
+  <!-- Question progress dots -->
+  <div style="display:flex;justify-content:center;gap:.5rem;margin:0 auto 1.5rem;max-width:400px;padding:0 1.5rem">
+    <div id="qDots"></div>
+  </div>
+
+  <!-- Nefertari header + chat -->
+  <div class="chat-container" style="padding:0 1.5rem">
+    <div class="nefertari-header">
+      <div class="nefertari-avatar">𓁹</div>
+      <div>
+        <div class="nefertari-name">Nefertari</div>
+        <div class="nefertari-title">Lemon Slice Interview Agent</div>
+      </div>
+      <div class="nefertari-status">
+        <div class="status-dot"></div> Active
+      </div>
+      <div style="margin-left:.75rem;font-size:.75rem;color:rgba(244,228,193,.4)" id="qCounter">Q 1 / 9</div>
+    </div>
+    <div class="chat-window" id="chatWindow"></div>
+  </div>
+
+  <div class="options-grid" id="optionsArea" style="padding:0 1.5rem"></div>
+
+  <div class="chat-input-area" style="padding:0 1.5rem">
+    <input class="chat-input" id="userInput" placeholder="Type your answer…" onkeydown="if(event.key==='Enter')sendAnswer()">
+    <button class="send-btn" id="sendBtn" onclick="sendAnswer()"><i class="fas fa-paper-plane"></i></button>
+  </div>
+</div>
+
+<!-- ===== PHASE 3: COMPLETION ===== -->
+<div class="phase" id="phase3">
+  <div style="padding:8rem 1.5rem 4rem">
+    <div class="completion-card">
+      <span class="ankh-icon">𓀀</span>
+      <h2>Journey Begun</h2>
+      <p>Your profile has been received, <strong id="completionName" style="color:var(--gold)">Sovereign</strong>.</p>
+      <p style="margin-top:.5rem">Nefertari has shared your case with <strong style="color:var(--gold)">Ramsees</strong>. Mr. Garcia will review your profile and reach out within 2 hours.</p>
+
+      <div class="profile-summary" id="profileSummaryDiv"></div>
+
+      <div style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin-top:1.5rem">
+        <a href="index.html" class="btn-back-home"><i class="fas fa-home"></i> Return Home</a>
+        <button class="btn-back-home" onclick="downloadProfile()" style="background:rgba(212,175,55,.08)">
+          <i class="fas fa-download"></i> Save Profile
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Sand particles ────────────────────────
+(function(){
+  const c=document.getElementById('sandParticles');
+  for(let i=0;i<25;i++){
+    const g=document.createElement('div');g.className='sand-grain';
+    g.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*10}s;animation-duration:${8+Math.random()*8}s`;
+    c.appendChild(g);
+  }
+})();
+
+// ── State ──────────────────────────────────
+const profile = {};
+let answers = [];
+let currentQ = 0;
+let waitingForAnswer = false;
+
+// ── Phase switch ──────────────────────────
+function showPhase(n) {
+  document.querySelectorAll('.phase').forEach(p=>p.classList.remove('active'));
+  document.getElementById('phase'+n).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── Profile validation → Phase 2 ─────────
+function proceedToInterview() {
+  const fn=document.getElementById('firstName').value.trim();
+  const ln=document.getElementById('lastName').value.trim();
+  const ag=document.getElementById('age').value.trim();
+  const em=document.getElementById('email').value.trim();
+  const st=document.getElementById('state').value.trim();
+  const ct=document.getElementById('caseType').value;
+  const bd=document.getElementById('briefDesc').value.trim();
+
+  if(!fn||!ln||!ag||!em||!st||!ct||!bd){
+    shake(document.querySelector('.form-card'));
+    highlightEmpty();
+    return;
+  }
+
+  Object.assign(profile,{
+    firstName:fn, lastName:ln, fullName:`${fn} ${ln}`,
+    gender: document.getElementById('gender').value||'Not specified',
+    age:parseInt(ag),
+    email:em,
+    phone: document.getElementById('phone').value.trim()||'Not provided',
+    state:st,
+    caseType:ct,
+    caseTypeLabel: document.getElementById('caseType').options[document.getElementById('caseType').selectedIndex].text,
+    briefDescription:bd,
+    startedAt: new Date().toISOString(),
+  });
+
+  showPhase(2);
+  initInterview();
+}
+
+function highlightEmpty(){
+  ['firstName','lastName','age','email','state','caseType','briefDesc'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el.value.trim()){el.style.borderColor='#f87171';setTimeout(()=>el.style.borderColor='',2500);}
+  });
+}
+function shake(el){
+  el.style.animation='shake .35s ease';
+  setTimeout(()=>el.style.animation='',400);
+}
+
+// ── Interview questions ───────────────────
+const QUESTIONS = [
+  { id:'situation', nef:'I've received your profile, and I'm honored to receive you.',
+    followup: (p)=>`${p.fullName}, tell me — describe your situation in your own words. What led you here today?`,
+    type:'textarea', placeholder:'Share freely… Nefertari listens.' },
+
+  { id:'matter_type', nef:'Thank you for sharing that.',
+    followup: ()=>'What is the primary nature of your matter?',
+    type:'options', options:['UCC / Commercial Law','Contract Dispute','Litigation','Debt / Credit','Business Formation','Administrative Process','Banking / SBLC','Other'] },
+
+  { id:'amount', nef:'Understood.',
+    followup: ()=>'What is the approximate amount at stake?',
+    type:'options', options:['Under $10,000','$10,000 – $50,000','$50,000 – $250,000','$250,000 – $1M','Over $1M','Not financial in nature'] },
+
+  { id:'urgency', nef:'I see.',
+    followup: ()=>'How urgent is your matter?',
+    type:'options', options:['Immediate — action required now','Within the next week','Within a month','Exploring my options — no rush'] },
+
+  { id:'jurisdiction', nef:'Noted.',
+    followup: ()=>'What jurisdiction or state governs your matter?',
+    type:'input', placeholder:'e.g. Florida, Federal, International…' },
+
+  { id:'prior_action', nef:'Good.',
+    followup: ()=>'Have you taken any prior legal or administrative action on this matter?',
+    type:'options', options:['Yes — filed documents','Yes — hired attorney','Yes — sent notices','No prior action','Not sure'] },
+
+  { id:'documentation', nef:'Understood.',
+    followup: ()=>'What documentation do you currently have prepared or available?',
+    type:'options', options:['All documents ready','Partial documentation','No documents yet','Need help identifying what I need'] },
+
+  { id:'desired_outcome', nef:'You\'re doing beautifully.',
+    followup: ()=>'What is your desired outcome? What does sovereignty look like for you in this matter?',
+    type:'textarea', placeholder:'Describe the outcome you seek…' },
+
+  { id:'anything_else', nef:'Almost there.',
+    followup: ()=>'Is there anything else you\'d like Mr. Garcia to know before your consultation?',
+    type:'textarea', placeholder:'Optional — anything else on your mind…', optional:true },
+];
+
+// ── Init interview ─────────────────────────
+function initInterview(){
+  buildQDots();
+  appendNefMsg(`Greetings, ${profile.fullName}. I am Nefertari — the guide who will prepare your case for Mr. Garcia and Ramsees. I will ask you 9 questions. Take your time and answer freely. Everything you share is held in sovereign confidence.`);
+  setTimeout(()=>askQuestion(0), 1800);
+}
+
+function buildQDots(){
+  const container=document.createElement('div');
+  container.style.cssText='display:flex;gap:.5rem;justify-content:center';
+  for(let i=0;i<9;i++){
+    const d=document.createElement('div');
+    d.id=`qdot${i}`;
+    d.style.cssText='width:9px;height:9px;border-radius:50%;background:rgba(212,175,55,.2);transition:all .3s';
+    container.appendChild(d);
+  }
+  document.getElementById('qDots').innerHTML='';
+  document.getElementById('qDots').appendChild(container);
+}
+
+function updateQDots(idx){
+  for(let i=0;i<9;i++){
+    const d=document.getElementById(`qdot${i}`);
+    if(!d)return;
+    if(i<idx)d.style.background='#d4af37';
+    else if(i===idx){d.style.background='#d4af37';d.style.boxShadow='0 0 8px rgba(212,175,55,.6)';}
+    else{d.style.background='rgba(212,175,55,.2)';d.style.boxShadow='';}
+  }
+  document.getElementById('qCounter').textContent=`Q ${idx+1} / 9`;
+}
+
+// ── Chat helpers ──────────────────────────
+function appendNefMsg(text, delay=0){
+  return new Promise(resolve=>{
+    setTimeout(()=>{
+      const typing=addTyping();
+      setTimeout(()=>{
+        removeTyping(typing);
+        const msg=document.createElement('div');
+        msg.className='msg';
+        msg.innerHTML=`
+          <div class="msg-avatar nef">𓁹</div>
+          <div class="msg-bubble">${text}</div>`;
+        document.getElementById('chatWindow').appendChild(msg);
+        scrollChat();
+        resolve();
+      },800+text.length*12);
+    },delay);
+  });
+}
+
+function appendUserMsg(text){
+  const msg=document.createElement('div');
+  msg.className='msg user';
+  msg.innerHTML=`
+    <div class="msg-avatar user"><i class="fas fa-user"></i></div>
+    <div class="msg-bubble user-bubble">${escHtml(text)}</div>`;
+  document.getElementById('chatWindow').appendChild(msg);
+  scrollChat();
+}
+
+function addTyping(){
+  const el=document.createElement('div');
+  el.className='msg';
+  el.innerHTML=`<div class="msg-avatar nef">𓁹</div><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+  document.getElementById('chatWindow').appendChild(el);
+  scrollChat();
+  return el;
+}
+function removeTyping(el){if(el&&el.parentNode)el.parentNode.removeChild(el);}
+function scrollChat(){const c=document.getElementById('chatWindow');c.scrollTop=c.scrollHeight;}
+function escHtml(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// ── Ask question ──────────────────────────
+async function askQuestion(idx){
+  if(idx>=QUESTIONS.length){finishInterview();return;}
+  currentQ=idx;
+  updateQDots(idx);
+  const q=QUESTIONS[idx];
+  document.getElementById('optionsArea').innerHTML='';
+  setSendDisabled(true);
+
+  if(idx>0) await appendNefMsg(q.nef);
+  await appendNefMsg(q.followup(profile));
+
+  setSendDisabled(false);
+  waitingForAnswer=true;
+
+  if(q.type==='options'){
+    showOptions(q.options);
+    setSendDisabled(true);
+  } else {
+    document.getElementById('userInput').placeholder=q.placeholder||'Type your answer…';
+    document.getElementById('userInput').focus();
+    document.getElementById('optionsArea').innerHTML='';
+  }
+}
+
+function showOptions(opts){
+  const area=document.getElementById('optionsArea');
+  area.innerHTML='';
+  const grid=document.createElement('div');
+  grid.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.6rem;max-width:680px;margin:0 auto 1rem;padding:0 1.5rem';
+  opts.forEach(o=>{
+    const b=document.createElement('button');
+    b.className='opt-btn';
+    b.textContent=o;
+    b.onclick=()=>selectOption(o,b,grid);
+    grid.appendChild(b);
+  });
+  area.appendChild(grid);
+}
+
+function selectOption(val, btn, grid){
+  grid.querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  setTimeout(()=>recordAnswer(val), 350);
+}
+
+async function sendAnswer(){
+  const input=document.getElementById('userInput');
+  const val=input.value.trim();
+  if(!val||!waitingForAnswer)return;
+  input.value='';
+  recordAnswer(val);
+}
+
+async function recordAnswer(val){
+  if(!waitingForAnswer)return;
+  waitingForAnswer=false;
+  setSendDisabled(true);
+  document.getElementById('optionsArea').innerHTML='';
+
+  appendUserMsg(val);
+  answers.push({question:QUESTIONS[currentQ].id, answer:val});
+  profile[QUESTIONS[currentQ].id]=val;
+
+  setTimeout(()=>askQuestion(currentQ+1), 600);
+}
+
+function setSendDisabled(disabled){
+  document.getElementById('sendBtn').disabled=disabled;
+}
+
+// ── Finish interview ──────────────────────
+async function finishInterview(){
+  setSendDisabled(true);
+  document.getElementById('optionsArea').innerHTML='';
+  document.getElementById('userInput').placeholder='Interview complete…';
+
+  await appendNefMsg('Your answers have been received with honor.');
+  await appendNefMsg(`${profile.fullName}, your sovereign profile is now complete. Ramsees and Mr. Garcia are being informed. Thank you for your trust.`);
+
+  profile.completedAt=new Date().toISOString();
+  profile.answers=answers;
+  profile.warmthScore=computeWarmth();
+  profile.sessionId='YBTM-'+Date.now().toString(36).toUpperCase();
+
+  // Save to localStorage
+  const stored=JSON.parse(localStorage.getItem('ybtm_clients')||'[]');
+  stored.unshift(profile);
+  localStorage.setItem('ybtm_clients',JSON.stringify(stored.slice(0,50)));
+
+  setTimeout(()=>showCompletion(), 2000);
+}
+
+function computeWarmth(){
+  let score=50;
+  const urg=profile.urgency||'';
+  if(/immediate/i.test(urg))score+=20;
+  else if(/week/i.test(urg))score+=10;
+  const amt=profile.amount||'';
+  if(/1M|250,000/i.test(amt))score+=10;
+  else if(/50,000/i.test(amt))score+=5;
+  const sit=profile.situation||'';
+  const legalTerms=['ucc','discharge','securitization','trust','commercial','sblc','warrant','lien','claim','creditor'];
+  const hits=legalTerms.filter(t=>sit.toLowerCase().includes(t)).length;
+  score+=hits*3;
+  const prior=profile.prior_action||'';
+  if(/Yes/i.test(prior))score+=5;
+  const docs=profile.documentation||'';
+  if(/All/i.test(docs))score+=5;
+  const vague=['not sure','maybe','I think','no idea','don\'t know'];
+  const hesitation=vague.filter(v=>(profile.situation||'').toLowerCase().includes(v)).length;
+  score-=hesitation*5;
+  return Math.min(100,Math.max(0,Math.round(score)));
+}
+
+function showCompletion(){
+  showPhase(3);
+  document.getElementById('completionName').textContent=profile.fullName;
+  const summary=document.getElementById('profileSummaryDiv');
+  const warmth=profile.warmthScore;
+  const warmthColor=warmth>=70?'#4ade80':warmth>=45?'#d4af37':'#f87171';
+  summary.innerHTML=`
+    <div style="text-align:center;margin-bottom:1.25rem">
+      <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(244,228,193,.4);margin-bottom:.35rem">Warmth Score</div>
+      <div class="warmth-score" style="color:${warmthColor}">${warmth}</div>
+      <div style="font-size:.75rem;color:rgba(244,228,193,.5)">/ 100</div>
+    </div>
+    ${[
+      ['Session ID', profile.sessionId],
+      ['Name', profile.fullName],
+      ['Age / Gender', `${profile.age} · ${profile.gender}`],
+      ['Location', profile.state],
+      ['Primary Matter', profile.caseTypeLabel],
+      ['Urgency', profile.urgency||'—'],
+      ['Amount', profile.amount||'—'],
+      ['Documentation', profile.documentation||'—'],
+      ['Submitted', new Date(profile.completedAt).toLocaleString()],
+    ].map(([k,v])=>`<div class="summary-row"><span class="summary-key">${k}</span><span class="summary-val">${v}</span></div>`).join('')}
+  `;
+}
+
+function downloadProfile(){
+  const data=JSON.stringify(profile,null,2);
+  const blob=new Blob([data],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`YBTM_Profile_${profile.sessionId}.json`;a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── CSS shake animation ───────────────────
+document.head.insertAdjacentHTML('beforeend',`<style>
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+</style>`);
+</script>
+</body>
+</html>
