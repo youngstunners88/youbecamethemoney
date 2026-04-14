@@ -64,21 +64,44 @@ nav{border-bottom:1px solid var(--border);backdrop-filter:blur(8px);position:sti
 /* ── RAMSEES VOICE ── */
 .ramsees-panel{background:var(--card);border:1px solid rgba(212,175,55,.3);border-radius:1.25rem;padding:2rem;position:relative;overflow:hidden}
 .ramsees-panel::before{content:'';position:absolute;top:-30%;left:-30%;width:60%;height:80%;background:radial-gradient(ellipse,rgba(212,175,55,.06),transparent);pointer-events:none}
-.voice-orb{width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,.25),rgba(212,175,55,.05));
-  border:2px solid rgba(212,175,55,.4);display:flex;align-items:center;justify-content:center;
-  font-size:2.5rem;cursor:pointer;transition:all .3s;position:relative;flex-shrink:0;margin:0 auto}
-.voice-orb:hover{box-shadow:0 0 40px rgba(212,175,55,.4);transform:scale(1.05)}
-.voice-orb.listening{border-color:var(--green);box-shadow:0 0 0 0 rgba(74,222,128,.4);animation:voicePulse 1.2s ease infinite}
-.voice-orb.speaking{border-color:var(--blue);box-shadow:0 0 0 0 rgba(96,165,250,.4);animation:voicePulse 0.8s ease infinite}
-@keyframes voicePulse{0%{box-shadow:0 0 0 0 rgba(212,175,55,.4)}70%{box-shadow:0 0 0 20px rgba(212,175,55,0)}100%{box-shadow:0 0 0 0 rgba(212,175,55,0)}}
-.voice-orb.listening{animation-name:voicePulseGreen}
-@keyframes voicePulseGreen{0%{box-shadow:0 0 0 0 rgba(74,222,128,.5)}70%{box-shadow:0 0 0 25px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
-.voice-orb.speaking{animation-name:voicePulseBlue}
-@keyframes voicePulseBlue{0%{box-shadow:0 0 0 0 rgba(96,165,250,.5)}70%{box-shadow:0 0 0 25px rgba(96,165,250,0)}100%{box-shadow:0 0 0 0 rgba(96,165,250,0)}}
-.transcript-box{background:#000;border:1px solid var(--border);border-radius:.75rem;padding:1rem;min-height:80px;font-family:'Courier New',monospace;font-size:.85rem;color:#e5e7eb;line-height:1.7}
-.response-box{background:var(--card2);border:1px solid rgba(212,175,55,.2);border-radius:.75rem;padding:1.25rem;min-height:80px;font-size:.9rem;line-height:1.75;color:var(--gold)}
-.waveform{display:flex;align-items:center;gap:3px;height:30px;justify-content:center}
-.wave-bar{width:4px;border-radius:2px;background:var(--gold);transition:height .1s}
+
+/* Big one-click speak button */
+.speak-btn{display:flex;align-items:center;justify-content:center;gap:.85rem;width:100%;padding:1.35rem 2rem;
+  background:linear-gradient(135deg,rgba(212,175,55,.15),rgba(212,175,55,.08));
+  border:2px solid rgba(212,175,55,.5);border-radius:1rem;cursor:pointer;transition:all .3s;
+  font-size:1.1rem;font-weight:700;color:var(--gold);letter-spacing:.04em}
+.speak-btn:hover{background:linear-gradient(135deg,rgba(212,175,55,.25),rgba(212,175,55,.12));border-color:var(--gold);box-shadow:0 0 30px rgba(212,175,55,.2)}
+.speak-btn.listening{background:linear-gradient(135deg,rgba(74,222,128,.15),rgba(74,222,128,.05));border-color:var(--green);color:var(--green);animation:btnPulse 1.2s ease infinite}
+.speak-btn.speaking{background:linear-gradient(135deg,rgba(96,165,250,.15),rgba(96,165,250,.05));border-color:var(--blue);color:var(--blue);animation:btnPulse .8s ease infinite}
+.speak-btn.thinking{border-color:var(--orange);color:var(--orange)}
+.speak-btn:disabled{cursor:not-allowed;opacity:.6}
+@keyframes btnPulse{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,.3)}70%{box-shadow:0 0 0 16px rgba(74,222,128,0)}}
+
+.mic-icon{font-size:1.6rem;transition:transform .2s}
+.speak-btn.listening .mic-icon{transform:scale(1.15)}
+
+/* Chat conversation thread */
+.chat-thread{background:#000;border:1px solid var(--border);border-radius:.85rem;padding:1rem;min-height:140px;max-height:320px;overflow-y:auto;display:flex;flex-direction:column;gap:.85rem}
+.chat-bubble-wrap{display:flex;gap:.6rem;align-items:flex-end}
+.chat-bubble-wrap.you{flex-direction:row-reverse}
+.chat-bubble{border-radius:.75rem;padding:.75rem 1rem;max-width:85%;font-size:.9rem;line-height:1.6}
+.chat-bubble.ramsees{background:#111827;border:1px solid rgba(212,175,55,.2);color:var(--gold)}
+.chat-bubble.you{background:#1e3a5f;border:1px solid rgba(96,165,250,.2);color:#e5e7eb}
+.chat-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.chat-avatar.r{background:#1c1400;border:1px solid rgba(212,175,55,.35)}
+.chat-avatar.y{background:#0f172a;border:1px solid rgba(96,165,250,.25)}
+
+/* Type bar */
+.type-bar{display:flex;gap:.6rem;align-items:center}
+.type-input{flex:1;background:#0d1117;border:1px solid var(--border);border-radius:.75rem;color:#f3f4f6;
+  padding:.8rem 1.1rem;font-size:.95rem;outline:none;transition:border-color .25s;font-family:inherit}
+.type-input:focus{border-color:rgba(212,175,55,.5)}
+.type-input::placeholder{color:var(--muted)}
+.type-send{background:var(--gold);color:#000;border:none;border-radius:.75rem;padding:.8rem 1.35rem;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s;flex-shrink:0}
+.type-send:hover{background:#f0cb52}
+
+.waveform{display:flex;align-items:center;gap:3px;height:20px;justify-content:center}
+.wave-bar{width:3px;border-radius:2px;background:var(--gold);transition:height .1s}
 
 /* ── CLIENT CARDS ── */
 .client-card{background:var(--card2);border:1px solid var(--border);border-radius:.85rem;padding:1.25rem;cursor:pointer;transition:all .25s}
@@ -149,90 +172,82 @@ nav{border-bottom:1px solid var(--border);backdrop-filter:blur(8px);position:sti
   <div class="tab-panel active" id="p-ramsees">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
 
-      <!-- Voice Command Panel -->
-      <div class="ramsees-panel glow" style="grid-column:1/-1">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.75rem;flex-wrap:wrap;gap:1rem">
+      <!-- Main interaction panel -->
+      <div class="ramsees-panel glow" style="grid-column:1/-1;display:flex;flex-direction:column;gap:1.5rem">
+
+        <!-- Header -->
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem">
           <div>
-            <h2 style="font-size:1.3rem;font-weight:800">Ramsees <span class="gold">Voice Command</span></h2>
-            <p style="color:var(--muted);font-size:.8rem;margin-top:.25rem">Speak directly to your AI orchestrator. Powered by ElevenLabs.</p>
+            <h2 style="font-size:1.3rem;font-weight:800">Speak to <span class="gold">Ramsees</span></h2>
+            <p style="color:var(--muted);font-size:.82rem;margin-top:.2rem">Press the button below and speak — or type your question. Ramsees will respond out loud and in writing.</p>
           </div>
-          <div style="display:flex;align-items:center;gap:.75rem">
-            <span class="badge b-gray" id="ramseesStatus">STANDBY</span>
-            <button class="btn btn-outline" onclick="testRamsees()" style="font-size:.8rem;padding:.5rem 1rem">Test Voice</button>
-          </div>
-        </div>
-
-        <!-- Main voice interaction -->
-        <div style="display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:start">
-          <!-- Orb -->
-          <div style="display:flex;flex-direction:column;align-items:center;gap:1rem">
-            <div class="voice-orb" id="voiceOrb" onclick="toggleVoice()">𓀀</div>
-            <div style="font-size:.7rem;color:var(--muted);text-align:center" id="orbLabel">Tap to speak</div>
-            <div class="waveform" id="waveform" style="opacity:0">
-              <div class="wave-bar" style="height:6px" id="wb0"></div>
-              <div class="wave-bar" style="height:12px" id="wb1"></div>
-              <div class="wave-bar" style="height:18px" id="wb2"></div>
-              <div class="wave-bar" style="height:10px" id="wb3"></div>
-              <div class="wave-bar" style="height:20px" id="wb4"></div>
-              <div class="wave-bar" style="height:8px" id="wb5"></div>
-              <div class="wave-bar" style="height:14px" id="wb6"></div>
-            </div>
-          </div>
-
-          <!-- Transcript + Response -->
-          <div style="display:flex;flex-direction:column;gap:1rem">
-            <div>
-              <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.4rem">You Said</div>
-              <div class="transcript-box" id="transcriptBox">
-                <span style="color:var(--muted)">Your spoken command will appear here…</span>
-              </div>
-            </div>
-            <div>
-              <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.4rem">Ramsees Response</div>
-              <div class="response-box" id="responseBox">
-                <span style="color:var(--muted)">Awaiting command, Mr. Garcia…</span>
-              </div>
-            </div>
-            <div style="display:flex;gap:.75rem;flex-wrap:wrap">
-              <input id="textCommand" style="flex:1;background:#0d1117;border:1px solid var(--border);border-radius:.65rem;color:#f3f4f6;padding:.65rem 1rem;font-size:.875rem;outline:none;min-width:200px" placeholder="Or type a command…" onkeydown="if(event.key==='Enter')sendTextCommand()">
-              <button class="btn btn-gold" onclick="sendTextCommand()" style="padding:.65rem 1.25rem;font-size:.875rem">Send</button>
-            </div>
+          <div style="display:flex;align-items:center;gap:.65rem">
+            <span class="badge b-gray" id="ramseesStatus">READY</span>
+            <button class="btn btn-outline" onclick="testRamsees()" style="font-size:.78rem;padding:.4rem .9rem">Hear Ramsees</button>
           </div>
         </div>
 
-        <!-- Quick commands -->
-        <div style="margin-top:1.75rem;border-top:1px solid var(--border);padding-top:1.25rem">
-          <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.75rem">Quick Commands</div>
-          <div style="display:flex;flex-wrap:wrap;gap:.5rem">
-            <button class="btn btn-outline" style="font-size:.75rem;padding:.4rem .9rem" onclick="quickCmd('Show me today\'s hot leads')">Hot Leads</button>
-            <button class="btn btn-outline" style="font-size:.75rem;padding:.4rem .9rem" onclick="quickCmd('Run the weekly learning cycle')">Run Cycle</button>
-            <button class="btn btn-outline" style="font-size:.75rem;padding:.4rem .9rem" onclick="quickCmd('What is the current pipeline value?')">Pipeline Value</button>
-            <button class="btn btn-outline" style="font-size:.75rem;padding:.4rem .9rem" onclick="quickCmd('Show me client warmth scores')">Warmth Scores</button>
-            <button class="btn btn-outline" style="font-size:.75rem;padding:.4rem .9rem" onclick="quickCmd('Schedule calls for tomorrow morning')">Schedule Calls</button>
-            <button class="btn btn-outline" style="font-size:.75rem;padding:.4rem .9rem" onclick="quickCmd('Generate this week\'s insights report')">Insights Report</button>
-            <button class="btn btn-outline" style="font-size:.75rem;padding:.4rem .9rem" onclick="quickCmd('Who are the most urgent cases this week?')">Urgent Cases</button>
+        <!-- ONE-CLICK SPEAK BUTTON -->
+        <button class="speak-btn" id="speakBtn" onclick="toggleVoice()">
+          <span class="mic-icon" id="micIcon">🎙</span>
+          <span id="speakLabel">Press here and speak to Ramsees</span>
+          <div class="waveform" id="waveform" style="opacity:0;margin-left:.5rem">
+            <div class="wave-bar" style="height:4px" id="wb0"></div>
+            <div class="wave-bar" style="height:8px" id="wb1"></div>
+            <div class="wave-bar" style="height:12px" id="wb2"></div>
+            <div class="wave-bar" style="height:7px" id="wb3"></div>
+            <div class="wave-bar" style="height:14px" id="wb4"></div>
+            <div class="wave-bar" style="height:6px" id="wb5"></div>
+            <div class="wave-bar" style="height:10px" id="wb6"></div>
+          </div>
+        </button>
+
+        <!-- Conversation thread -->
+        <div class="chat-thread" id="chatThread">
+          <div style="text-align:center;color:var(--muted);font-size:.85rem;padding:.75rem">
+            Your conversation with Ramsees will appear here
+          </div>
+        </div>
+
+        <!-- Typing bar -->
+        <div class="type-bar">
+          <input class="type-input" id="textCommand" placeholder="Or type your question here and press Enter…" onkeydown="if(event.key==='Enter')sendTextCommand()">
+          <button class="type-send" onclick="sendTextCommand()">Send</button>
+        </div>
+
+        <!-- Quick-tap questions -->
+        <div style="border-top:1px solid var(--border);padding-top:1.1rem">
+          <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.6rem">Quick questions</div>
+          <div style="display:flex;flex-wrap:wrap;gap:.45rem">
+            <button class="btn btn-outline" style="font-size:.75rem;padding:.35rem .85rem" onclick="quickCmd('Who are my hottest leads right now?')">Hot Leads</button>
+            <button class="btn btn-outline" style="font-size:.75rem;padding:.35rem .85rem" onclick="quickCmd('What is my pipeline worth this week?')">Pipeline Value</button>
+            <button class="btn btn-outline" style="font-size:.75rem;padding:.35rem .85rem" onclick="quickCmd('Show me everyone who has completed their intake interview')">All Clients</button>
+            <button class="btn btn-outline" style="font-size:.75rem;padding:.35rem .85rem" onclick="quickCmd('What are the most urgent cases I need to call today?')">Urgent Cases</button>
+            <button class="btn btn-outline" style="font-size:.75rem;padding:.35rem .85rem" onclick="quickCmd('When is the best time to make my calls tomorrow?')">Best Call Times</button>
+            <button class="btn btn-outline" style="font-size:.75rem;padding:.35rem .85rem" onclick="quickCmd('Run this week\'s learning cycle and update my strategy')">Run Cycle</button>
+            <button class="btn btn-outline" style="font-size:.75rem;padding:.35rem .85rem" onclick="quickCmd('Give me a full weekly report')">Weekly Report</button>
           </div>
         </div>
       </div>
 
-      <!-- Ramsees Memory -->
+      <!-- Pipeline snapshot -->
       <div class="card" style="padding:1.5rem">
-        <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem">Ramsees Memory <span class="badge b-blue" style="margin-left:.5rem">Live</span></h3>
-        <div style="display:flex;flex-direction:column;gap:.75rem" id="ramseesMem">
-          <div class="phrase-row"><span style="color:var(--muted);font-size:.8rem">Clients onboarded</span><span style="color:var(--text);font-weight:700" id="memClients">0</span></div>
-          <div class="phrase-row"><span style="color:var(--muted);font-size:.8rem">Avg warmth score</span><span style="color:var(--gold);font-weight:700" id="memWarmth">—</span></div>
-          <div class="phrase-row"><span style="color:var(--muted);font-size:.8rem">Top matter type</span><span style="color:var(--text);font-weight:700" id="memTopMatter">—</span></div>
-          <div class="phrase-row"><span style="color:var(--muted);font-size:.8rem">Hot leads (≥70)</span><span style="color:var(--green);font-weight:700" id="memHot">0</span></div>
-          <div class="phrase-row"><span style="color:var(--muted);font-size:.8rem">Last interview</span><span style="color:var(--text);font-size:.8rem;font-weight:600;text-align:right" id="memLast">—</span></div>
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem">Pipeline Snapshot</h3>
+        <div style="display:flex;flex-direction:column;gap:.75rem">
+          <div class="phrase-row"><span style="color:var(--muted);font-size:.85rem">Total clients</span><span style="color:var(--text);font-weight:700" id="memClients">0</span></div>
+          <div class="phrase-row"><span style="color:var(--muted);font-size:.85rem">Average readiness score</span><span style="color:var(--gold);font-weight:700" id="memWarmth">—</span></div>
+          <div class="phrase-row"><span style="color:var(--muted);font-size:.85rem">Top case type</span><span style="color:var(--text);font-weight:700" id="memTopMatter">—</span></div>
+          <div class="phrase-row"><span style="color:var(--muted);font-size:.85rem">Priority clients</span><span style="color:var(--green);font-weight:700" id="memHot">0</span></div>
+          <div class="phrase-row"><span style="color:var(--muted);font-size:.85rem">Last intake</span><span style="color:var(--text);font-size:.78rem;font-weight:600;text-align:right;max-width:160px" id="memLast">—</span></div>
         </div>
-        <button class="btn btn-outline" style="width:100%;margin-top:1rem;font-size:.8rem;justify-content:center" onclick="showTab('clients')">View All Clients →</button>
+        <button class="btn btn-outline" style="width:100%;margin-top:1.1rem;font-size:.8rem;justify-content:center" onclick="showTab('clients')">View All Clients →</button>
       </div>
 
-      <!-- Command History -->
+      <!-- Conversation history -->
       <div class="card" style="padding:1.5rem">
-        <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem">Command History</h3>
-        <div id="commandHistory" style="display:flex;flex-direction:column;gap:.5rem;max-height:220px;overflow-y:auto">
-          <div style="color:var(--muted);font-size:.8rem;text-align:center;padding:1rem">No commands yet</div>
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem">Recent Questions</h3>
+        <div id="commandHistory" style="display:flex;flex-direction:column;gap:.45rem;max-height:220px;overflow-y:auto">
+          <div style="color:var(--muted);font-size:.8rem;text-align:center;padding:1rem">No questions yet</div>
         </div>
       </div>
 
@@ -245,7 +260,7 @@ nav{border-bottom:1px solid var(--border);backdrop-filter:blur(8px);position:sti
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
         <div>
           <h2 style="font-size:1.2rem;font-weight:700">Client Profiles</h2>
-          <p style="color:var(--muted);font-size:.8rem;margin-top:.2rem">Submitted via Nefertari · Lemon Slice Interview</p>
+          <p style="color:var(--muted);font-size:.8rem;margin-top:.2rem">Submitted via Nefertari intake interview</p>
         </div>
         <div style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap">
           <span class="badge b-gold" id="clientCount">0 clients</span>
@@ -373,51 +388,63 @@ nav{border-bottom:1px solid var(--border);backdrop-filter:blur(8px);position:sti
   <div class="tab-panel" id="p-settings">
     <div style="display:grid;gap:1.5rem;max-width:700px">
       <div class="card" style="padding:1.75rem">
-        <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:1.5rem">Ramsees Voice Settings <span class="badge b-gold" style="margin-left:.5rem">ElevenLabs</span></h2>
+        <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:.4rem">Voice &amp; Intelligence Setup</h2>
+        <p style="color:var(--muted);font-size:.82rem;margin-bottom:1.5rem;line-height:1.6">Paste the two codes below to activate Ramsees' voice and full intelligence. You only need to do this once.</p>
         <div style="display:flex;flex-direction:column;gap:1.25rem">
-          <div>
-            <label class="settings-label">ElevenLabs API Key</label>
-            <input class="settings-input" type="password" id="elevenApiKey" placeholder="sk-…" value="">
-            <div style="font-size:.7rem;color:var(--muted);margin-top:.35rem">Get yours at elevenlabs.io → Profile → API Keys</div>
+
+          <div style="background:var(--card2);border:1px solid var(--border);border-radius:.85rem;padding:1.25rem">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+              <div style="font-weight:700">🔊 Ramsees Voice</div>
+              <span class="badge" id="elevenStatus" style="background:#18181b;color:#71717a">Not active</span>
+            </div>
+            <label class="settings-label">Voice activation code</label>
+            <input class="settings-input" type="password" id="elevenApiKey" placeholder="Paste your voice code here…">
+            <div style="font-size:.72rem;color:var(--muted);margin-top:.4rem">This makes Ramsees speak out loud with a deep, authoritative voice.</div>
           </div>
-          <div>
-            <label class="settings-label">Voice ID (Ramsees)</label>
+
+          <div style="background:var(--card2);border:1px solid var(--border);border-radius:.85rem;padding:1.25rem">
+            <div style="font-weight:700;margin-bottom:.35rem">🔊 Ramsees Voice Style</div>
+            <label class="settings-label">Choose Ramsees' voice</label>
             <select class="settings-input" id="voiceId">
-              <option value="pNInz6obpgDQGcFmaJgB">Adam (deep, authoritative)</option>
-              <option value="ErXwobaYiN019PkySvjV">Antoni (warm, professional)</option>
-              <option value="VR6AewLTigWG4xSOukaG">Arnold (strong, commanding)</option>
-              <option value="yoZ06aMxZJJ28mfd3POQ">Sam (confident, clear)</option>
-              <option value="custom">Custom Voice ID</option>
+              <option value="pNInz6obpgDQGcFmaJgB">Deep &amp; Commanding</option>
+              <option value="ErXwobaYiN019PkySvjV">Warm &amp; Professional</option>
+              <option value="VR6AewLTigWG4xSOukaG">Strong &amp; Authoritative</option>
+              <option value="yoZ06aMxZJJ28mfd3POQ">Clear &amp; Confident</option>
             </select>
+            <div id="customVoiceRow" style="display:none;margin-top:.75rem">
+              <label class="settings-label">Custom voice code</label>
+              <input class="settings-input" id="customVoiceId" placeholder="your-voice-id-here">
+            </div>
           </div>
-          <div id="customVoiceRow" style="display:none">
-            <label class="settings-label">Custom Voice ID</label>
-            <input class="settings-input" id="customVoiceId" placeholder="your-voice-id-here">
+
+          <div style="background:var(--card2);border:1px solid var(--border);border-radius:.85rem;padding:1.25rem">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+              <div style="font-weight:700">🧠 Ramsees Intelligence</div>
+              <span class="badge" id="claudeStatus" style="background:#18181b;color:#71717a">Not active</span>
+            </div>
+            <label class="settings-label">Intelligence activation code</label>
+            <input class="settings-input" type="password" id="claudeApiKey" placeholder="Paste your intelligence code here…">
+            <div style="font-size:.72rem;color:var(--muted);margin-top:.4rem">This allows Ramsees to fully understand your questions and give real, intelligent answers about your clients and pipeline.</div>
           </div>
-          <div>
-            <label class="settings-label">Voice Stability (0–100)</label>
-            <input class="settings-input" type="range" id="voiceStability" min="0" max="100" value="65" style="padding:.4rem 0">
-            <span style="font-size:.8rem;color:var(--muted)" id="stabilityVal">65%</span>
-          </div>
-          <div>
-            <label class="settings-label">Claude API Key (Ramsees Intelligence)</label>
-            <input class="settings-input" type="password" id="claudeApiKey" placeholder="sk-ant-…">
-            <div style="font-size:.7rem;color:var(--muted);margin-top:.35rem">Powers Ramsees understanding of Mr. Garcia's commands</div>
-          </div>
-          <button class="btn btn-gold" onclick="saveSettings()" style="align-self:flex-start">Save Settings</button>
-          <div id="settingsSaved" style="color:var(--green);font-size:.8rem;display:none">✓ Settings saved</div>
+
+          <button class="btn btn-gold" onclick="saveSettings()" style="align-self:flex-start;padding:.85rem 2rem">Save &amp; Activate</button>
+          <div id="settingsSaved" style="color:var(--green);font-size:.85rem;display:none">✓ Saved. Ramsees is now fully active.</div>
         </div>
       </div>
 
       <div class="card" style="padding:1.75rem">
         <h3 style="font-weight:700;margin-bottom:1rem">System Status</h3>
         <div style="display:flex;flex-direction:column;gap:.75rem;font-size:.875rem">
-          <div class="phrase-row"><span style="color:var(--muted)">Ramsees Engine</span><span class="badge b-green">Active</span></div>
-          <div class="phrase-row"><span style="color:var(--muted)">Nefertari (Lemon Slice)</span><span class="badge b-green">Active</span></div>
-          <div class="phrase-row"><span style="color:var(--muted)">ElevenLabs TTS</span><span class="badge" id="elevenStatus" style="background:#18181b;color:#71717a">Not configured</span></div>
-          <div class="phrase-row"><span style="color:var(--muted)">Claude Intelligence</span><span class="badge" id="claudeStatus" style="background:#18181b;color:#71717a">Not configured</span></div>
-          <div class="phrase-row"><span style="color:var(--muted)">Voice Recognition</span><span class="badge" id="speechStatus" style="background:#18181b;color:#71717a">Checking…</span></div>
-          <div class="phrase-row"><span style="color:var(--muted)">Client Storage</span><span class="badge b-green">LocalStorage Ready</span></div>
+          <div class="phrase-row"><span style="color:var(--muted)">Ramsees</span><span class="badge b-green">Online</span></div>
+          <div class="phrase-row"><span style="color:var(--muted)">Nefertari (client intake)</span><span class="badge b-green">Online</span></div>
+          <div class="phrase-row"><span style="color:var(--muted)">Ramsees Voice</span><span class="badge" id="elevenStatusRow" style="background:#18181b;color:#71717a">Needs activation code</span></div>
+          <div class="phrase-row"><span style="color:var(--muted)">Ramsees Intelligence</span><span class="badge" id="claudeStatusRow" style="background:#18181b;color:#71717a">Needs activation code</span></div>
+          <div class="phrase-row"><span style="color:var(--muted)">Microphone (speak button)</span><span class="badge" id="speechStatus" style="background:#18181b;color:#71717a">Checking…</span></div>
+          <div class="phrase-row"><span style="color:var(--muted)">Client records</span><span class="badge b-green">Ready</span></div>
+        </div>
+        <div style="margin-top:1.25rem;padding:1rem;background:rgba(212,175,55,.05);border:1px solid rgba(212,175,55,.15);border-radius:.75rem;font-size:.8rem;line-height:1.7;color:rgba(244,228,193,.6)">
+          <strong style="color:var(--gold);display:block;margin-bottom:.4rem">Need your activation codes?</strong>
+          Send a message to your system administrator (Teacher Chris) and they will provide your two activation codes — one for voice, one for intelligence.
         </div>
       </div>
     </div>
@@ -496,22 +523,20 @@ function saveSettings(){
 }
 function updateStatusBadges(){
   const s=JSON.parse(localStorage.getItem('ybtm_settings')||'{}');
-  const eb=document.getElementById('elevenStatus');
-  if(s.elevenApiKey){eb.textContent='Connected';eb.className='badge b-green';}
-  else{eb.textContent='Not configured';eb.className='badge b-gray';}
-  const cb=document.getElementById('claudeStatus');
-  if(s.claudeApiKey){cb.textContent='Connected';cb.className='badge b-green';}
-  else{cb.textContent='Not configured';cb.className='badge b-gray';}
+  ['elevenStatus','elevenStatusRow'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    if(s.elevenApiKey){el.textContent='Active';el.className='badge b-green';}
+    else{el.textContent='Needs activation code';el.className='badge b-gray';}
+  });
+  ['claudeStatus','claudeStatusRow'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    if(s.claudeApiKey){el.textContent='Active';el.className='badge b-green';}
+    else{el.textContent='Needs activation code';el.className='badge b-gray';}
+  });
 }
-document.getElementById('voiceId').addEventListener('change',function(){
-  document.getElementById('customVoiceRow').style.display=this.value==='custom'?'block':'none';
-});
-document.getElementById('voiceStability').addEventListener('input',function(){
-  document.getElementById('stabilityVal').textContent=this.value+'%';
-});
 
 // ══════════════════════════════════════════════════════════
-// SPEECH RECOGNITION
+// SPEECH RECOGNITION — single-click, auto-stops on silence
 // ══════════════════════════════════════════════════════════
 let recognition = null;
 let isListening = false;
@@ -520,67 +545,67 @@ function checkSpeechSupport(){
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const badge = document.getElementById('speechStatus');
   if(SpeechRecognition){
-    badge.textContent='Available';badge.className='badge b-green';
+    badge.textContent='Ready';badge.className='badge b-green';
     recognition = new SpeechRecognition();
-    recognition.continuous = false;
-    recognition.interimResults = true;
+    recognition.continuous = false;      // auto-stops after a pause
+    recognition.interimResults = false;  // only fire when speech is finished
     recognition.lang = 'en-US';
-    recognition.onresult = handleSpeechResult;
-    recognition.onend = handleSpeechEnd;
-    recognition.onerror = handleSpeechError;
+    recognition.onresult = e => {
+      const transcript = e.results[0][0].transcript.trim();
+      if(transcript) processCommand(transcript);
+    };
+    recognition.onend = () => {
+      isListening = false;
+      setBtnState('idle');
+    };
+    recognition.onerror = e => {
+      isListening = false;
+      setBtnState('idle');
+      if(e.error !== 'no-speech' && e.error !== 'aborted')
+        addChatBubble('ramsees','I didn\'t catch that, Mr. Garcia. Please try again.');
+    };
   } else {
-    badge.textContent='Not supported';badge.className='badge b-red';
+    badge.textContent='Not available — use Chrome';badge.className='badge b-orange';
   }
 }
 
 function toggleVoice(){
-  if(isListening) stopListening();
-  else startListening();
-}
-
-function startListening(){
-  if(!recognition){alert('Voice recognition not supported in this browser. Try Chrome.');return;}
+  if(isListening){
+    recognition && recognition.stop();
+    isListening=false; setBtnState('idle'); return;
+  }
+  if(!recognition){
+    addChatBubble('ramsees','Voice is not supported in this browser. Please use Google Chrome and try again.');
+    return;
+  }
   isListening=true;
+  setBtnState('listening');
   recognition.start();
-  setOrbState('listening');
-  document.getElementById('transcriptBox').innerHTML='<span style="color:#4ade80" class="pulse">● Listening…</span>';
-  startWaveform();
-}
-function stopListening(){
-  if(recognition && isListening){recognition.stop();}
-  isListening=false;
-}
-function handleSpeechResult(e){
-  let transcript='';
-  for(let i=e.resultIndex;i<e.results.length;i++) transcript+=e.results[i][0].transcript;
-  document.getElementById('transcriptBox').textContent=transcript;
-  if(e.results[e.results.length-1].isFinal){
-    stopListening();
-    processCommand(transcript.trim());
-  }
-}
-function handleSpeechEnd(){
-  isListening=false;
-  stopWaveform();
-  if(document.getElementById('transcriptBox').innerHTML.includes('Listening')){
-    document.getElementById('transcriptBox').innerHTML='<span style="color:#71717a">Nothing detected. Try again.</span>';
-    setOrbState('idle');
-  }
-}
-function handleSpeechError(e){
-  isListening=false;stopWaveform();
-  document.getElementById('transcriptBox').innerHTML=`<span style="color:#f87171">Error: ${e.error}</span>`;
-  setOrbState('idle');
 }
 
-function setOrbState(state){
-  const orb=document.getElementById('voiceOrb');
-  const label=document.getElementById('orbLabel');
-  orb.className='voice-orb'+(state!=='idle'?' '+state:'');
-  if(state==='listening'){label.textContent='Listening…';}
-  else if(state==='speaking'){label.textContent='Ramsees speaking…';}
-  else if(state==='thinking'){label.textContent='Thinking…';}
-  else{label.textContent='Tap to speak';}
+function setBtnState(state){
+  const btn=document.getElementById('speakBtn');
+  const label=document.getElementById('speakLabel');
+  const icon=document.getElementById('micIcon');
+  btn.className='speak-btn'+(state!=='idle'?' '+state:'');
+  btn.disabled=(state==='thinking'||state==='speaking');
+  if(state==='listening'){
+    icon.textContent='🎙'; label.textContent='Listening… speak now';
+    startWaveform();
+  } else if(state==='thinking'){
+    icon.textContent='⏳'; label.textContent='Ramsees is thinking…';
+    stopWaveform();
+  } else if(state==='speaking'){
+    icon.textContent='🔊'; label.textContent='Ramsees is speaking…';
+    startWaveform();
+  } else {
+    icon.textContent='🎙'; label.textContent='Press here and speak to Ramsees';
+    stopWaveform();
+  }
+  document.getElementById('ramseesStatus').textContent=
+    state==='listening'?'LISTENING':state==='thinking'?'THINKING':state==='speaking'?'SPEAKING':'READY';
+  document.getElementById('ramseesStatus').className=
+    state==='idle'?'badge b-green':state==='listening'?'badge b-green pulse':'badge b-blue pulse';
 }
 
 // ══════════════════════════════════════════════════════════
@@ -605,33 +630,58 @@ function stopWaveform(){
 // COMMAND PROCESSING
 // ══════════════════════════════════════════════════════════
 function quickCmd(cmd){
-  document.getElementById('transcriptBox').textContent=cmd;
+  addChatBubble('you', cmd);
   processCommand(cmd);
 }
 function sendTextCommand(){
-  const val=document.getElementById('textCommand').value.trim();
+  const input=document.getElementById('textCommand');
+  const val=input.value.trim();
   if(!val)return;
-  document.getElementById('transcriptBox').textContent=val;
-  document.getElementById('textCommand').value='';
+  input.value='';
+  addChatBubble('you', val);
   processCommand(val);
 }
 
 async function processCommand(cmd){
-  setOrbState('thinking');
-  document.getElementById('ramseesStatus').textContent='THINKING';
-  document.getElementById('ramseesStatus').className='badge b-blue pulse';
-
+  setBtnState('thinking');
+  addChatBubble('ramsees', '…', true); // placeholder
   const response = await getRamseesResponse(cmd);
-  displayResponse(response);
-  addToHistory(cmd, response);
-
-  setOrbState('speaking');
-  document.getElementById('ramseesStatus').textContent='SPEAKING';
+  updateLastBubble(response);
+  addToHistory(cmd);
+  setBtnState('speaking');
   await speakWithElevenLabs(response);
-  setOrbState('idle');
-  document.getElementById('ramseesStatus').textContent='READY';
-  document.getElementById('ramseesStatus').className='badge b-green';
+  setBtnState('idle');
 }
+
+// Chat thread helpers
+function addChatBubble(who, text, isPlaceholder=false){
+  const thread=document.getElementById('chatThread');
+  // clear placeholder message on first real message
+  if(thread.querySelector('[data-placeholder]')&&!isPlaceholder) thread.querySelector('[data-placeholder]').remove();
+  const wrap=document.createElement('div');
+  wrap.className='chat-bubble-wrap '+(who==='you'?'you':'');
+  if(isPlaceholder)wrap.dataset.placeholder='1';
+  const avatar=document.createElement('div');
+  avatar.className='chat-avatar '+(who==='ramsees'?'r':'y');
+  avatar.textContent=who==='ramsees'?'𓀀':'👤';
+  const bubble=document.createElement('div');
+  bubble.className='chat-bubble '+(who==='ramsees'?'ramsees':'you');
+  bubble.innerHTML=who==='ramsees'&&isPlaceholder?
+    '<span class="pulse" style="color:var(--gold)">●●●</span>':escHtml(text);
+  wrap.appendChild(avatar);wrap.appendChild(bubble);
+  thread.appendChild(wrap);
+  thread.scrollTop=thread.scrollHeight;
+}
+function updateLastBubble(text){
+  const thread=document.getElementById('chatThread');
+  const ph=thread.querySelector('[data-placeholder]');
+  if(ph){
+    ph.querySelector('.chat-bubble').innerHTML=escHtml(text);
+    delete ph.dataset.placeholder;
+  }
+}
+function escHtml(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function displayResponse(text){updateLastBubble(text);}
 
 async function getRamseesResponse(cmd){
   const s=JSON.parse(localStorage.getItem('ybtm_settings')||'{}');
@@ -740,32 +790,29 @@ function speakBrowser(text){
 }
 
 function testRamsees(){
-  const text=`Ramsees online, Mr. Garcia. All systems are operational. Nefertari is ready to receive new clients through the EMBARK portal. I await your command.`;
-  displayResponse(text);
-  addToHistory('[TEST]', text);
-  speakWithElevenLabs(text);
-}
-
-function displayResponse(text){
-  document.getElementById('responseBox').textContent=text;
+  const text=`Ramsees online, Mr. Garcia. All systems are operational. Nefertari is ready to receive new clients. I await your command.`;
+  addChatBubble('ramsees', text);
+  addToHistory('[Voice test]');
+  setBtnState('speaking');
+  speakWithElevenLabs(text).then(()=>setBtnState('idle'));
 }
 
 // ══════════════════════════════════════════════════════════
 // COMMAND HISTORY
 // ══════════════════════════════════════════════════════════
 const cmdHistory=[];
-function addToHistory(cmd, resp){
-  cmdHistory.unshift({cmd,resp,time:new Date().toLocaleTimeString()});
+function addToHistory(cmd){
+  cmdHistory.unshift({cmd,time:new Date().toLocaleTimeString()});
   if(cmdHistory.length>20)cmdHistory.pop();
   renderHistory();
 }
 function renderHistory(){
   const el=document.getElementById('commandHistory');
-  if(!cmdHistory.length){el.innerHTML='<div style="color:var(--muted);font-size:.8rem;text-align:center;padding:1rem">No commands yet</div>';return;}
+  if(!cmdHistory.length){el.innerHTML='<div style="color:var(--muted);font-size:.8rem;text-align:center;padding:1rem">No questions yet</div>';return;}
   el.innerHTML=cmdHistory.map(h=>`
-    <div style="background:#0d1117;border:1px solid var(--border);border-radius:.5rem;padding:.6rem .85rem;cursor:pointer;transition:border-color .2s" onclick="quickCmd('${h.cmd.replace(/'/g,"\\'")}')">
-      <div style="font-size:.75rem;font-weight:600;color:#e5e7eb;margin-bottom:.2rem">${h.cmd.slice(0,60)}${h.cmd.length>60?'…':''}</div>
-      <div style="font-size:.65rem;color:var(--muted)">${h.time}</div>
+    <div style="background:#0d1117;border:1px solid var(--border);border-radius:.5rem;padding:.5rem .85rem;cursor:pointer;transition:border-color .2s" onclick="quickCmd('${h.cmd.replace(/'/g,"\\'")}')">
+      <div style="font-size:.78rem;color:#e5e7eb">${h.cmd.slice(0,65)}${h.cmd.length>65?'…':''}</div>
+      <div style="font-size:.62rem;color:var(--muted);margin-top:.15rem">${h.time} · tap to ask again</div>
     </div>`).join('');
 }
 
