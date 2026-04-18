@@ -642,11 +642,191 @@
         /* Scroll Animation */
         .fade-in { opacity: 0; transform: translateY(30px); transition: all 0.8s; }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        /* ═══════════════════════════════════════════════════════════
+           EGYPTIAN SPACESHIP — Holographic command deck
+           ═══════════════════════════════════════════════════════════ */
+
+        /* Gavel cursor (idle) */
+        body, body * {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><g transform="rotate(-30 16 16)"><rect x="12" y="2" width="8" height="14" rx="1.5" fill="%23d4af37" stroke="%23f4d03f" stroke-width="0.6"/><rect x="14.5" y="14" width="3" height="13" fill="%23f4e4c1"/><rect x="9" y="27" width="14" height="3" rx="0.5" fill="%23d4af37"/></g></svg>') 16 16, auto;
+        }
+        a, button, .service-card, .pillar-card, .testimonial-card, .hero-cta,
+        .nav-links a, .logo, .music-btn, .cta-btn, [onclick], [role="button"] {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 32 32"><g transform="rotate(-30 16 16)"><rect x="12" y="2" width="8" height="14" rx="1.5" fill="%23f4d03f" stroke="%23ffffff" stroke-width="0.4"/><rect x="14.5" y="14" width="3" height="13" fill="%23ffffff"/><rect x="9" y="27" width="14" height="3" rx="0.5" fill="%23f4d03f"/></g></svg>') 20 20, pointer !important;
+        }
+        input, textarea, select {
+            cursor: text !important;
+        }
+
+        /* Subtle grid / space ambience */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+            background:
+                linear-gradient(rgba(212, 175, 55, 0.035) 1px, transparent 1px) 0 0 / 60px 60px,
+                linear-gradient(90deg, rgba(212, 175, 55, 0.035) 1px, transparent 1px) 0 0 / 60px 60px,
+                radial-gradient(ellipse at center, transparent 0%, rgba(10, 14, 39, 0.75) 85%);
+            animation: gridDrift 120s linear infinite;
+        }
+        @keyframes gridDrift {
+            from { background-position: 0 0, 0 0, center; }
+            to { background-position: 60px 60px, 60px 60px, center; }
+        }
+
+        /* Twinkling starfield */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+            background-image:
+                radial-gradient(1px 1px at 20% 30%, rgba(244, 228, 193, 0.8), transparent),
+                radial-gradient(1px 1px at 60% 70%, rgba(212, 175, 55, 0.6), transparent),
+                radial-gradient(1px 1px at 80% 20%, rgba(244, 228, 193, 0.7), transparent),
+                radial-gradient(1px 1px at 40% 85%, rgba(212, 175, 55, 0.5), transparent),
+                radial-gradient(1px 1px at 90% 50%, rgba(244, 228, 193, 0.4), transparent),
+                radial-gradient(1.5px 1.5px at 10% 60%, rgba(244, 228, 193, 0.7), transparent);
+            animation: twinkle 8s ease-in-out infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        /* Floating orbs — spaceship ambience */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.18;
+            pointer-events: none;
+            z-index: -1;
+            animation: orbFloat 22s ease-in-out infinite;
+        }
+        .orb-1 { width: 420px; height: 420px;
+            background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+            top: 8%; left: -8%; }
+        .orb-2 { width: 520px; height: 520px;
+            background: radial-gradient(circle, var(--lapis) 0%, transparent 70%);
+            bottom: 8%; right: -8%; animation-delay: -7s; }
+        .orb-3 { width: 320px; height: 320px;
+            background: radial-gradient(circle, var(--gold-light) 0%, transparent 70%);
+            top: 45%; left: 45%; animation-delay: -14s; }
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(90px, -70px) scale(1.2); }
+        }
+
+        /* Holographic upgrade for all panels */
+        .service-card, .pillar-card, .testimonial-card {
+            background:
+                linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, rgba(30, 58, 95, 0.08) 100%),
+                rgba(10, 14, 39, 0.55) !important;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(212, 175, 55, 0.28) !important;
+            box-shadow:
+                0 0 40px rgba(212, 175, 55, 0.08),
+                inset 0 1px 0 rgba(244, 228, 193, 0.08);
+            transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1),
+                        border-color 0.5s, box-shadow 0.5s !important;
+            position: relative;
+            overflow: hidden;
+        }
+        .service-card::after, .pillar-card::after, .testimonial-card::after {
+            content: '';
+            position: absolute;
+            top: -100%; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.7), transparent);
+            transition: top 1.8s cubic-bezier(0.65, 0, 0.35, 1);
+            pointer-events: none;
+        }
+        .service-card:hover, .pillar-card:hover, .testimonial-card:hover {
+            transform: translateY(-8px) scale(1.015);
+            border-color: rgba(212, 175, 55, 0.75) !important;
+            box-shadow:
+                0 25px 70px rgba(212, 175, 55, 0.22),
+                0 0 90px rgba(212, 175, 55, 0.16) !important;
+        }
+        .service-card:hover::after, .pillar-card:hover::after, .testimonial-card:hover::after {
+            top: 100%;
+        }
+
+        /* Hover glow on CTAs and buttons */
+        .hero-cta, .cta-btn, button, .music-btn {
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+                        box-shadow 0.4s, filter 0.4s !important;
+        }
+        .hero-cta:hover, .cta-btn:hover, button:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.55),
+                        0 0 80px rgba(212, 175, 55, 0.25) !important;
+        }
+
+        /* Cash burst animation */
+        .cash-burst {
+            position: fixed;
+            pointer-events: none;
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            z-index: 9999;
+            animation: cashFly 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+            text-shadow: 0 0 14px rgba(212, 175, 55, 0.9),
+                         0 0 28px rgba(212, 175, 55, 0.4);
+            user-select: none;
+            will-change: transform, opacity;
+        }
+        @keyframes cashFly {
+            0%   { opacity: 1; transform: translate(-50%, -50%) scale(0.4) rotate(0deg); }
+            20%  { opacity: 1; transform: translate(-50%, -50%) scale(1.3) rotate(15deg); }
+            100% { opacity: 0;
+                   transform: translate(calc(-50% + var(--burst-x)), calc(-50% + var(--burst-y))) scale(1.1) rotate(var(--burst-r)); }
+        }
+
+        /* Corner hieroglyph accents */
+        .glyph-corner {
+            position: fixed;
+            font-size: 2.5rem;
+            color: rgba(212, 175, 55, 0.08);
+            pointer-events: none;
+            z-index: -1;
+            user-select: none;
+            font-family: serif;
+            animation: glyphPulse 6s ease-in-out infinite;
+        }
+        .glyph-tl { top: 90px; left: 20px; }
+        .glyph-tr { top: 90px; right: 20px; animation-delay: -2s; }
+        .glyph-bl { bottom: 20px; left: 20px; animation-delay: -4s; }
+        .glyph-br { bottom: 20px; right: 20px; animation-delay: -1s; }
+        @keyframes glyphPulse {
+            0%, 100% { opacity: 0.08; transform: scale(1); }
+            50% { opacity: 0.18; transform: scale(1.05); }
+        }
+
+        /* Respect reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .orb, body::before, body::after, .glyph-corner { animation: none !important; }
+            .cash-burst { display: none; }
+        }
     </style>
 </head>
 <body>
     <div class="bg-animation"></div>
     <div class="sand-particles" id="sandParticles"></div>
+    <div class="orb orb-1" aria-hidden="true"></div>
+    <div class="orb orb-2" aria-hidden="true"></div>
+    <div class="orb orb-3" aria-hidden="true"></div>
+    <div class="glyph-corner glyph-tl" aria-hidden="true">𓂀</div>
+    <div class="glyph-corner glyph-tr" aria-hidden="true">𓋹</div>
+    <div class="glyph-corner glyph-bl" aria-hidden="true">𓏏</div>
+    <div class="glyph-corner glyph-br" aria-hidden="true">𓉐</div>
 
     <nav>
         <a href="#" class="logo">
@@ -1293,6 +1473,37 @@
         };
 
         MusicPlayer.init();
+
+        /* ═══════════════════════════════════════════════════════════
+           CASH BURST — click anywhere for a shower of gold
+           ═══════════════════════════════════════════════════════════ */
+        (function initCashBurst() {
+            const symbols = ['$', '$', '$', '💵', '💰', '𓋹'];
+            const colors = ['#d4af37', '#f4d03f', '#2ecc71', '#f4e4c1'];
+            let lastBurst = 0;
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('input, textarea, select, elevenlabs-convai')) return;
+                const now = Date.now();
+                if (now - lastBurst < 120) return;
+                lastBurst = now;
+                const count = 12;
+                for (let i = 0; i < count; i++) {
+                    const el = document.createElement('div');
+                    el.className = 'cash-burst';
+                    el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                    el.style.left = e.clientX + 'px';
+                    el.style.top  = e.clientY + 'px';
+                    el.style.color = colors[Math.floor(Math.random() * colors.length)];
+                    const angle = (Math.PI * 2 / count) * i + (Math.random() * 0.5);
+                    const distance = 90 + Math.random() * 140;
+                    el.style.setProperty('--burst-x', Math.cos(angle) * distance + 'px');
+                    el.style.setProperty('--burst-y', (Math.sin(angle) * distance - 40) + 'px');
+                    el.style.setProperty('--burst-r', (Math.random() * 720 - 360) + 'deg');
+                    document.body.appendChild(el);
+                    setTimeout(() => el.remove(), 1300);
+                }
+            }, { passive: true });
+        })();
     </script>
     <!-- ElevenLabs Convai Widget -->
     <elevenlabs-convai agent-id="agent_2401kh49ezxaef3tqynwkb1pyp22"></elevenlabs-convai>
