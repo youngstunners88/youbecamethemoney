@@ -615,6 +615,17 @@ async function finishInterview(){
   stored.unshift(profile);
   localStorage.setItem('ybtm_clients',JSON.stringify(stored.slice(0,50)));
 
+  // Ping Ramsees gateway (command center, not Zo). Non-blocking.
+  try{
+    const s=JSON.parse(localStorage.getItem('ybtm_settings')||'{}');
+    const base=(s.ramseesGateway||'').trim()||'/api/ramsees';
+    fetch(base+'/embark',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({profile,answers})
+    }).catch(()=>{});
+  }catch(e){}
+
   setTimeout(()=>showCompletion(), 2000);
 }
 

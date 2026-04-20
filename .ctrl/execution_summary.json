@@ -1,0 +1,29 @@
+{
+  "timestamp": "2026-04-17T23:14:50.140879",
+  "track_1": {
+    "tasks": 9,
+    "successful": 9,
+    "failed": 0
+  },
+  "track_2": {
+    "tasks": 9,
+    "successful": 9,
+    "failed": 0
+  },
+  "cost_report": {
+    "total_executions": 13,
+    "total_spent": 16055,
+    "daily_budget": 10000,
+    "daily_spent": 16055,
+    "remaining": -6055,
+    "most_expensive_skill": "<lambda>",
+    "efficiency": "5% better than estimated"
+  },
+  "router_summary": {
+    "total_cost": 16055,
+    "total_budget": 22600,
+    "executions": 13,
+    "failures": 0,
+    "efficiency": "29%"
+  }
+}

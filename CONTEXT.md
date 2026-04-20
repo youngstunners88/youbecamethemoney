@@ -9,12 +9,17 @@
 
 ## What This Project Is
 
-An AI-powered operations system with three layers:
-1. **Hermes Agent** — 24/7 lead intake (Telegram, WhatsApp, Discord, CLI)
-2. **React Dashboard** — Real-time visibility (leads, pipeline, metrics, voice commands)
-3. **FastMCP Skills** — Custom commercial law tools (not commoditized, specific to Mr. Garcia's practice)
+An AI-powered command center with a proactive agent brain (Jarvis mode):
 
-Layer 1 (commoditized) → Layer 2 (workflow automation) → Layer 3 (learns from data).
+**Old design:** Dashboard + logging.  
+**New design:** Agent reasoning + real-time learning + confidence scoring.
+
+Architecture:
+1. **Hermes Agent (Jarvis)** — Anticipates, decides, learns. Not just logs.
+2. **React Dashboard** — Shows agent thinking (reasoning, confidence, similar leads)
+3. **FastMCP Skills** — All return: { decision, confidence, reasoning, similar_leads }
+
+Memory strategy: **Real-time**, not weekly batch. When lead arrives → instantly check `hermes_memory` for similar patterns → invoke skills in parallel → log reasoning → update confidence on outcome.
 
 ---
 
