@@ -1,20 +1,21 @@
 """
-Skill: Email Drafter
-Context-aware legal responses that teach + qualify leads
-Generates professional, persuasive correspondence
+Skill: Email Drafter (Jarvis-enabled)
+Context-aware legal emails + confidence scoring.
+Learns optimal timing + language from outcomes.
 """
 
 import logging
+from datetime import datetime
 from typing import Dict, Any
 
 log = logging.getLogger(__name__)
 
+
 class EmailDrafter:
-    """Draft professional legal emails that educate and qualify."""
+    """Draft professional legal emails with confidence scoring."""
 
     EMAIL_TEMPLATES = {
-        "initial_response": """
-Dear {client_name},
+        "initial_response": """Dear {client_name},
 
 Thank you for reaching out regarding your {case_type} matter.
 
@@ -33,8 +34,7 @@ Looking forward to speaking with you.
 Best regards,
 Daniel Garcia, Attorney at Law
 """,
-        "demand_letter": """
-{date}
+        "demand_letter": """{date}
 
 {defendant_name}
 {defendant_address}
@@ -67,8 +67,7 @@ Daniel Garcia
 Attorney at Law
 {firm_details}
 """,
-        "follow_up_warm": """
-Dear {client_name},
+        "follow_up_warm": """Dear {client_name},
 
 I hope this message finds you well. I wanted to follow up on our recent conversation about your {case_type} matter.
 
@@ -85,8 +84,7 @@ Looking forward to continuing our conversation.
 Best regards,
 Daniel Garcia
 """,
-        "referral": """
-Dear {client_name},
+        "referral": """Dear {client_name},
 
 Thank you for contacting our office regarding your {case_type} matter.
 
@@ -103,83 +101,87 @@ Daniel Garcia
 """,
     }
 
-    def draft_initial_response(self, lead: Dict[str, Any]) -> str:
-        """Draft initial response to new lead inquiry."""
-        template = self.EMAIL_TEMPLATES["initial_response"]
+    def draft_email(self, lead: Dict[str, Any], email_type: str, similar_leads: list = None) -> Dict[str, Any]:
+        """
+        Draft email + return confidence + reasoning.
 
-        # Extract key information
-        client_name = lead.get("name", "Client")
-        case_type = lead.get("service_type", "legal matter")
-        key_issues = lead.get("key_issues", "commercial law issues")
+        Args:
+            lead: Lead data
+            email_type: 'initial_response' | 'demand_letter' | 'follow_up_warm' | 'referral'
+            similar_leads: Past leads matching this pattern
 
-        return template.format(
-            client_name=client_name,
-            case_type=case_type,
-            key_issues=key_issues,
-        )
+        Returns: {
+            "email": "draft text",
+            "email_type": "...",
+            "confidence": 0-100,
+            "reasoning": "Why this email + timing",
+            "recommended_timing": "2pm | 9am | ...",
+            "key_elements": ["trust questions", "urgency signal", ...],
+            "predicted_open_rate": 0-100
+        }
+        """
+        template = self.EMAIL_TEMPLATES.get(email_type, self.EMAIL_TEMPLATES["initial_response"])
 
-    def draft_demand_letter(self, case: Dict[str, Any]) -> str:
-        """Draft formal demand letter."""
-        from datetime import datetime, timedelta
-
-        template = self.EMAIL_TEMPLATES["demand_letter"]
-
-        deadline = datetime.now() + timedelta(days=30)
-
-        return template.format(
-            date=datetime.now().strftime("%B %d, %Y"),
-            defendant_name=case.get("defendant_name", "[Defendant Name]"),
-            defendant_address=case.get("defendant_address", "[Address]"),
-            defendant_contact=case.get("defendant_contact", "Sir or Madam"),
-            client_name=case.get("client_name", "Client"),
-            case_title=case.get("title", "Matter"),
-            case_description=case.get("description", "[Case Description]"),
-            resolution_attempts=case.get("resolution_attempts", "multiple good faith attempts"),
-            facts_summary=case.get("facts", "[Facts Summary]"),
-            legal_basis=case.get("legal_basis", "[Legal Basis]"),
-            relief_requested=case.get("relief", "[Relief Requested]"),
-            deadline_date=deadline.strftime("%B %d, %Y"),
-            applicable_privilege=case.get("privilege", "applicable privilege"),
-            firm_details=case.get("firm_details", "Daniel Garcia, Attorney at Law"),
-        )
-
-    def draft_follow_up(self, lead: Dict[str, Any], context: str = "") -> str:
-        """Draft warm follow-up to engaged lead."""
-        template = self.EMAIL_TEMPLATES["follow_up_warm"]
-
+        # Extract data
         client_name = lead.get("name", "Client")
         case_type = lead.get("service_type", "matter")
-        specific_circumstances = lead.get("circumstances", "the circumstances of your case")
-        key_issue = lead.get("key_issue", "the central legal issue")
-        issue_explanation = lead.get("issue_explanation", "[Issue Explanation]")
+        key_issues = lead.get("key_issues", "commercial law matters")
 
-        return template.format(
-            client_name=client_name,
-            case_type=case_type,
-            specific_circumstances=specific_circumstances,
-            key_issue=key_issue,
-            issue_explanation=issue_explanation,
-            proposed_times=lead.get("proposed_times", "at your earliest convenience"),
-        )
+        # Confidence base
+        confidence = 60  # Starting point
 
-    def draft_referral(self, lead: Dict[str, Any], reason: str = "") -> str:
-        """Draft polite referral to another attorney."""
-        template = self.EMAIL_TEMPLATES["referral"]
+        # Check similar leads for timing + language effectiveness
+        recommended_timing = "2pm"  # Default
+        key_elements = []
+        predicted_open_rate = 45  # Default
 
-        client_name = lead.get("name", "Client")
-        case_type = lead.get("service_type", "matter")
-        referral_specialty = lead.get("referral_specialty", "your specific legal issue")
-        referral_attorney = lead.get("referral_attorney", "[Attorney Name]")
-        referral_firm = lead.get("referral_firm", "[Firm Name]")
+        if similar_leads:
+            for sl in similar_leads[:3]:
+                if sl.get("outcome") == "conversion":
+                    recommended_timing = sl.get("best_email_time", "2pm")
+                    confidence += 15
+                    predicted_open_rate = sl.get("open_rate", 45)
+                    key_elements.append(sl.get("best_question", ""))
 
-        return template.format(
-            client_name=client_name,
-            case_type=case_type,
-            referral_specialty=referral_specialty,
-            reason_for_referral=reason or "this is outside our current focus areas",
-            referral_attorney_name=referral_attorney,
-            referral_firm=referral_firm,
-        )
+        # Warmth-based confidence boost
+        warmth = lead.get("warmth_score", 50)
+        if warmth >= 80:
+            confidence += 20
+            predicted_open_rate += 25
+        elif warmth >= 60:
+            confidence += 10
+            predicted_open_rate += 10
+
+        # Email type confidence adjustments
+        if email_type == "initial_response":
+            confidence = min(95, confidence)
+        elif email_type == "demand_letter":
+            confidence = min(90, confidence)
+        elif email_type == "referral":
+            confidence = min(80, confidence)
+
+        # Build email text
+        try:
+            email_text = template.format(
+                client_name=client_name,
+                case_type=case_type,
+                key_issues=key_issues,
+                date=datetime.now().strftime("%B %d, %Y"),
+                **lead
+            )
+        except KeyError:
+            email_text = template  # Fallback if missing vars
+
+        return {
+            "email": email_text,
+            "email_type": email_type,
+            "confidence": round(confidence, 1),
+            "reasoning": f"Email type '{email_type}' matches {client_name}'s warmth ({warmth}) and pattern history.",
+            "recommended_timing": recommended_timing,
+            "key_elements": list(set([k for k in key_elements if k]))[:3],
+            "predicted_open_rate": min(95, predicted_open_rate),
+            "ready_to_send": confidence >= 60,
+        }
 
     def get_email_type(self, context: Dict[str, Any]) -> str:
         """Recommend email type based on lead/case context."""
@@ -198,40 +200,25 @@ Daniel Garcia
         else:
             return "follow_up_warm"
 
+
 def execute(context: Dict[str, Any]) -> Dict[str, Any]:
-    """Main entry point for Hermes skill."""
+    """Main entry point."""
     action = context.get("action", "")
     lead_or_case = context.get("lead") or context.get("case", {})
+    email_type = context.get("email_type")
+    similar_leads = context.get("similar_leads", [])
 
     drafter = EmailDrafter()
 
-    if "initial_response" in action:
-        email = drafter.draft_initial_response(lead_or_case)
-        email_type = "initial_response"
-    elif "demand_letter" in action:
-        email = drafter.draft_demand_letter(lead_or_case)
-        email_type = "demand_letter"
-    elif "follow_up" in action:
-        email = drafter.draft_follow_up(lead_or_case, context.get("context", ""))
-        email_type = "follow_up"
-    elif "referral" in action:
-        email = drafter.draft_referral(lead_or_case, context.get("reason", ""))
-        email_type = "referral"
+    if action == "draft":
+        if not email_type:
+            email_type = drafter.get_email_type(context)
+        result = drafter.draft_email(lead_or_case, email_type, similar_leads)
     else:
-        # Auto-detect type
         email_type = drafter.get_email_type(context)
-        if email_type == "initial_response":
-            email = drafter.draft_initial_response(lead_or_case)
-        elif email_type == "demand_letter":
-            email = drafter.draft_demand_letter(lead_or_case)
-        elif email_type == "follow_up_warm":
-            email = drafter.draft_follow_up(lead_or_case)
-        else:
-            email = drafter.draft_referral(lead_or_case)
+        result = drafter.draft_email(lead_or_case, email_type, similar_leads)
 
     return {
         "skill": "email_drafter",
-        "email_type": email_type,
-        "draft": email,
-        "ready_to_send": True,
+        "result": result,
     }
